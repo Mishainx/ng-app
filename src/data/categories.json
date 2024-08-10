@@ -1,0 +1,222 @@
+ [
+    {
+      "categoryId": 1,
+      "title": "Gaming",
+      "src": "/category/gaming-section-2.jpg",
+      "srcMenu":"/category/circle/gaming.png",
+      "href": "./categories/gaming",
+      "subcategory": [
+        { 
+          "title": "joysticks", 
+          "subCategoryId": 1, 
+          "src": "/subcategories/joystick.png", 
+          "href": "./categories/gaming/joysticks",
+          "types": [
+            { "typeId": 1, "title": "ps1", "src": "/subcategory/joysticks/ps1.png", "href": "./categories/gaming/joysticks/ps1" },
+            { "typeId": 2, "title": "ps2", "src": "/subcategory/joysticks/ps2.png", "href": "./categories/gaming/joysticks/ps2" },
+            { "typeId": 3, "title": "xbox", "src": "/subcategory/joysticks/xbox.png", "href": "./categories/gaming/joysticks/xbox" }
+          ]
+        },
+        { 
+          "title": "accesorios", 
+          "subCategoryId": 2, 
+          "src": "/subcategories/accesorios.png", 
+          "href": "./categories/gaming/accesorios",
+          "types": [
+            { "typeId": 1, "title": "auriculares", "src": "/subcategory/accesorios/auriculares.png", "href": "./categories/gaming/accesorios/auriculares" },
+            { "typeId": 2, "title": "cargadores", "src": "/subcategory/accesorios/cargadores.png", "href": "./categories/gaming/accesorios/cargadores" },
+            { "typeId": 3, "title": "fundas", "src": "/subcategory/accesorios/fundas.png", "href": "./categories/gaming/accesorios/fundas" }
+          ]
+        },
+        { 
+          "title": "consolas", 
+          "subCategoryId": 3, 
+          "src": "/subcategories/consolas.png", 
+          "href": "./categories/gaming/consolas",
+          "types": [
+            { "typeId": 1, "title": "ps4", "src": "/subcategory/consolas/ps4.png", "href": "./categories/gaming/consolas/ps4" },
+            { "typeId": 2, "title": "xbox one", "src": "/subcategory/consolas/xboxone.png", "href": "./categories/gaming/consolas/xboxone" },
+            { "typeId": 3, "title": "nintendo switch", "src": "/subcategory/consolas/switch.png", "href": "./categories/gaming/consolas/switch" }
+          ]
+        },
+        { 
+          "title": "sillas", 
+          "subCategoryId": 4, 
+          "src": "/subcategories/sillas.png", 
+          "href": "./categories/gaming/sillas",
+          "types": [
+            { "typeId": 1, "title": "gaming", "src": "/subcategory/sillas/gaming.png", "href": "./categories/gaming/sillas/gaming" },
+            { "typeId": 2, "title": "oficina", "src": "/subcategory/sillas/oficina.png", "href": "./categories/gaming/sillas/oficina" }
+          ]
+        },
+        { 
+          "title": "perifericos", 
+          "subCategoryId": 5, 
+          "src": "/subcategories/perifericos.png", 
+          "href": "./categories/gaming/perifericos",
+          "types": [
+            { "typeId": 1, "title": "teclados", "src": "/subcategory/perifericos/teclados.png", "href": "./categories/gaming/perifericos/teclados" },
+            { "typeId": 2, "title": "ratones", "src": "/subcategory/perifericos/ratones.png", "href": "./categories/gaming/perifericos/ratones" },
+            { "typeId": 3, "title": "monitores", "src": "/subcategory/perifericos/monitores.png", "href": "./categories/gaming/perifericos/monitores" }
+          ]
+        }
+      ]
+    },
+    {
+      "categoryId": 2,
+      "title": "Holder",
+      "src": "/category/holders-section.png",
+      "srcMenu":"/category/circle/holders.png",
+      "href": "./categories/holder",
+      "subcategory": [
+        { 
+          "title": "soporte tv", 
+          "subCategoryId": 6, 
+          "src": "/category/holder/soporte_tv.png", 
+          "href": "./categories/holder/soporte_tv",
+          "types": [
+            { "typeId": 1, "title": "fijo", "src": "/subcategory/soporte_tv/fijo.png", "href": "./categories/holder/soporte_tv/fijo" },
+            { "typeId": 2, "title": "inclinable", "src": "/subcategory/soporte_tv/inclinable.png", "href": "./categories/holder/soporte_tv/inclinable" },
+            { "typeId": 3, "title": "articulado", "src": "/subcategory/soporte_tv/articulado.png", "href": "./categories/holder/soporte_tv/articulado" }
+          ]
+        },
+        { 
+          "title": "soporte auto", 
+          "subCategoryId": 7, 
+          "src": "/category/holder/soporte_auto.png", 
+          "href": "./categories/holder/soporte_auto",
+          "types": [
+            { "typeId": 1, "title": "parabrisas", "src": "/subcategory/soporte_auto/parabrisas.png", "href": "./categories/holder/soporte_auto/parabrisas" },
+            { "typeId": 2, "title": "ventilacion", "src": "/subcategory/soporte_auto/ventilacion.png", "href": "./categories/holder/soporte_auto/ventilacion" },
+            { "typeId": 3, "title": "carga", "src": "/subcategory/soporte_auto/carga.png", "href": "./categories/holder/soporte_auto/carga" }
+          ]
+        },
+        { 
+          "title": "A/V", 
+          "subCategoryId": 8, 
+          "src": "/category/holder/av.png", 
+          "href": "./categories/holder/av",
+          "types": [
+            { "typeId": 1, "title": "hdmi", "src": "/subcategory/av/hdmi.png", "href": "./categories/holder/av/hdmi" },
+            { "typeId": 2, "title": "rca", "src": "/subcategory/av/rca.png", "href": "./categories/holder/av/rca" },
+            { "typeId": 3, "title": "optico", "src": "/subcategory/av/optico.png", "href": "./categories/holder/av/optico" }
+          ]
+        },
+        { 
+          "title": "soporte tablets", 
+          "subCategoryId": 9, 
+          "src": "/category/holder/soporte_tablets.png", 
+          "href": "./categories/holder/soporte_tablets",
+          "types": [
+            { "typeId": 1, "title": "mesa", "src": "/subcategory/soporte_tablets/mesa.png", "href": "./categories/holder/soporte_tablets/mesa" },
+            { "typeId": 2, "title": "auto", "src": "/subcategory/soporte_tablets/auto.png", "href": "./categories/holder/soporte_tablets/auto" },
+            { "typeId": 3, "title": "pared", "src": "/subcategory/soporte_tablets/pared.png", "href": "./categories/holder/soporte_tablets/pared" }
+          ]
+        }
+      ]
+    },
+    {
+      "categoryId": 3,
+      "title": "Movilidad",
+      "src": "/category/movilidad.png",
+      "srcMenu":"/category/circle/movilidad.png", 
+      "href": "/category/movilidad.png",
+      "subcategory": [
+        { 
+          "title": "monopatín", 
+          "subCategoryId": 10, 
+          "src": "/category/movilidad.png",
+          "srcMenu":"/category/movilidad.png", 
+          "href": "./categories/movilidad/monopatin",
+          "types": [
+            { "typeId": 1, "title": "eléctrico", "src": "/subcategory/monopatin/electrico.png", "href": "./categories/movilidad/monopatin/electrico" },
+            { "typeId": 2, "title": "manual", "src": "/subcategory/monopatin/manual.png", "href": "./categories/movilidad/monopatin/manual" }
+          ]
+        }
+      ]
+    },
+    {
+      "categoryId": 4,
+      "title": "Sonido",
+      "src": "/category/sonido-section.png",
+      "srcMenu":"/category/circle/sonido.png",
+      "href": "./categories/sonido",
+      "subcategory": [
+        { 
+          "title": "auriculares", 
+          "subCategoryId": 11, 
+          "src": "/category/sonido/auriculares.png", 
+          "href": "./categories/sonido/auriculares",
+          "types": [
+            { "typeId": 1, "title": "diadema", "src": "/subcategory/auriculares/diadema.png", "href": "./categories/sonido/auriculares/diadema" },
+            { "typeId": 2, "title": "in-ear", "src": "/subcategory/auriculares/inear.png", "href": "./categories/sonido/auriculares/inear" },
+            { "typeId": 3, "title": "wireless", "src": "/subcategory/auriculares/wireless.png", "href": "./categories/sonido/auriculares/wireless" }
+          ]
+        },
+        { 
+          "title": "parlantes", 
+          "subCategoryId": 12, 
+          "src": "/category/sonido/parlantes.png", 
+          "href": "./categories/sonido/parlantes",
+          "types": [
+            { "typeId": 1, "title": "Bluetooth", "src": "/subcategory/parlantes/bluetooth.png", "href": "./categories/sonido/parlantes/bluetooth" },
+            { "typeId": 2, "title": "Home Theater", "src": "/subcategory/parlantes/hometheater.png", "href": "./categories/sonido/parlantes/hometheater" },
+            { "typeId": 3, "title": "Portátil", "src": "/subcategory/parlantes/portatil.png", "href": "./categories/sonido/parlantes/portatil" }
+          ]
+        },
+        { 
+          "title": "barras de sonido", 
+          "subCategoryId": 13, 
+          "src": "/category/sonido/barra_sonido.png", 
+          "href": "./categories/sonido/barra_sonido",
+          "types": [
+            { "typeId": 1, "title": "tv", "src": "/subcategory/barras_sonido/tv.png", "href": "./categories/sonido/barra_sonido/tv" },
+            { "typeId": 2, "title": "home theater", "src": "/subcategory/barras_sonido/hometheater.png", "href": "./categories/sonido/barra_sonido/hometheater" },
+            { "typeId": 3, "title": "portátil", "src": "/subcategory/barras_sonido/portatil.png", "href": "./categories/sonido/barra_sonido/portatil" }
+          ]
+        }
+      ]
+    },
+    {
+      "categoryId": 5,
+      "title": "Home",
+      "src": "/category/hogar.png",
+      "srcMenu": "/category/circle/home.png",
+      "href": "./categories/home",
+      "subcategory": [
+        { 
+          "title": "componentes", 
+          "subCategoryId": 14, 
+          "src": "/category/pc/componentes.png", 
+          "href": "./categories/pc/componentes",
+          "types": [
+            { "typeId": 1, "title": "CPU", "src": "/subcategory/componentes/cpu.png", "href": "./categories/pc/componentes/cpu" },
+            { "typeId": 2, "title": "GPU", "src": "/subcategory/componentes/gpu.png", "href": "./categories/pc/componentes/gpu" },
+            { "typeId": 3, "title": "RAM", "src": "/subcategory/componentes/ram.png", "href": "./categories/pc/componentes/ram" }
+          ]
+        },
+        { 
+          "title": "accesorios", 
+          "subCategoryId": 15, 
+          "src": "/category/pc/accesorios.png", 
+          "href": "./categories/pc/accesorios",
+          "types": [
+            { "typeId": 1, "title": "teclados", "src": "/subcategory/accesorios/teclados.png", "href": "./categories/pc/accesorios/teclados" },
+            { "typeId": 2, "title": "ratones", "src": "/subcategory/accesorios/ratones.png", "href": "./categories/pc/accesorios/ratones" },
+            { "typeId": 3, "title": "monitores", "src": "/subcategory/accesorios/monitores.png", "href": "./categories/pc/accesorios/monitores" }
+          ]
+        },
+        { 
+          "title": "laptops", 
+          "subCategoryId": 16, 
+          "src": "/category/pc/laptops.png", 
+          "href": "./categories/pc/laptops",
+          "types": [
+            { "typeId": 1, "title": "gaming", "src": "/subcategory/laptops/gaming.png", "href": "./categories/pc/laptops/gaming" },
+            { "typeId": 2, "title": "oficina", "src": "/subcategory/laptops/oficina.png", "href": "./categories/pc/laptops/oficina" },
+            { "typeId": 3, "title": "portátil", "src": "/subcategory/laptops/portatil.png", "href": "./categories/pc/laptops/portatil" }
+          ]
+        }
+      ]
+    }
+  ]

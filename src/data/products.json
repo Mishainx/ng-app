@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Joystick Pro Gamer",
+    "description": "Joystick de alta precisión con retroalimentación táctil.",
+    "category": "consolas",
+    "subcategory": "joysticks",
+    "type": "Accesorio",
+    "img": "/products/joystick.png",
+    "price": 59.99,
+    "stock": 150,
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "Consola Next-Gen",
+    "description": "Consola de última generación con capacidades de juego avanzadas.",
+    "category": "consolas",
+    "subcategory": "consolas",
+    "type": "Consola",
+    "img": "/products/sillon-gamer.png",
+    "price": 399.99,
+    "stock": 100,
+    "featured": true
+  },
+  {
+    "id": 3,
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado mecánico con retroiluminación RGB personalizable.",
+    "category": "accesorios",
+    "subcategory": "teclados",
+    "type": "Accesorio",
+    "img": "/products/auriculares-gato.png",
+    "price": 89.99,
+    "stock": 80,
+    "featured": false
+  },
+  {
+    "id": 4,
+    "title": "Silla Gaming Ergonómica",
+    "description": "Silla ergonómica diseñada para largas sesiones de juego.",
+    "category": "sillas",
+    "subcategory": "gaming",
+    "type": "Mobiliario",
+    "img": "/products/mouse-gamer.png",
+    "price": 299.99,
+    "stock": 50,
+    "featured": true
+  },
+  {
+    "id": 5,
+    "title": "Mouse Inalámbrico",
+    "description": "Mouse inalámbrico con sensor de alta precisión.",
+    "category": "accesorios",
+    "subcategory": "mouses",
+    "type": "Accesorio",
+    "img": "/products/monopatin.png",
+    "price": 49.99,
+    "stock": 120,
+    "featured": true
+  },
+  {
+    "id": 6,
+    "title": "Mouse Inalámbrico",
+    "description": "Mouse inalámbrico con sensor de alta precisión.",
+    "category": "accesorios",
+    "subcategory": "mouses",
+    "type": "Accesorio",
+    "img": "/products/monopatin.png",
+    "price": 49.99,
+    "stock": 120,
+    "featured": true
+  }, 
+   {
+    "id": 6,
+    "title": "Mouse Inalámbrico",
+    "description": "Mouse inalámbrico con sensor de alta precisión.",
+    "category": "accesorios",
+    "subcategory": "mouses",
+    "type": "Accesorio",
+    "img": "/products/monopatin.png",
+    "price": 49.99,
+    "stock": 120,
+    "featured": true
+  },
+  {
+    "id": 6,
+    "title": "Mouse Inalámbrico",
+    "description": "Mouse inalámbrico con sensor de alta precisión.",
+    "category": "accesorios",
+    "subcategory": "mouses",
+    "type": "Accesorio",
+    "img": "/products/monopatin.png",
+    "price": 49.99,
+    "stock": 120,
+    "featured": true
+  }
+]
