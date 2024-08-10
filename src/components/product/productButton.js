@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CounterButton from "./CounterButton";
+import CounterButton from "./counterButton";
 import CtaProduct from "./ctaProduct";
 
 export default function ProductButton() {
