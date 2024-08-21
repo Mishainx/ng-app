@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import products from "../../data/products.json";
-import ProductCard from "./productCard";
+import ProductCard2 from "./productCard2";
 
 const FeaturedProducts = () => {
   const containerRef = useRef(null);
@@ -39,22 +39,22 @@ const FeaturedProducts = () => {
   const duplicatedProducts = [...featuredProducts, ...featuredProducts];
 
   return (
-    <section className="relative py-12 px-4 mx-auto max-w-6xl">
+    <section className="relative py-10 px-4 mx-auto max-w-6xl">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold">Destacados</h2>
         <div className="inline-block w-24 h-1 bg-red-500 mt-2"></div>
       </div>
-      <div className="overflow-hidden w-full flex items-center px-4">
-        <div
-          ref={containerRef}
-          className="flex space-x-6 p-2 overflow-x-hidden whitespace-nowrap"
-        >
-          {duplicatedProducts.map((product, index) => (
-            <div className="inline-block" key={`${product.id}-${index}`}>
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+      <div className=" w-full flex items-center px-3">
+      <div
+  ref={containerRef}
+  className="flex flex-s space-x-2 overflow-x-hidden h-full"
+>
+  {duplicatedProducts.map((product, index) => (
+    <div className="inline-block h-full p-1" key={`${product.id}-${index}`}>
+      <ProductCard2 product={product} />
+    </div>
+  ))}
+</div>
       </div>
     </section>
   );

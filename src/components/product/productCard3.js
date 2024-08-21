@@ -5,7 +5,7 @@ import WhatsappIcon from "@/icons/WhatsappIcon";
 import EyeIcon from "@/icons/EyeIcon";
 import PlusIcon from "@/icons/PlusIcon";
 
-export default function ProductCard3({ product }) {
+export default function ProductCard2({ product }) {
     const [showDetail, setShowDetail] = useState(false);
 
     const handleQuickviewClick = () => {

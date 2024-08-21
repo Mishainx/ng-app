@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function NavCard({ imgSrc, title, href }) {
   return (
-    <div className="group relative w-full max-w-sm overflow-hidden rounded-lg bg-card shadow-xl transition-transform duration-300 hover:scale-105 xs:w-10/12 sm:w-10/12">
+    <div className="group relative w-full max-w-sm overflow-hidden rounded-lg bg-card shadow-xl transition-transform duration-300 hover:scale-105 xs:w-10/12">
       <Link href={href || '#'}>
         <div className="absolute inset-0 bg-gradient-to-r from-black via-80% via-slate-900 to-slate-700 z-10"></div>
         <Image
