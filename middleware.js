@@ -33,7 +33,7 @@ export async function middleware(request) {
     }
   } catch (error) {
     console.error('Error al verificar el token:', error);
-    return NextResponse.redirect(new URL('/proximamente', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 }
 
