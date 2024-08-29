@@ -15,9 +15,13 @@ const MenuList = ({ open, handleClose, pages, categories }) => {
     setSelectedCategory(null);
   };
 
+  const handleLinkClick = () => {
+    handleClose(); // Cierra el menú al hacer clic en un enlace
+  };
+
   return (
     <div className={`${open ? 'visible opacity-100' : 'invisible opacity-0'} transition-all fixed inset-0 bg-gray-700/60 flex justify-end z-40`}>
-      <aside className={`${!open ? 'translate-x-full md:translate-x-48 rounded-l-xl' : 'translate-x-0'} bg-slate-100 transition-all duration-500 w-full md:w-56 flex flex-col items-center p-2 shadow-lg ${open ? 'rounded-none' : ''}`}>
+      <aside className={`${!open ? 'translate-x-full md:translate-x-48 rounded-l-xl' : 'translate-x-0'} bg-slate-100 transition-all duration-700 w-full md:w-56 flex flex-col items-center p-2 shadow-lg ${open ? 'rounded-none' : ''}`}>
         <div onClick={handleClose} className="cursor-pointer mb-4 flex justify-center w-full">
           <MenuIcon width={25} height={25} />
         </div>
@@ -39,6 +43,7 @@ const MenuList = ({ open, handleClose, pages, categories }) => {
                     href={selectedCategory.href}
                     className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
                     prefetch={false}
+                    onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
                   >
                     <Image src={selectedCategory.srcMenu} alt={selectedCategory.title} width={24} height={24} className="w-6 h-6" />
                     <span className="text-xs">Todos los productos</span>
@@ -50,6 +55,7 @@ const MenuList = ({ open, handleClose, pages, categories }) => {
                       href={subCategory.href}
                       className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
                       prefetch={false}
+                      onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
                     >
                       <Image src={subCategory.src} alt={subCategory.title} width={24} height={24} className="w-6 h-6" />
                       <span className="text-xs">{subCategory.title}</span>
@@ -65,6 +71,7 @@ const MenuList = ({ open, handleClose, pages, categories }) => {
                       href={page.href}
                       className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
                       prefetch={false}
+                      onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
                     >
                       {page.src}
                       <span className="text-xs">{page.title}</span>
@@ -96,4 +103,3 @@ const MenuList = ({ open, handleClose, pages, categories }) => {
 };
 
 export default MenuList;
-

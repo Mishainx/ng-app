@@ -1,42 +1,51 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import products from "../../data/products.json";
-import ProductCard2 from "./productCard2";
+import ProductCard from "./productCard";
 
 const FeaturedProducts = () => {
   const containerRef = useRef(null);
+  const [startTouchX, setStartTouchX] = useState(0);
+  const [isTouching, setIsTouching] = useState(false);
 
-  useEffect(() => {
-    const container = containerRef.current;
+  const scrollLeft = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ left: -200, behavior: "smooth" });
+    }
+  };
 
-    if (!container) return;
+  const scrollRight = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ left: 200, behavior: "smooth" });
+    }
+  };
 
-    const scrollStep = 1.2; // Velocidad del desplazamiento más suave
-    const scrollInterval = 16; // Intervalo de actualización para suavidad
-    let scrollAmount = 0;
+  const handleTouchStart = (e) => {
+    setIsTouching(true);
+    setStartTouchX(e.touches[0].clientX);
+  };
 
-    const animateScroll = () => {
-      if (scrollAmount >= container.scrollWidth / 2) {
-        container.scrollLeft = 0;
-        scrollAmount = 0;
+  const handleTouchMove = (e) => {
+    if (!isTouching) return;
+    const touchEndX = e.touches[0].clientX;
+    const diffX = startTouchX - touchEndX;
+    
+    if (Math.abs(diffX) > 50) { // Adjust sensitivity as needed
+      if (diffX > 0) {
+        scrollRight();
       } else {
-        scrollAmount += scrollStep;
-        container.scrollLeft = scrollAmount;
+        scrollLeft();
       }
+      setIsTouching(false); // End touch event after scrolling
+    }
+  };
 
-      setTimeout(() => requestAnimationFrame(animateScroll), scrollInterval); // Continuar la animación
-    };
+  const handleTouchEnd = () => {
+    setIsTouching(false);
+  };
 
-    animateScroll(); // Iniciar la animación
-
-    // Cleanup on component unmount
-    return () => cancelAnimationFrame(animateScroll);
-  }, []);
-
-  // Duplicate the products to create an infinite scroll effect
-  const featuredProducts = products.filter(product => product.featured);
-  const duplicatedProducts = [...featuredProducts, ...featuredProducts];
+  const featuredProducts = products.filter((product) => product.featured);
 
   return (
     <section className="relative py-10 px-4 mx-auto max-w-6xl">
@@ -44,17 +53,34 @@ const FeaturedProducts = () => {
         <h2 className="text-3xl font-bold">Destacados</h2>
         <div className="inline-block w-24 h-1 bg-red-500 mt-2"></div>
       </div>
-      <div className=" w-full flex items-center px-3">
-      <div
-  ref={containerRef}
-  className="flex flex-s space-x-2 overflow-x-hidden h-full"
->
-  {duplicatedProducts.map((product, index) => (
-    <div className="inline-block h-full p-1" key={`${product.id}-${index}`}>
-      <ProductCard2 product={product} />
-    </div>
-  ))}
-</div>
+      <div className="relative flex items-center">
+        <button
+          className="w-10 h-10 flex items-center justify-center p-2 bg-white rounded-full shadow-md z-10"
+          onClick={scrollLeft}
+          style={{ top: '50%', transform: 'translateY(-50%)' }}
+        >
+          &lt;
+        </button>
+        <div
+          ref={containerRef}
+          className="flex space-x-2 overflow-x-hidden h-full px-10 scrollbar-hide ml-10 mr-10"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {featuredProducts.map((product, index) => (
+            <div className="flex items-stretch p-2" key={`${product.id}-${index}`}>
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+        <button
+          className="w-10 h-10 flex items-center justify-center p-2 bg-white rounded-full shadow-md z-10"
+          onClick={scrollRight}
+          style={{ top: '50%', transform: 'translateY(-50%)' }}
+        >
+          &gt;
+        </button>
       </div>
     </section>
   );

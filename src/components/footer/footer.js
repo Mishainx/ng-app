@@ -5,6 +5,7 @@ import MapsIcon from "@/icons/MapsIcon";
 import WhatsappIcon from "@/icons/WhatsappIcon";
 import YoutubeIcon from "@/icons/YoutubeIcon";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -25,20 +26,27 @@ const Footer = () => {
             </div>
           </div>
           {/* Info */}
-          <div className="w-full lg:w-1/4 text-xs flex items-center justify-center my-7">
-            <ul className="w-full items-center flex flex-col  leading-relaxed">
-              <h3 className="text-slate-50 text-xl font-bold">Info</h3>
-              <li className="flex  gap-3 cursor-pointer hover:text-white transition-colors duration-300">
+          <div className="w-full lg:w-1/4 text-xs flex my-7">
+            <ul className="w-full items-center flex flex-col  m-auto leading-relaxed">
+              <h3 className="text-slate-50 text-xl font-bold ">Info</h3>
+              <li className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
+              <Link href="https://maps.app.goo.gl/cCr4VrpNMuDqTppJA" className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
                 <MapsIcon />
-                <p className="">Av. Corrientes 2416, CABA</p>
+                <p>Av. Corrientes 2416, CABA</p>
+              </Link>
               </li>
-              <li className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300 ">
-                <MailIcon />
-                <p>nippongame@gmail.com</p>
+              <li >
+                <Link href="mailto:nippongame@gmail.com" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                  <MailIcon />
+                  <p>nippongame@gmail.com</p>
+                </Link>
+
               </li>
-              <li className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-30">
-                <WhatsappIcon />
-                <p>+54911222222</p>
+              <li >
+                <Link href="https://wa.me/5491154041650?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                  <WhatsappIcon />
+                  <p>+54911222222</p>
+                </Link>
               </li>
             </ul>
           </div>
@@ -47,16 +55,23 @@ const Footer = () => {
             <ul className="w-full items-center flex flex-col  m-auto leading-relaxed">
               <h3 className="text-slate-50 text-xl font-bold ">Info</h3>
               <li className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
+              <Link href="https://maps.app.goo.gl/cCr4VrpNMuDqTppJA" className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
                 <MapsIcon />
                 <p>Av. Corrientes 2416, CABA</p>
+              </Link>
               </li>
-              <li className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
-                <MailIcon />
-                <p>nippongame@gmail.com</p>
+              <li >
+                <Link href="mailto:nippongame@gmail.com" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                  <MailIcon />
+                  <p>nippongame@gmail.com</p>
+                </Link>
+
               </li>
-              <li className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
-                <WhatsappIcon />
-                <p>+54911222222</p>
+              <li >
+                <Link href="https://wa.me/5491154041650?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                  <WhatsappIcon />
+                  <p>+54911222222</p>
+                </Link>
               </li>
             </ul>
           </div>

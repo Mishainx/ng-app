@@ -6,7 +6,7 @@ import Link from "next/link";
 import categories from "../../../data/categories.json";
 
 const CategoriesNav = () => {
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const [scrollLeft, setCategoriesList, setScrollLeft] = useState(0);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
 

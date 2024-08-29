@@ -2,7 +2,11 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./app/*"],
-      "@/icons/*": ["./src/icons/*"]
+      "@/context/*": ["./src/context/*"],
+      "@/icons/*": ["./src/icons/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/firebase/*": ["./src/firebase/*"],
+      "@/utils/*": ["./src/utils/*"],
     }
   }
 }

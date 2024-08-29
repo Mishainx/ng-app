@@ -27,8 +27,12 @@ export default function ProductDetail({ product, onClose }) {
                     <p className="">{product.category}</p>
                     <h2 className="text-xl font-bold text-white ">{product.title}</h2>
                     <p className="">{product.description}</p>
+                    <p className="text-xs">
+                        {`Presentación: ${product.shortDescription.charAt(0).toUpperCase()}${product.shortDescription.slice(1)}`}
+                    </p>
                     <p className=" mb-4">{`$${product.price}`}</p>
                 </div>
+                
                 <ProductButton/>
             </div>
         </div>

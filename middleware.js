@@ -1,19 +1,45 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
- 
-// This function can be marked `async` if using `await` inside
-export function middleware(request) {
-    const cookieStore = cookies()
-    const cookie = cookieStore.get('ng-ct')
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
- if(!cookie){
-    return NextResponse.redirect(new URL('/login', request.url))
- }
+export async function middleware(request) {
+  const { pathname } = new URL(request.url);
 
+  if (pathname.startsWith('/_next/') || pathname.startsWith('/static/')) {
+    return NextResponse.next();
+  }
 
-return NextResponse.next()
+  const cookieStore = cookies();
+  const cookie = cookieStore.get('ng-ct');
+
+  if (!cookie) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // Verifica el token en la API
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: cookie.value }) // Envía el token en el cuerpo de la solicitud
+    });
+
+    if (response.ok) {
+      // Token es válido
+      return NextResponse.next();
+    } else {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  } catch (error) {
+    console.error('Error al verificar el token:', error);
+    return NextResponse.redirect(new URL('/proximamente', request.url));
+  }
 }
-// See "Matching Paths" below to learn more
+
 export const config = {
-  matcher: '/admin/:path*',
-}
+   matcher: [
+     '/admin/:path*', // Aplica a todas las rutas bajo /admin
+   ],
+ };
+ 

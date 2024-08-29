@@ -5,9 +5,9 @@ import ProductsIcon from "@/icons/ProductsIcon";
 import CartIcon from "@/icons/CartIcon";
 
 const pages=[
-  {title:"Home",href:"/",src:<HomeIcon width="20" height="20"/>},
-  {title:"Productos",href:"/catalogo",src:<ProductsIcon width="20" height="20" />},
-  {title:"Mis compras",href:"/compras",src:<CartIcon width="20" height="20"/>},
+  {title:"Home", href:"/",src:<HomeIcon width="20" height="20"/>},
+  {title:"Productos", href:"/catalogo",src:<ProductsIcon width="20" height="20" />},
+  {title:"Mi pedido", href:"/pedidos",src:<CartIcon width="20" height="20"/>},
 ]
 
 
