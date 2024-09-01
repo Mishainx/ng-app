@@ -70,6 +70,7 @@ const LoginForm = () => {
           value={values.password}
           required
           placeholder="Tu contraseña"
+          autoComplete="on"
           className="p-3 rounded w-full border border-gray-700 bg-gray-700 text-white mb-4 focus:outline-none focus:border-red-500"
           name="password"
           onChange={handleChange}
