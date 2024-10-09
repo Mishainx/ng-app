@@ -1,47 +1,6 @@
-"use client"
-
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import categoriesData from '../../../../src/data/categories.json'; // Import the JSON file
-import ProductList from '../../../../src/components/product/productList';
-import Link from 'next/link';
 
-export default function Categories({ params }) {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
-  const [selectedType, setSelectedType] = useState(null); // New state for types
-
-  useEffect(() => {
-    // Filter the category based on params
-    const category = categoriesData.find(cat => cat.href.includes(params.category));
-    setSelectedCategory(category);
-  }, [params.category]);
-
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-
-  useEffect(() => {
-    const container = document.getElementById("subcategories-container");
-    if (container) {
-      setIsOverflowing(container.scrollWidth > container.clientWidth);
-    }
-  }, [selectedCategory]);
-
-  const handleScrollLeft = () => {
-    const container = document.getElementById("subcategories-container");
-    if (container) {
-      container.scrollBy({ left: -150, behavior: "smooth" });
-      setScrollLeft(container.scrollLeft - 150);
-    }
-  };
-
-  const handleScrollRight = () => {
-    const container = document.getElementById("subcategories-container");
-    if (container) {
-      container.scrollBy({ left: 150, behavior: "smooth" });
-      setScrollLeft(container.scrollLeft + 150);
-    }
-  };
+export default function Subcategories({ params }) {
 
   return (
     <main>

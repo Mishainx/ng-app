@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { collection, addDoc,getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db, storage } from '@/firebase/config';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { cookies } from 'next/headers';
 import { authAdmin } from '@/firebase/authManager';
-import { generateSequentialSku } from '../../../src/utils/createSku';
+import { createSlug, slugExists } from '@/utils/createSlug';
 
 // `GET` para obtener los valores actuales de las categorías
 export const GET = async () => {
@@ -61,7 +61,8 @@ export const POST = async (req) => {
     const title = formData.get('title');
     const imgFile = formData.get('img'); // Archivo de imagen principal
     const iconFile = formData.get('icon'); // Archivo del ícono
-    let createdAt = formData.get('createdAt'); // La fecha como string
+    let createdAt = formData.get('createdAt');
+    const showInMenu = formData.get('showInMenu') // La fecha como string
 
     // Validar los datos
     if (!title || typeof title !== 'string' || title.length > 40) {
@@ -70,6 +71,17 @@ export const POST = async (req) => {
         { status: 400 }
       );
     }
+
+      // Validar el campo showInMenu: debe ser "true" o "false"
+  if (showInMenu !== 'true' && showInMenu !== 'false') {
+    return NextResponse.json(
+      { message: 'Validation error: showInMenu must be either "true" or "false"' },
+      { status: 400 }
+    );
+  }
+
+  // Convertir showInMenu a booleano
+  const showInMenuBool = showInMenu === 'true';
 
     if (!imgFile || !(imgFile instanceof Blob)) {
       return NextResponse.json(
@@ -101,21 +113,21 @@ export const POST = async (req) => {
       );
     }
 
-    // Generar SKU secuencial
-    const sku = await generateSequentialSku('categories');
-
     // Si no se proporciona la fecha, usar la fecha actual
     if (!createdAt) {
       createdAt = new Date().toISOString(); // Formato ISO
     }
 
+    // Generar el slug a partir del título
+    const uniqueSlug = await createSlug(title, slugExists);
+
     // Subir la imagen principal a Firebase Storage
-    const imgStorageRef = ref(storage, `categories/${sku}_${imgFile.name}`);
+    const imgStorageRef = ref(storage, `categories/${imgFile.name}`);
     await uploadBytes(imgStorageRef, imgFile);
     const imgUrl = await getDownloadURL(imgStorageRef);
 
     // Subir el icono a Firebase Storage
-    const iconStorageRef = ref(storage, `categories/${sku}_icon_${iconFile.name}`);
+    const iconStorageRef = ref(storage, `categories/icon_${iconFile.name}`);
     await uploadBytes(iconStorageRef, iconFile);
     const iconUrl = await getDownloadURL(iconStorageRef);
 
@@ -124,9 +136,10 @@ export const POST = async (req) => {
       title: title,
       img: imgUrl,
       icon: iconUrl,
-      sku: sku,
-      subcategory: [],
+      slug: uniqueSlug, // Añadir el slug al documento
+      subcategories: [],
       createdAt: createdAt,
+      showInMenu: showInMenuBool,
     });
 
     return NextResponse.json(

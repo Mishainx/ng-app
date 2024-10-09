@@ -17,7 +17,7 @@ export default function ProductDetail({ product, onClose }) {
                 <div className="w-full h-32 flex justify-center items-center">
                     <Image
                         src={product.img}
-                        alt={`${product.title} imagen`}
+                        alt={`${product.name} imagen`}
                         width={250}
                         height={250}
                         className=" h-auto rounded relative  bottom-10"
@@ -25,7 +25,7 @@ export default function ProductDetail({ product, onClose }) {
                 </div>
                 <div>
                     <p className="">{product.category}</p>
-                    <h2 className="text-xl font-bold text-white ">{product.title}</h2>
+                    <h2 className="text-xl font-bold text-white ">{product.name}</h2>
                     <p className="">{product.description}</p>
                     <p className="text-xs">
                         {`Presentación: ${product.shortDescription.charAt(0).toUpperCase()}${product.shortDescription.slice(1)}`}

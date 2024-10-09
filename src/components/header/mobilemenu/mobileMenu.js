@@ -2,7 +2,6 @@
 import MenuIcon from "@/icons/MenuIcon";
 import MenuList from "../menulist/menuList";
 import { useState } from "react";
-import categories from "../../../data/categories.json"
 
 export default function MobileMenu({ pages }) {
     const [open, setOpen] = useState(false);
@@ -16,7 +15,7 @@ export default function MobileMenu({ pages }) {
                 <MenuIcon width={25} height={25}/>
             </div>
 
-            <MenuList open={open} handleClose={handleClose} pages={pages} categories={categories} />
+            <MenuList open={open} handleClose={handleClose} pages={pages} />
         </>
     );
 }

@@ -17,7 +17,7 @@ export const CategoriesProvider = ({ children }) => {
           throw new Error('Error al traer las categorías');
         }
         const data = await response.json();
-        setCategories(data);
+        setCategories(data.payload);
       } catch (error) {
         setError(error.message);
       } finally {

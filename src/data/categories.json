@@ -4,7 +4,7 @@
       "title": "Gaming",
       "src": "/category/gaming-section-2.jpg",
       "srcMenu":"/category/circle/gaming.png",
-      "href": "./categories/gaming",
+      "href": "./categorias/gaming",
       "subcategory": [
         { 
           "title": "joysticks", 
@@ -67,7 +67,7 @@
       "title": "Holder",
       "src": "/category/holders-section.png",
       "srcMenu":"/category/circle/holders.png",
-      "href": "./categories/holder",
+      "href": "./categorias/holder",
       "subcategory": [
         { 
           "title": "soporte tv", 
@@ -120,7 +120,7 @@
       "title": "Movilidad",
       "src": "/category/movilidad.png",
       "srcMenu":"/category/circle/movilidad.png", 
-      "href": "/category/movilidad.png",
+      "href": "/categorias/movilidad.png",
       "subcategory": [
         { 
           "title": "monopatín", 
@@ -140,7 +140,7 @@
       "title": "Sonido",
       "src": "/category/sonido-section.png",
       "srcMenu":"/category/circle/sonido.png",
-      "href": "./categories/sonido",
+      "href": "./categorias/sonido",
       "subcategory": [
         { 
           "title": "auriculares", 
@@ -182,7 +182,7 @@
       "title": "Home",
       "src": "/category/hogar.png",
       "srcMenu": "/category/circle/home.png",
-      "href": "./categories/home",
+      "href": "./categorias/home",
       "subcategory": [
         { 
           "title": "componentes", 

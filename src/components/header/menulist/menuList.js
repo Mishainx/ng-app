@@ -1,103 +1,184 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Importa el componente Image
+import Image from "next/image";
 import MenuIcon from "@/icons/MenuIcon";
-import ArrowIcon from "@/icons/ArrowIcon";
+import HomeIcon from "@/icons/HomeIcon"; // Asegúrate de tener este ícono
+import { useCategories } from "@/context/CategoriesContext";
+import { capitalizeFirstLetter } from "@/utils/stringsManager";
 
-const MenuList = ({ open, handleClose, pages, categories }) => {
+const MenuList = ({ open, handleClose }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isMenuVisible, setIsMenuVisible] = useState(open);
+  const { categories } = useCategories();
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-  };
-
-  const handleBackToCategories = () => {
-    setSelectedCategory(null);
-  };
+  useEffect(() => {
+    if (open) {
+      setIsMenuVisible(true);
+    } else {
+      const timer = setTimeout(() => setIsMenuVisible(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   const handleLinkClick = () => {
-    handleClose(); // Cierra el menú al hacer clic en un enlace
+    handleClose();
   };
 
+  const handleCategoryClick = (category) => {
+    setSelectedCategory((prev) => (prev === category ? null : category));
+  };
+
+  const gamingCategory = categories.find(category => category.title.toLowerCase() === "gaming" && category.showInMenu);
+  const otherCategories = categories.filter(category => category.title.toLowerCase() !== "gaming" && category.showInMenu);
+
   return (
-    <div className={`${open ? 'visible opacity-100' : 'invisible opacity-0'} transition-all fixed inset-0 bg-gray-700/60 flex justify-end z-40`}>
-      <aside className={`${!open ? 'translate-x-full md:translate-x-48 rounded-l-xl' : 'translate-x-0'} bg-slate-100 transition-all duration-700 w-full md:w-56 flex flex-col items-center p-2 shadow-lg ${open ? 'rounded-none' : ''}`}>
-        <div onClick={handleClose} className="cursor-pointer mb-4 flex justify-center w-full">
-          <MenuIcon width={25} height={25} />
-        </div>
-        <nav className="flex-1 overflow-auto w-full">
-          <ul className="grid gap-1 w-full">
-            {selectedCategory ? (
-              <>
-                <li className="w-full rounded-lg">
-                  <button
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
-                    onClick={handleBackToCategories}
-                  >
-                    <ArrowIcon width={15} height={15} className='transform rotate-180' />
-                    <span className="text-xs"></span>
-                  </button>
-                </li>
-                <li className="w-full rounded-lg">
-                  <Link
-                    href={selectedCategory.href}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
-                    prefetch={false}
-                    onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
-                  >
-                    <Image src={selectedCategory.srcMenu} alt={selectedCategory.title} width={24} height={24} className="w-6 h-6" />
-                    <span className="text-xs">Todos los productos</span>
-                  </Link>
-                </li>
-                {selectedCategory.subcategory.map((subCategory) => (
-                  <li key={subCategory.subCategoryId} className="w-full rounded-lg">
-                    <Link
-                      href={subCategory.href}
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
-                      prefetch={false}
-                      onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
-                    >
-                      <Image src={subCategory.src} alt={subCategory.title} width={24} height={24} className="w-6 h-6" />
-                      <span className="text-xs">{subCategory.title}</span>
-                    </Link>
-                  </li>
-                ))}
-              </>
-            ) : (
-              <>
-                {pages.map((page, i) => (
-                  <li key={i} className="w-full rounded-lg">
-                    <Link
-                      href={page.href}
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200"
-                      prefetch={false}
-                      onClick={handleLinkClick} // Cierra el menú al hacer clic en el enlace
-                    >
-                      {page.src}
-                      <span className="text-xs">{page.title}</span>
-                      <div className="flex-grow" /> {/* Espacio flexible para alinear a la derecha */}
-                      <ArrowIcon width={15} height={15} />
-                    </Link>
-                  </li>
-                ))}
-                {categories.map((category) => (
-                  <li key={category.categoryId} className="w-full rounded-lg">
-                    <button
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-700 hover:text-gray-200 w-full"
-                      onClick={() => handleCategoryClick(category)}
-                    >
-                      <Image src={category.srcMenu} alt={category.title} width={24} height={24} className="w-6 h-6" />
-                      <span className="text-xs">{category.title}</span>
-                      <div className="flex-grow" /> {/* Espacio flexible para alinear a la derecha */}
-                      <ArrowIcon width={15} height={15} />
+    <div
+      className={`fixed inset-0 bg-black/70 flex justify-end z-40 transition-opacity duration-500 ease-out ${
+        open ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
+    >
+      {isMenuVisible && (
+        <aside
+          className={`bg-white transition-transform duration-300 w-full md:w-72 flex flex-col items-start p-4 shadow-xl transform ${
+            open ? "translate-x-0" : "translate-x-full opacity-0"
+          }`}
+        >
+          <div
+            onClick={handleClose}
+            className="cursor-pointer mb-4 flex justify-center w-full"
+          >
+            <MenuIcon width={30} height={30} />
+          </div>
+          <nav className="flex-1 overflow-auto w-full">
+            <ul className="space-y-0.5"> {/* Reduce espacio entre elementos */}
+              {/* Link to Home */}
+              <li className="relative">
+                <div className="flex items-center justify-between w-full">
+                  <Link href="/" onClick={handleLinkClick} className="w-full">
+                    <button className="flex items-center space-x-2 text-left w-full p-3 rounded-lg transition-all duration-300 ease-in-out text-gray-800 hover:bg-gray-200 hover:text-gray-600"> {/* Reduce padding */}
+                      <HomeIcon width={24} height={24} /> {/* Icono de home */}
+                      <span className="font-medium">Inicio</span>
                     </button>
+                  </Link>
+                </div>
+              </li>
+
+              {/* Gaming Category */}
+              {gamingCategory?.subcategories?.filter(sub => sub.showInMenu).length > 0 && (
+                <li key={gamingCategory.id} className="relative">
+                  <div className="flex items-center justify-between w-full">
+                    <button
+                      className="w-full flex items-center space-x-2 text-left p-3 rounded-lg transition-all duration-300 ease-in-out text-gray-800 hover:bg-gray-200 hover:text-gray-600"
+                      onClick={() => handleCategoryClick(gamingCategory)}
+                    >
+                      <Image
+                        src={gamingCategory.icon}
+                        alt={gamingCategory.title}
+                        width={24}
+                        height={24}
+                      />
+                      <span className="font-medium">
+                        {capitalizeFirstLetter(gamingCategory.title)}
+                      </span>
+                    </button>
+                    <span
+                      className={`transition-transform duration-100 cursor-pointer ${
+                        selectedCategory === gamingCategory ? "rotate-180 text-red-600" : "text-gray-500"
+                      }`}
+                      onClick={() => handleCategoryClick(gamingCategory)}
+                    >
+                      ▼
+                    </span>
+                  </div>
+                  <ul
+                    className={`mt-2 space-y-1 overflow-hidden transition-max-height duration-300 ease-in-out ${
+                      selectedCategory === gamingCategory ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    {selectedCategory === gamingCategory &&
+                      gamingCategory.subcategories
+                        .filter(sub => sub.showInMenu)
+                        .map((sub) => (
+                          <li key={sub.sku}>
+                            <Link
+                              href={`/categories/${gamingCategory.slug}/${sub.slug}`}
+                              className="block bg-white text-gray-700 hover:text-gray-500 px-4 py-1 rounded"
+                              onClick={handleLinkClick}
+                            >
+                              {capitalizeFirstLetter(sub.title)}
+                            </Link>
+                          </li>
+                        ))}
+                  </ul>
+                </li>
+              )}
+
+              {/* Other Categories */}
+              {otherCategories.map((category) => {
+                const subcategoriesToShow = category.subcategories.filter(sub => sub.showInMenu);
+
+                return (
+                  <li key={category.id} className="relative">
+                    <div className="flex items-center justify-between w-full">
+                      <Link
+                        href={`/categorias/${category.slug}`}
+                        onClick={handleLinkClick}
+                        className="w-full"
+                      >
+                        <button
+                          className={`flex items-center space-x-2 text-left w-full p-3 rounded-lg transition-all duration-300 ease-in-out ${
+                            selectedCategory === category
+                              ? "bg-gray-100 text-red-600 font-semibold shadow-md"
+                              : "text-gray-800 hover:bg-gray-200 hover:text-gray-600"
+                          }`} // Reduce padding
+                        >
+                          <Image
+                            src={category.icon}
+                            alt={category.title}
+                            width={24}
+                            height={24}
+                          />
+                          <span className="font-medium">
+                            {capitalizeFirstLetter(category.title)}
+                          </span>
+                        </button>
+                      </Link>
+                      {subcategoriesToShow.length > 0 && (
+                        <span
+                          className={`transition-transform duration-100 cursor-pointer ${
+                            selectedCategory === category ? "rotate-180 text-red-600" : "text-gray-500"
+                          }`}
+                          onClick={() => handleCategoryClick(category)}
+                        >
+                          ▼
+                        </span>
+                      )}
+                    </div>
+                    <ul
+                      className={`mt-2 space-y-1 overflow-hidden transition-max-height duration-300 ease-in-out ${
+                        selectedCategory === category ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      {selectedCategory === category &&
+                        subcategoriesToShow.map((sub) => (
+                          <li key={sub.sku}>
+                            <Link
+                              href={`/categories/${category.slug}/${sub.slug}`}
+                              className="block bg-white text-gray-700 hover:text-gray-500 px-4 py-1 rounded"
+                              onClick={handleLinkClick}
+                            >
+                              {capitalizeFirstLetter(sub.title)}
+                            </Link>
+                          </li>
+                        ))}
+                    </ul>
                   </li>
-                ))}
-              </>
-            )}
-          </ul>
-        </nav>
-      </aside>
+                );
+              })}
+            </ul>
+          </nav>
+        </aside>
+      )}
     </div>
   );
 };

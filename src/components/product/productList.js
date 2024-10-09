@@ -1,8 +1,11 @@
 import ProductCard from './productCard';
 
-import products from '../../../src/data/products.json';
+export default async function ProductList() {
 
-export default function ProductList() {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`,{cache:"no-store"}); // Ajusta la URL según sea necesario
+  const data = await response.json()
+  const products = data.payload
+
     return (
       <div className="w-full p-5 gap-4 flex flex-wrap justify-center">
                         {products.map(product => (
