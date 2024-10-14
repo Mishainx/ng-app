@@ -1,17 +1,39 @@
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
 export default async function Catalogo() {
+  let products = [];
+  let categories = [];
+  
+  try {
+    // Fetch de productos
+    const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, { next: { revalidate: 3600 } });    
+    if (!productsResponse.ok) {
+      throw new Error(`Error fetching products: ${productsResponse.statusText}`);
+    }
+    
+    const productsData = await productsResponse.json();
+    products = productsData.payload;
 
-  // Fetch de productos
-  const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {next:{revalidate:3600}});
-  console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
-  const productsData = await productsResponse.json();
-  const products = productsData.payload;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return <div>Error fetching products: {error.message}</div>; // Manejo del error
+  }
 
-  // Fetch de categorías
-  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {next:{revalidate:3600}});
-  const categoriesData = await categoriesResponse.json();
-  const categories = categoriesData.payload;
+  try {
+    // Fetch de categorías
+    const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, { next: { revalidate: 3600 } });
+
+    if (!categoriesResponse.ok) {
+      throw new Error(`Error fetching categories: ${categoriesResponse.statusText}`);
+    }
+    
+    const categoriesData = await categoriesResponse.json();
+    categories = categoriesData.payload;
+
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+    return <div>Error fetching categories: {error.message}</div>; // Manejo del error
+  }
 
   return (
     <main className="flex flex-col items-center justify-start min-h-screen py-10">
