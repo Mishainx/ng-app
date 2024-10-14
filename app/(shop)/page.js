@@ -17,7 +17,6 @@ export default function Home() {
         <NavCard imgSrc='/navCard/local-nav-card.png' title='Local' href='/local'/>
         <NavCard imgSrc='/navCard/catalogo-nav-card.png' title='Ofertas' href='/ofertas'/>
       </div>
-      <FeaturedProducts/>
     </main>
     </>
 

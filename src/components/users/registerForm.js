@@ -10,12 +10,14 @@ const RegisterForm = () => {
     email: "",
     name: "",
     surname: "",
+    businessName: "", // Agregar el campo Razón Social aquí
     whatsapp: "",
     address: "",
     city: "",
     province: "",
     country: "",
     password: "",
+    cuit: "", // Agregar el campo CUIT aquí
   });
   const [step, setStep] = useState(1);
 
@@ -32,23 +34,22 @@ const RegisterForm = () => {
       if (step < 3) {
         setStep(step + 1);
       } else {
-              // Realizar el fetch POST a la API
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-  
-      // Verificar la respuesta de la API
-      if (response.status === 201) {
-        setSuccess(true);
-      } else {
-        const errorData = await response.json();
-        setError(`Error al registrar el usuario: ${errorData.error}`);
-      }
- 
+        // Realizar el fetch POST a la API
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+
+        // Verificar la respuesta de la API
+        if (response.status === 201) {
+          setSuccess(true);
+        } else {
+          const errorData = await response.json();
+          setError(`Error al registrar el usuario: ${errorData.error}`);
+        }
       }
     } catch (error) {
       setError("Error al registrar el usuario: " + error.message);
@@ -59,7 +60,7 @@ const RegisterForm = () => {
   return (
     <div className="w-full max-w-md mx-auto">
       {success ? (
-        <RegisterMessage/>
+        <RegisterMessage />
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -83,7 +84,7 @@ const RegisterForm = () => {
                 type="text"
                 value={values.name}
                 required
-                placeholder="Name"
+                placeholder="Nombre"
                 className="p-2 rounded w-full border border-gray-700 bg-gray-700 text-white mb-3 focus:outline-none focus:border-red-500 text-sm"
                 name="name"
                 onChange={handleChange}
@@ -92,9 +93,17 @@ const RegisterForm = () => {
                 type="text"
                 value={values.surname}
                 required
-                placeholder="Surname"
+                placeholder="Apellido"
                 className="p-2 rounded w-full border border-gray-700 bg-gray-700 text-white mb-3 focus:outline-none focus:border-red-500 text-sm"
                 name="surname"
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                value={values.businessName}
+                placeholder="Razón Social"
+                className="p-2 rounded w-full border border-gray-700 bg-gray-700 text-white mb-3 focus:outline-none focus:border-red-500 text-sm"
+                name="businessName" // Campo Razón Social
                 onChange={handleChange}
               />
               <input
@@ -113,6 +122,15 @@ const RegisterForm = () => {
                 placeholder="WhatsApp"
                 className="p-2 rounded w-full border border-gray-700 bg-gray-700 text-white mb-3 focus:outline-none focus:border-red-500 text-sm"
                 name="whatsapp"
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                value={values.cuit}
+                required
+                placeholder="CUIT"
+                className="p-2 rounded w-full border border-gray-700 bg-gray-700 text-white mb-3 focus:outline-none focus:border-red-500 text-sm"
+                name="cuit" // Campo CUIT
                 onChange={handleChange}
               />
             </>

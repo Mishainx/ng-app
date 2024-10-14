@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LoginButton from "../loginButton";
+import Order from "@/components/order/Order";
 
 export default function DesktopMenu({ pages }) {
   return (

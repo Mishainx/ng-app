@@ -1,40 +1,91 @@
-import Image from "next/image";
-import ProductButton from "./productButton";
+import Image from 'next/image';
+import { capitalizeFirstLetter, formatPriceToUSD } from '@/utils/stringsManager';
+import ActionButtons from './actionsButtons';
 
-export default function ProductDetail({ product, onClose }) {
-    return (
-        <div className="w-full p-5 fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-75 z-50">
-            <div className=" rounded-lg shadow-lg w-full max-w-lg relative text-white bg-slate-100 text-center text-sm bg-gradient-to-r from-slate-600 to-slate-900">
-                <button
-                    className="absolute top-0 right-0 mt-2 mr-2 text-gray-600"
-                    onClick={onClose}
-                >
-                    &times;
-                </button>
-                <div>
-                    
-                </div>
-                <div className="w-full h-32 flex justify-center items-center">
-                    <Image
-                        src={product.img}
-                        alt={`${product.name} imagen`}
-                        width={250}
-                        height={250}
-                        className=" h-auto rounded relative  bottom-10"
-                    />
-                </div>
-                <div>
-                    <p className="">{product.category}</p>
-                    <h2 className="text-xl font-bold text-white ">{product.name}</h2>
-                    <p className="">{product.description}</p>
-                    <p className="text-xs">
-                        {`Presentación: ${product.shortDescription.charAt(0).toUpperCase()}${product.shortDescription.slice(1)}`}
-                    </p>
-                    <p className=" mb-4">{`$${product.price}`}</p>
-                </div>
-                
-                <ProductButton/>
+// Imagen de fallback si la imagen del producto es null
+const fallbackImage = '/images/default-product.png';
+
+export default function ProductDetail({ product }) {
+  return (
+    <div className="flex flex-col items-center md:flex-row md:items-start gap-10 p-6">
+      {/* Imagen del producto */}
+      <div className="w-full md:w-1/2 flex justify-center">
+        {product.img ? (
+          <Image
+            src={product.img}
+            alt={product.name}
+            width={400}
+            height={400}
+            className="object-cover shadow-lg rounded-lg"
+          />
+        ) : (
+          <Image
+            src={fallbackImage}
+            alt="Imagen no disponible"
+            width={400}
+            height={400}
+            className="object-cover shadow-lg rounded-lg"
+          />
+        )}
+      </div>
+
+      {/* Detalles del producto */}
+      <div className="w-full md:w-1/2">
+        <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left mb-2 flex items-center justify-center md:justify-start">
+          {product.name.toUpperCase()}
+          {product.discount > 0 && (
+            <div className="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-md ml-2">
+              ¡OFERTA!
             </div>
+          )}
+        </h1>
+
+        {/* Mostrar el precio con descuento si existe */}
+        <div className="mb-4 text-center md:text-left">
+          {product.discount > 0 ? (
+            <>
+              <p className="text-xs font-semibold text-red-500 line-through">
+                {formatPriceToUSD(product.price)}
+              </p>
+              <p className="text-2xl font-semibold text-red-500">
+                {formatPriceToUSD(product.price - (product.price * product.discount / 100))}
+              </p>
+            </>
+          ) : (
+            <p className="text-2xl font-semibold text-red-500">
+              {formatPriceToUSD(product.price)}
+            </p>
+          )}
         </div>
-    );
+
+        <div className="text-sm text-gray-700 space-y-2">
+          <p>
+            <span className="font-medium">Presentación: </span>
+            {capitalizeFirstLetter(product.shortDescription)}
+          </p>
+          <p>
+            <span className="font-medium">Descripción: </span>
+            {capitalizeFirstLetter(product.longDescription)}
+          </p>
+          <p>
+            <span className="font-medium">Categoría: </span>
+            {capitalizeFirstLetter(product.category)}
+          </p>
+          <p>
+            <span className="font-medium">Stock: </span>
+            {product.stock ? 'Disponible' : 'Sin stock'}
+          </p>
+          <p>
+            <span className="font-medium">Sku: </span>
+            {product.sku}
+          </p>
+        </div>
+
+        {/* Botones de acción */}
+        <div className="mt-1">
+          <ActionButtons productSku={product.sku} stock={product.stock} />
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -40,9 +40,8 @@ export const POST = async (req) => {
 
     // Recorrer la lista de productos y agregarlos a Firestore
     for (const product of products) {
-      // Validar si la categoría y subcategoría existen
+      // Validar si la categoría existe
       const category = product.category;
-      const subcategory = product.subcategory;
 
       if (!await categoryExists(category)) {
         return NextResponse.json(
@@ -51,11 +50,15 @@ export const POST = async (req) => {
         );
       }
 
-      if (subcategory && !await subcategoryExists(subcategory)) {
-        return NextResponse.json(
-          { message: `Subcategory ${subcategory} does not exist in ${category}` },
-          { status: 400 }
-        );
+      // Validar si todas las subcategorías existen
+      const subcategories = product.subcategory || [];
+      for (const subcategory of subcategories) {
+        if (!await subcategoryExists(subcategory)) {
+          return NextResponse.json(
+            { message: `Subcategory ${subcategory} does not exist in ${category}` },
+            { status: 400 }
+          );
+        }
       }
 
       // Validar si el producto ya existe
@@ -69,8 +72,8 @@ export const POST = async (req) => {
       // Crear slug a partir del título
       const uniqueSlug = await createSlug(product.name, slugExists);
       const productSku = await generateSequentialSku("products")
-      product.slug = uniqueSlug
-      product.sku = productSku
+      product.slug = uniqueSlug;
+      product.sku = productSku;
       const newProduct = { ...product };
 
       // Agregar el producto a Firestore
