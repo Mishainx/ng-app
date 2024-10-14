@@ -8,6 +8,7 @@ export default async function Catalogo() {
     // Fetch de productos
     const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);    
     if (!productsResponse.ok) {
+      console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
       throw new Error(`Error fetching products: ${productsResponse.statusText}`);
     }
     
