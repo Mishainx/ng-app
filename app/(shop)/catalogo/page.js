@@ -1,7 +1,8 @@
+"use client"
+
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
 export default async function Catalogo() {
-
   // Fetch de productos
   const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
   const productsData = await productsResponse.json();
