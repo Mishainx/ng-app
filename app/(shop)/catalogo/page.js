@@ -1,29 +1,44 @@
+"use client"
+
+import { useEffect, useState } from "react";
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
-export default async function Catalogo() {
+export default function Catalogo() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch de productos
-  const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
-  const productsData = await productsResponse.json();
-  const products = productsData.payload;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/API/PRODUCTS`);
+        if (!response.ok) {
+          throw new Error("Error fetching products");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Fetch de categorías
-  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-  const categoriesData = await categoriesResponse.json();
-  const categories = categoriesData.payload;
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen py-10">
-      {/* Título de la página */}
-      <div className="relative text-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-900 inline-block relative">
-          Catálogo
-          <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
-        </h1>
-      </div>
-
-      {/* Pasar productos y categorías al componente */}
-      <CatalogueContainer products={products} categories={categories} />
-    </main>
+    <div>
+      <h1>Lista de Productos</h1>
+      <CatalogueContainer products={products} />
+    </div>
   );
 }
