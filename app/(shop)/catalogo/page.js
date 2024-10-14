@@ -8,7 +8,7 @@ export default async function Catalogo() {
   const products = productsData.payload;
 
   // Fetch de categorías
-  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+  const categoriesResponse = await fetch(`https://www.mikine.com.ar/api/products`);
   const categoriesData = await categoriesResponse.json();
   const categories = categoriesData.payload;
 
