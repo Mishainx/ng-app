@@ -1,32 +1,16 @@
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
 export default async function Catalogo() {
-  let products = [];
-  let categories = [];
-  let error = null;
 
-  try {
-    // Fetch de productos
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/products`
-    const productsResponse = await fetch(url);
-    if (!productsResponse.ok) {
-      console.log(productsResponse.json() )
-      throw new Error("Error al obtener los productos");
-    }
-    const productsData = await productsResponse.json();
-    products = productsData.payload;
+  // Fetch de productos
+  const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+  const productsData = await productsResponse.json();
+  const products = productsData.payload;
 
-    // Fetch de categorías
-    const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-    if (!categoriesResponse.ok) {
-      throw new Error("Error al obtener las categorías");
-    }
-    const categoriesData = await categoriesResponse.json();
-    categories = categoriesData.payload;
-  } catch (err) {
-    error = err.message; // Guarda el error si ocurre
-    console.error(error); // Log del error para depuración
-  }
+  // Fetch de categorías
+  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+  const categoriesData = await categoriesResponse.json();
+  const categories = categoriesData.payload;
 
   return (
     <main className="flex flex-col items-center justify-start min-h-screen py-10">
@@ -38,8 +22,8 @@ export default async function Catalogo() {
         </h1>
       </div>
 
-      {/* Manejo de error */}
-      {error && <div className="text-red-500 mb-4">Error: {error}</div>}
+      {/* Pasar productos y categorías al componente */}
+      <CatalogueContainer products={products} categories={categories} />
     </main>
   );
 }
