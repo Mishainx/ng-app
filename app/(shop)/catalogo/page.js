@@ -38,9 +38,6 @@ export default async function Catalogo() {
 
       {/* Manejo de error */}
       {error && <div className="text-red-500 mb-4">Error: {error}</div>}
-
-      {/* Pasar productos y categorías al componente */}
-      <CatalogueContainer products={products} categories={categories} />
     </main>
   );
 }
