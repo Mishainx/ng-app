@@ -5,7 +5,6 @@ import { authAdmin } from '@/firebase/authManager';
 import { cookies } from 'next/headers';
 
 export const GET = async () => {
-    try {
         // Obtener las cookies y el token
         const cookieStore = cookies();
         const cookie = cookieStore.get('ng-ct');
@@ -30,6 +29,7 @@ export const GET = async () => {
                 { status: 401 }
             );
         }
+        try {
 
         // Obtener el UID del usuario del token
         const uid = decodedToken.uid;
