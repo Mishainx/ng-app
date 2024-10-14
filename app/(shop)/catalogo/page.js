@@ -8,14 +8,12 @@ export default async function Catalogo() {
   try {
     // Fetch de productos
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/products`
-    console.log(url)
     const productsResponse = await fetch(url);
     if (!productsResponse.ok) {
+      console.log(productsResponse )
       throw new Error("Error al obtener los productos");
     }
-    console.log(productsResponse)
     const productsData = await productsResponse.json();
-    console.log(productsData)
     products = productsData.payload;
 
     // Fetch de categorías
