@@ -15,9 +15,8 @@ export default function Order() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch("/api/users/profile", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           method: "GET",
-          credentials: "include",
         });
 
         if (!response.ok) {
@@ -27,6 +26,7 @@ export default function Order() {
         const data = await response.json();
         setUserData(data);
       } catch (err) {
+        console.log("el error es aqui")
         setError(err.message);
       }
     };
@@ -37,7 +37,7 @@ export default function Order() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
         if (!response.ok) {
           throw new Error("Error al obtener los productos");
         }
@@ -55,26 +55,26 @@ export default function Order() {
   }, []);
 
   useEffect(() => {
+    const getCartProducts = () => {
+      if (!userData) return [];
+      return userData.cart.map(item => {
+        const product = products.find(prod => prod.sku === item.productSku);
+        return {
+          ...item,
+          price: product ? product.price : 0,
+          name: product ? product.name : item.productSku,
+        };
+      });
+    };
+
     if (userData) {
       setCartProducts(getCartProducts());
     }
   }, [userData, products]);
 
-  const getCartProducts = () => {
-    if (!userData) return [];
-    return userData.cart.map(item => {
-      const product = products.find(prod => prod.sku === item.productSku);
-      return {
-        ...item,
-        price: product ? product.price : 0,
-        name: product ? product.name : item.productSku,
-      };
-    });
-  };
-
   // Actualizar cantidad de productos en el carrito
   const updateQuantity = (productSku, newQuantity) => {
-    setCartProducts(prevCart => 
+    setCartProducts(prevCart =>
       prevCart.map(item =>
         item.productSku === productSku
           ? { ...item, quantity: newQuantity }

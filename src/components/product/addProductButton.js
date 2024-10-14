@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from 'react';
 import Link from "next/link";
@@ -22,6 +22,7 @@ export default function AddProductButton({ productSku, stock, quantity }) {
         const data = await response.json();
         setUserId(data.id); // Asegúrate de que tu API devuelva el userId
       } catch (error) {
+
         console.error("Failed to fetch user profile:", error);
       } finally {
         setLoading(false);
@@ -37,21 +38,26 @@ export default function AddProductButton({ productSku, stock, quantity }) {
       return;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        productSku,
-        quantity,
-      }),
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productSku,
+          quantity,
+        }),
+      });
 
-    if (!response.ok) {
-      console.error("Error adding product to cart:", await response.json());
-    } else {
-      console.log("Product added to cart successfully");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error adding product to cart: ${errorData.message || 'Unknown error'}`);
+      } else {
+        console.log("Product added to cart successfully");
+      }
+    } catch (error) {
+      console.error("Failed to add product to cart:", error);
     }
   };
 

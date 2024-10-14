@@ -6,7 +6,6 @@ import { cookies } from 'next/headers';
 
 export const GET = async () => {
     try {
-
         // Obtener las cookies y el token
         const cookieStore = cookies();
         const cookie = cookieStore.get('ng-ct');
@@ -25,6 +24,7 @@ export const GET = async () => {
         try {
             decodedToken = await authAdmin.verifyIdToken(token);
         } catch (error) {
+            console.error("Token verification error:", error);
             return NextResponse.json(
                 { message: 'Unauthorized: Invalid token' },
                 { status: 401 }
@@ -33,10 +33,10 @@ export const GET = async () => {
 
         // Obtener el UID del usuario del token
         const uid = decodedToken.uid;
-        console.log(uid);
         // Obtener el documento específico del usuario usando el UID
-        const userDocRef = doc(db, "users", uid); // Asumiendo que el ID de usuario es el mismo que el UID
+        const userDocRef = doc(db, "users", uid);
         const userDocSnapshot = await getDoc(userDocRef);
+
         if (!userDocSnapshot.exists()) {
             return NextResponse.json(
                 { message: 'User not found' },
@@ -45,11 +45,13 @@ export const GET = async () => {
         }
 
         const userData = { id: userDocSnapshot.id, ...userDocSnapshot.data() };
-        console.log(userData)
         return NextResponse.json(userData); // Devuelve solo los datos del usuario
 
     } catch (error) {
+        // Registra el error completo para depuración
         console.error("Error fetching user:", error);
+        
+        // Devuelve una respuesta de error genérica
         return NextResponse.json(
             { message: 'Internal Server Error' },
             { status: 500 }
