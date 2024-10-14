@@ -1,5 +1,3 @@
-"use client"
-
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
 export default async function Catalogo() {
