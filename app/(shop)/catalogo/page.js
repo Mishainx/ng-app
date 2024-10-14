@@ -1,16 +1,30 @@
 import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 
 export default async function Catalogo() {
+  let products = [];
+  let categories = [];
+  let error = null;
 
-  // Fetch de productos
-  const productsResponse = await fetch(`https://www.mikine.com.ar/api/products`);
-  const productsData = await productsResponse.json();
-  const products = productsData.payload;
+  try {
+    // Fetch de productos
+    const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+    if (!productsResponse.ok) {
+      throw new Error("Error al obtener los productos");
+    }
+    const productsData = await productsResponse.json();
+    products = productsData.payload;
 
-  // Fetch de categorías
-  const categoriesResponse = await fetch(`https://www.mikine.com.ar/api/products`);
-  const categoriesData = await categoriesResponse.json();
-  const categories = categoriesData.payload;
+    // Fetch de categorías
+    const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+    if (!categoriesResponse.ok) {
+      throw new Error("Error al obtener las categorías");
+    }
+    const categoriesData = await categoriesResponse.json();
+    categories = categoriesData.payload;
+  } catch (err) {
+    error = err.message; // Guarda el error si ocurre
+    console.error(error); // Log del error para depuración
+  }
 
   return (
     <main className="flex flex-col items-center justify-start min-h-screen py-10">
@@ -21,6 +35,9 @@ export default async function Catalogo() {
           <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
         </h1>
       </div>
+
+      {/* Manejo de error */}
+      {error && <div className="text-red-500 mb-4">Error: {error}</div>}
 
       {/* Pasar productos y categorías al componente */}
       <CatalogueContainer products={products} categories={categories} />
