@@ -3,7 +3,7 @@ import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
 export default async function Catalogo() {
 
   // Fetch de productos
-  const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+  const productsResponse = await fetch(`https://www.mikine.com.ar/api/products`);
   const productsData = await productsResponse.json();
   const products = productsData.payload;
 
