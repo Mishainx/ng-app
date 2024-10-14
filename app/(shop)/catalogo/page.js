@@ -10,7 +10,7 @@ export default async function Catalogo() {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/products`
     const productsResponse = await fetch(url);
     if (!productsResponse.ok) {
-      console.log(productsResponse )
+      console.log(productsResponse.json() )
       throw new Error("Error al obtener los productos");
     }
     const productsData = await productsResponse.json();
