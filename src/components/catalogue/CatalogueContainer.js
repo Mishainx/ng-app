@@ -5,7 +5,7 @@ import CatalogueList from "./CatalogueList";
 import FilterComponent from "./FilterComponent";
 import { useCategories } from "@/context/CategoriesContext";
 
-export default function CatalogueContainer({ products, categories }) {
+export default function CatalogueContainer({ products }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
   const {categories} = useCategories()
