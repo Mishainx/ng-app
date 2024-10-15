@@ -14,13 +14,11 @@ import { productExists } from '@/utils/productExits';
 // `GET` para obtener los valores actuales de las categorías
 export const GET = async () => {
   try {
-    console.log("hola")
     const productsSnapshot = await getDocs(collection(db, 'products'));
     const products = productsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("los productos son:", products)
     return NextResponse.json(
       { message: 'success', payload: products },
       { status: 200 }
