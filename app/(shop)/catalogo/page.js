@@ -1,6 +1,5 @@
 import ProductList from "@/components/product/productList";
 
-
 export default async function Catalogo() {
 
   return (
