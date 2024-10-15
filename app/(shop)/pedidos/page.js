@@ -21,7 +21,7 @@ export default async function Pedidos() {
     }
   }
   const products = await getProducts()
-  console.log(products)
+  console.log(products[0])
 
     return (
       <main>
