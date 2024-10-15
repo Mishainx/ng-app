@@ -1,8 +1,9 @@
 import ProductList from "@/components/product/productList";
 
 async function getCategories (){
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`,{next:{revalidate:3600}}); // Ajusta la URL según sea necesario
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`); // Ajusta la URL según sea necesario
   const data = await response.json()
+  console.log(data)
   const categories = data.payload
   return categories
 }
