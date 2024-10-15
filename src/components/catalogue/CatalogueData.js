@@ -6,12 +6,10 @@ export default async function CatalogueData() {
     const data = await response.json()
     const products = data.payload
   
-  
   return (
 <>
 
-      {/* Pasar productos y categorías al componente */}
-      <CatalogueContainer products={products} />
+hola
 </>
   );
 }
