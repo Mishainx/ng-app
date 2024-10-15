@@ -2,8 +2,9 @@ import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPriceToUSD } from "@/utils/stringsManager";
+import ProductPrice from "./productPrice";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product,discount, user}) {
   return (
     <div className=" w-28 xxs:w-32 h-64 shadow-md flex flex-col items-center justify-between text-center hover:scale-105 transition-transform duration-500 relative bg-white">
       {/* Banderita Condicional */}
@@ -45,7 +46,9 @@ export default function ProductCard({ product }) {
         
         {/* Precio */}
         <div>
-          {product?.discount > 0 ? (
+      {user ? ( // Cambié la condición para verificar si el usuario está presente
+        <>
+          {discount > 0 ? (
             <>
               <p className="text-sm mb-1 line-through text-gray-500">
                 {formatPriceToUSD(product.price)}
@@ -55,11 +58,14 @@ export default function ProductCard({ product }) {
               </p>
             </>
           ) : (
-            <p className="text-sm mb-1">
-              {formatPriceToUSD(product.price)}
-            </p>
+            <p className="text-sm mb-1">{formatPriceToUSD(product.price)}</p>
           )}
-        </div>
+        </>
+      ) : (
+        <p className="text-gray-500 text-sm">Inicia sesión para ver los precios</p>
+      )}
+    </div>
+
       </div>
 
       {/* Botón de detalle */}

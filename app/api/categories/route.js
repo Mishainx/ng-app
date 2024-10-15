@@ -9,7 +9,6 @@ import { createSlug, slugExists } from '@/utils/createSlug';
 // `GET` para obtener los valores actuales de las categorías
 export const GET = async () => {
   try {
-    console.log("parrapa")
     const categoriesSnapshot = await getDocs(collection(db, 'categories'));
     const categories = categoriesSnapshot.docs.map((doc) => ({
       id: doc.id,
