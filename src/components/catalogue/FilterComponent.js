@@ -22,6 +22,7 @@ export default function FilterComponent({
     setSubcategories(selectedCategoryObj?.subcategories || []);
     setSelectedSubcategory("");
   }, [selectedCategory, categories]);
+  
 
   const handleCategoryChange = (e) => {
     const categorySlug = e.target.value;
