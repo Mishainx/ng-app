@@ -1,6 +1,16 @@
 import ProductList from "@/components/product/productList";
 
+async function getCategories (){
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`,{next:{revalidate:3600}}); // Ajusta la URL según sea necesario
+  const data = await response.json()
+  const categories = data.payload
+  return categories
+}
+
+
 export default async function Catalogo() {
+  const  categories = await getCategories()
+  console.log(categories)
 
   return (
     <main className="flex flex-col items-center justify-start min-h-screen py-10">
