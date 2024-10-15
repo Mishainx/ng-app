@@ -3,7 +3,7 @@ export default async function Pedidos() {
 
   async function getProducts() {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`); // Ajusta la URL según sea necesario
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`); // Ajusta la URL según sea necesario
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
