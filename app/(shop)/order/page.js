@@ -37,40 +37,42 @@ export default function Order() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
         if (!response.ok) {
           throw new Error("Error al obtener los productos");
         }
-
+  
         const data = await response.json();
-        setProducts(data.payload);
+        setProducts(data.payload); // Aquí deberías recibir los productos con sus precios
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProducts();
   }, []);
+  
 
   useEffect(() => {
     const getCartProducts = () => {
       if (!userData) return [];
       return userData.cart.map(item => {
-        const product = products?.find(prod => prod.sku === item.productSku);
+        const product = products?.find(prod => prod.sku === item.productSku); // Buscar el producto por SKU en los productos obtenidos
         return {
           ...item,
-          price: product ? product.price : 0,
-          name: product ? product.name : item.productSku,
+          price: product ? product.price : 0, // Asegurarse de que el precio se obtenga del producto correcto
+          name: product ? product.name : item.productSku, // Usar el nombre del producto si existe
         };
       });
     };
-
-    if (userData) {
-      setCartProducts(getCartProducts());
+  
+    if (userData && products.length > 0) {
+      setCartProducts(getCartProducts()); // Actualizar los productos del carrito cuando se tengan los datos
     }
   }, [userData, products]);
+  
 
   // Actualizar cantidad de productos en el carrito
   const updateQuantity = (productSku, newQuantity) => {
@@ -119,7 +121,6 @@ export default function Order() {
 
   if (loading) return <p className="text-center">Cargando...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
-console.log(products)
 
   return (
     <main className="max-w-4xl mx-auto p-4">
