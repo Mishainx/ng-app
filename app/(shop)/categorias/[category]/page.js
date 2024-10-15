@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import ProductList from '@/components/product/productList';
 
 export default function Categories({ params }) {
@@ -6,7 +5,6 @@ export default function Categories({ params }) {
 
   return (
     <main>
-
       <section>
         <ProductList />
       </section>
