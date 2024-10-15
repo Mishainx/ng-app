@@ -16,7 +16,7 @@ export default function FilterComponent({
 
   useEffect(() => {
     // Initialize subcategories when the selected category changes
-    const selectedCategoryObj = categories.find(
+    const selectedCategoryObj = categories.find?(
       (category) => category.slug === selectedCategory
     );
     setSubcategories(selectedCategoryObj?.subcategories || []);
