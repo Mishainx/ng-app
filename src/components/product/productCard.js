@@ -5,7 +5,7 @@ import { formatPriceToUSD } from "@/utils/stringsManager";
 
 export default function ProductCard({ product }) {
   return (
-    <div className="w-32 h-64 shadow-md flex flex-col items-center justify-between text-center hover:scale-105 transition-transform duration-500 relative bg-white">
+    <div className=" w-28 xxs:w-32 h-64 shadow-md flex flex-col items-center justify-between text-center hover:scale-105 transition-transform duration-500 relative bg-white">
       {/* Banderita Condicional */}
       {product?.discount > 0 ? (
         <div className="absolute -top-3 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">

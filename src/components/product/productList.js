@@ -7,12 +7,12 @@ export default async function ProductList() {
   const data = await response.json()
   const products = data.payload
     return (
-      <div className="w-full p-5 gap-4 flex flex-wrap justify-center">
+      <div className="w-full  flex flex-wrap justify-center">
           <CatalogueContainer products={products}/>              
-          
+          {/*}
                         {products.map(product => (
           <ProductCard key={product.id} product={product} />
-        ))}
+        ))}*/}
       </div>
     );
   }

@@ -12,24 +12,25 @@ export default function CatalogueList({ products }) {
 
   return (
     <div>
-            <div className="flex flex-wrap items-center justify-center gap-5 flex-grow p-1 xxs:p-10">
-      {products?.slice(0, visibleCount).map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {/* Usar grid para alinear las tarjetas */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 xxs:p-10">
+        {products?.slice(0, visibleCount).map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
 
       {/* Mostrar enlace "Cargar más" si hay más productos por cargar */}
+      <div>
+        {visibleCount < products.length && (
+          <span
+            onClick={loadMore}
+            className="mt-4 cursor-pointer hover:underline flex items-center justify-center gap-2"
+          >
+            Cargar más
+            <ArrowIcon className={"w-3 h-3 transform rotate-90"} />
+          </span>
+        )}
+      </div>
     </div>
-    <div>
-              {visibleCount < products.length && (
-        <span
-          onClick={loadMore}
-          className="mt-4 cursor-pointer hover:underline flex  items-center justify-center gap-2"
-        >
-          Cargar más
-          <ArrowIcon className={"w-3 h-3 transform rotate-90"} />        </span>
-      )}
-    </div>
-    </div>
-
   );
 }

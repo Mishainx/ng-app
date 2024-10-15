@@ -3,7 +3,7 @@ import ProductList from "@/components/product/productList";
 export default async function Catalogo() {
 
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen py-10">
+    <main className="w-full flex flex-col items-center justify-start min-h-screen py-10">
       {/* Título de la página */}
       <div className="relative text-center mb-6">
         <h1 className="text-4xl font-bold text-gray-900 inline-block relative">
