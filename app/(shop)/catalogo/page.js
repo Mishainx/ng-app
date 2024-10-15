@@ -1,3 +1,5 @@
+import ProductList from "@/components/product/productList";
+
 export default async function Catalogo() {
 
   return (
@@ -9,6 +11,7 @@ export default async function Catalogo() {
           <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
         </h1>
       </div>
+      <ProductList/>
     </main>
   );
 }
