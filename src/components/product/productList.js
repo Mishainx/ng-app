@@ -1,4 +1,3 @@
-import CatalogueContainer from '../catalogue/CatalogueContainer';
 import ProductCard from './productCard';
 
 export default async function ProductList() {
@@ -9,7 +8,9 @@ export default async function ProductList() {
 
     return (
       <div className="w-full p-5 gap-4 flex flex-wrap justify-center">
-        <CatalogueContainer products={products}/>
+                        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
       </div>
     );
   }
