@@ -58,7 +58,7 @@ export default function Order() {
     const getCartProducts = () => {
       if (!userData) return [];
       return userData.cart.map(item => {
-        const product = products.find(prod => prod.sku === item.productSku);
+        const product = products?.find(prod => prod.sku === item.productSku);
         return {
           ...item,
           price: product ? product.price : 0,
