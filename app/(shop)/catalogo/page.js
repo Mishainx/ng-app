@@ -1,11 +1,22 @@
 import ProductList from "@/components/product/productList";
 
-async function getCategories (){
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`); // Ajusta la URL según sea necesario
-  const data = await response.json()
-  console.log(data)
-  const categories = data.payload
-  return categories
+async function getCategories() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`); // Ajusta la URL según sea necesario
+    
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+    const categories = data.payload;
+    return categories;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return null; // O ajusta esto según cómo quieras manejar el error en tu aplicación
+  }
 }
 
 
