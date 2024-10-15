@@ -1,4 +1,4 @@
-import CatalogueContainer from "@/components/catalogue/CatalogueContainer";
+import CatalogueData from "@/components/catalogue/CatalogueData";
 
 export default async function Catalogo() {
   
@@ -11,8 +11,7 @@ export default async function Catalogo() {
           <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
         </h1>
       </div>
-
-      {/* Pasar productos y categorías al componente */}
+    <CatalogueData/>
     </main>
   );
 }
