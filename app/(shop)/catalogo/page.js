@@ -8,7 +8,7 @@ export default async function Catalogo() {
       throw new Error('Error fetching product');
     }
     const data = await response.json();
-    products = data.payload;
+    const products = data.payload;
 
   } catch (error) {
     console.error("Error fetching product:", error);
