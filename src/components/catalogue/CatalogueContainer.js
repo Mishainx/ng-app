@@ -3,10 +3,12 @@
 import { useState } from "react";
 import CatalogueList from "./CatalogueList";
 import FilterComponent from "./FilterComponent";
+import { useCategories } from "@/context/CategoriesContext";
 
 export default function CatalogueContainer({ products, categories }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
+  const {categories} = useCategories()
 
   const sortProducts = (productsToSort, key, direction) => {
     return productsToSort.sort((a, b) => {
