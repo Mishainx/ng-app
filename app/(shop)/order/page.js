@@ -119,6 +119,7 @@ export default function Order() {
 
   if (loading) return <p className="text-center">Cargando...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+console.log(products)
 
   return (
     <main className="max-w-4xl mx-auto p-4">
