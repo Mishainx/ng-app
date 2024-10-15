@@ -85,10 +85,31 @@ export default function Order() {
     );
   };
 
-  // Eliminar producto del carrito
-  const removeProduct = (productSku) => {
+// Eliminar producto del carrito y hacer un fetch al backend
+const removeProduct = async (productSku) => {
+  try {
+    // Hacer una solicitud DELETE al servidor
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ productSku }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar el producto');
+    }
+
+    // Actualizar el estado en el frontend si la eliminación fue exitosa
     setCartProducts(prevCart => prevCart.filter(item => item.productSku !== productSku));
-  };
+    
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error);
+    setError('Error al eliminar el producto');
+  }
+};
+
 
   // Calcular total
   const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
