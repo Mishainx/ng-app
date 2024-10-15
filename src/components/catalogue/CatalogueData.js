@@ -4,9 +4,8 @@ export default async function CatalogueData() {
   
   return (
 <>
-
+hola
       {/* Pasar productos y categorías al componente */}
-      <CatalogueContainer products={products} categories={categories} />
 </>
   );
 }
