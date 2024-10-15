@@ -1,6 +1,6 @@
 import CatalogueData from "@/components/catalogue/CatalogueData";
 
-export default async function Catalogo() {
+export default function Catalogo() {
   
   return (
     <main className="flex flex-col items-center justify-start min-h-screen py-10">
