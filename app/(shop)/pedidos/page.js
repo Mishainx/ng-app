@@ -13,7 +13,7 @@ export default async function Pedidos() {
       return categories;
     } catch (error) {
       console.log("el error es aqui")
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories:2", error);
       return null; // O ajusta esto según cómo quieras manejar el error en tu aplicación
     }
   }
@@ -33,15 +33,14 @@ export default async function Pedidos() {
       return products;
     } catch (error) {
       console.log("el error es aqui")
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories:1", error);
       return null; // O ajusta esto según cómo quieras manejar el error en tu aplicación
     }
   }
   
-
-
   const categories = await getCategories()
   const products = await getProducts()
+
     return (
       <main>
           <div className="h-screen">
