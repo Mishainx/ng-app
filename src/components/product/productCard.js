@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPriceToUSD } from "@/utils/stringsManager";
 import ProductPrice from "./productPrice";
+import EyeIcon from "@/icons/EyeIcon";
 
 export default function ProductCard({ product,discount, user}) {
   return (
@@ -36,7 +37,7 @@ export default function ProductCard({ product,discount, user}) {
       </div>
       
       {/* Contenido */}
-      <div className="flex-grow flex flex-col justify-between">
+      <div className="flex-grow flex flex-col justify-around">
         <h3 className="text-xs font-semibold">
           {product?.name?.toUpperCase()}
         </h3>
@@ -62,7 +63,13 @@ export default function ProductCard({ product,discount, user}) {
           )}
         </>
       ) : (
-        <p className="text-gray-500 text-sm">Inicia sesión para ver los precios</p>
+<Link href="/login">
+  <p className="flex items-center justify-center text-slate-400 text-xxs hover:text-slate-600 transition-colors duration-300">
+    <EyeIcon width="20" height="20" className="mr-1" /> {/* Agregar un margen a la derecha del ícono */}
+    Precios
+  </p>
+</Link>
+
       )}
     </div>
 
