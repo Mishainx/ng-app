@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPriceToUSD } from "@/utils/stringsManager";
 import ProductPrice from "./productPrice";
-import EyeIcon from "@/icons/EyeIcon";
+ // Importar el contexto
 
-export default function ProductCard({ product,discount, user}) {
+export default function ProductCard({ product, discount }) {
+
   return (
-    <div className=" w-28 xxs:w-32 h-64 shadow-md flex flex-col items-center justify-between text-center hover:scale-105 transition-transform duration-500 relative bg-white">
+    <div className="w-28 xxs:w-32 h-64 shadow-md flex flex-col items-center justify-between text-center hover:scale-105 transition-transform duration-500 relative bg-white">
       {/* Banderita Condicional */}
       {product?.discount > 0 ? (
         <div className="absolute -top-3 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">
@@ -46,33 +47,7 @@ export default function ProductCard({ product,discount, user}) {
         </p>
         
         {/* Precio */}
-        <div>
-      {user ? ( // Cambié la condición para verificar si el usuario está presente
-        <>
-          {discount > 0 ? (
-            <>
-              <p className="text-sm mb-1 line-through text-gray-500">
-                {formatPriceToUSD(product.price)}
-              </p>
-              <p className="text-red-500 text-sm mb-1">
-                {formatPriceToUSD(product.discount)}
-              </p>
-            </>
-          ) : (
-            <p className="text-sm mb-1">{formatPriceToUSD(product.price)}</p>
-          )}
-        </>
-      ) : (
-<Link href="/login">
-  <p className="flex items-center justify-center text-slate-400 text-xxs hover:text-slate-600 transition-colors duration-300">
-    <EyeIcon width="20" height="20" className="mr-1" /> {/* Agregar un margen a la derecha del ícono */}
-    Precios
-  </p>
-</Link>
-
-      )}
-    </div>
-
+        <ProductPrice price={product.price} discount={product.discount}/>
       </div>
 
       {/* Botón de detalle */}

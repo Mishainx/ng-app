@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // Importar el contexto de autenticación
 
 const LoginForm = () => {
   const router = useRouter();
+  const { login } = useAuth(); // Obtener la función de inicio de sesión del contexto
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -23,26 +25,11 @@ const LoginForm = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-  
-      if (response.ok) {
-        const success = await response.json();
-        if (success) {
-          router.push("/");
-        } else {
-          setError("Ocurrió un error. Por favor, intenta nuevamente."); // Mensaje mostrado en caso de error
-        }
-      } else {
-        setError("Ocurrió un error. Por favor, intenta nuevamente."); // Mensaje mostrado en caso de fallo en el response
-      }
-    } catch (error) {
-      setError("Ocurrió un error. Por favor, intenta nuevamente."); // Mensaje mostrado en caso de excepción
+      // Llama a la función login en lugar de hacer la solicitud manualmente
+      await login(values); 
+      router.push("/"); // Redirigir al inicio después de iniciar sesión
+    } catch (err) {
+      setError(err.message); // Establecer el mensaje de error
     }
   };
   
@@ -78,7 +65,7 @@ const LoginForm = () => {
         <div className="flex flex-col gap-4">
           <button
             type="submit"
-            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           >
             Ingresar
           </button>
