@@ -13,7 +13,6 @@ export default async function Catalogo() {
       </div>
 
       {/* Pasar productos y categorías al componente */}
-      <CatalogueContainer products={products} categories={categories} />
     </main>
   );
 }
