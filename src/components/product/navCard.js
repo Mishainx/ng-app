@@ -2,11 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function NavCard({ imgSrc, title, href }) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`,{cache:"no-store",next:{revalidate:3600}}); // Ajusta la URL según sea necesario
-  const data = await response.json()
-  const products = data.payload
-  console.log(products)
-
 
   return (
     <div className="group relative w-11/12 sm:w-full max-w-sm overflow-hidden rounded-lg bg-card shadow-xl transition-transform duration-300 hover:scale-105 xs:w-10/12">
