@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "../product/productCard";
 import ArrowIcon from "@/icons/ArrowIcon";
 
@@ -7,7 +7,6 @@ export default function CatalogueList({ products }) {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Estado de carga
-  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -41,17 +40,16 @@ export default function CatalogueList({ products }) {
   if (error) {
     return <p className="text-red-500 text-sm">Error: {error}</p>;
   }
-  // Mostrar inicialmente 20 productos
 
   // Función para cargar más productos
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 20); // Aumentar en 20 el conteo visible
   };
-  console.log(userData)
+
   return (
     <div>
       {/* Usar grid para alinear las tarjetas */}
-      <div className="grid grid-cols-2 xxs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
+      <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
         {products?.slice(0, visibleCount).map((product) => (
           <ProductCard key={product.id} product={product} user={userData} />
         ))}
