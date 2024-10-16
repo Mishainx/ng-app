@@ -7,7 +7,7 @@ const fallbackImage = '/images/default-product.png';
 
 export default function ProductDetail({ product }) {
   return (
-    <div className="flex flex-col items-center md:flex-row md:items-start gap-10 p-6">
+    <div className="flex flex-col items-center sm:flex-row md:items-start gap-10 p-6">
       {/* Imagen del producto */}
       <div className="w-full md:w-1/2 flex justify-center">
         {product.img ? (
@@ -30,7 +30,7 @@ export default function ProductDetail({ product }) {
       </div>
 
       {/* Detalles del producto */}
-      <div className="w-full md:w-1/2">
+      <div className="w-full md:w-1/2 ">
         <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left mb-2 flex items-center justify-center md:justify-start">
           {product.name.toUpperCase()}
           {product.discount > 0 && (
@@ -57,8 +57,9 @@ export default function ProductDetail({ product }) {
             </p>
           )}
         </div>
+        {/* Descripcion producto */}
 
-        <div className="text-sm text-gray-700 space-y-2">
+        <div className="text-sm text-gray-700 space-y-2 text-start">
           <p>
             <span className="font-medium">Presentación: </span>
             {capitalizeFirstLetter(product.shortDescription)}
@@ -82,7 +83,7 @@ export default function ProductDetail({ product }) {
         </div>
 
         {/* Botones de acción */}
-        <div className="mt-1">
+        <div className="mt-1 flex items-center justify-center">
           <ActionButtons productSku={product.sku} stock={product.stock} />
         </div>
       </div>

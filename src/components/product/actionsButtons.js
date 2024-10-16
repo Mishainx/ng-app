@@ -16,12 +16,12 @@ export default function ActionButtons({ productSku, stock }) {
   };
 
   return (
-    <div className="flex flex-col  justify-center gap-2 w-full max-w-sm">
+    <div className="flex flex-col justify-center gap-2 w-full max-w-sm">
       {/* Mostrar selector de cantidad y botón solo si el stock es mayor que 0 */}
       {stock > 0 ? (
         <>
           {/* Selector de cantidad */}
-          <div className="flex items-center gap-5 w-full">
+          <div className="flex items-center gap-5 w-full justify-center">
             <label htmlFor="quantity" className="font-medium text-gray-700 text-sm">Cantidad:</label>
             <input
               type="number"

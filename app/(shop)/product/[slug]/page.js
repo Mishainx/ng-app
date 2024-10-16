@@ -31,7 +31,7 @@ export default async function ProductPage({ params }) {
   }
 
   return (
-    <main className="p-10 max-w-6xl mx-auto">
+    <main className="p-2 md:p-10 max-w-6xl mx-auto">
       <ProductDetail product={product} />
     </main>
   );

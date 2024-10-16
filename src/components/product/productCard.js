@@ -1,7 +1,6 @@
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import Image from "next/image";
 import Link from "next/link";
-import { formatPriceToUSD } from "@/utils/stringsManager";
 import ProductPrice from "./productPrice";
  // Importar el contexto
 
