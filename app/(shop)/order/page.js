@@ -93,6 +93,18 @@ export default function Order() {
 
   const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+
+  const updateQuantity = (productSku, newQuantity) => {
+    setCartProducts(prevCart => 
+      prevCart.map(item => 
+        item.productSku === productSku 
+          ? { ...item, quantity: newQuantity } 
+          : item
+      )
+    );
+  };
+  
+
   const generateWhatsAppMessage = () => {
     if (!userData.user || cartProducts.length === 0) return "";
 
@@ -155,20 +167,21 @@ export default function Order() {
                       <div className="text-xs md:text-sm text-gray-500 xxs:text-start">{capitalizeFirstLetter(item.productSku)}</div>
                       <div className="text-xs md:text-sm text-gray-500">Precio unitario: ${item.price.toFixed(2)}</div>
                       <div className="flex items-center justify-center xxs:justify-start mt-1">
-                        <button
-                          className="text-red-500 mx-2"
-                          onClick={() => updateQuantity(item.productSku, Math.max(item.quantity - 1, 1))}
-                        >
-                          -
-                        </button>
-                        <span className="mx-2">{item.quantity}</span>
-                        <button
-                          className="text-green-500 mx-2"
-                          onClick={() => updateQuantity(item.productSku, item.quantity + 1)}
-                        >
-                          +
-                        </button>
-                      </div>
+  <button
+    className="text-red-500 mx-2"
+    onClick={() => updateQuantity(item.productSku, Math.max(item.quantity - 1, 1))} // Decremento
+  >
+    -
+  </button>
+  <span className="mx-2">{item.quantity}</span>
+  <button
+    className="text-green-500 mx-2"
+    onClick={() => updateQuantity(item.productSku, item.quantity + 1)} // Incremento
+  >
+    +
+  </button>
+</div>
+
                     </div>
                     <div className="flex flex-col xxs:flex-row items-center mt-2 md:mt-0">
                       <span className="text-lg font-bold text-red-600"> ${subtotal.toFixed(2)}</span>
