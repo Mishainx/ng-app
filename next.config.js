@@ -5,6 +5,10 @@ const nextConfig = {
               protocol: 'https',
               hostname: 'firebasestorage.googleapis.com',
             },
+            {
+              protocol: 'https',
+              hostname: 'via.placeholder.com',
+            },
           ],
     },
     async headers() {
