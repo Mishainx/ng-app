@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 export async function middleware(request) {
   const { pathname } = new URL(request.url);
 
+  // Permitir el acceso a los recursos estáticos
   if (pathname.startsWith('/_next/') || pathname.startsWith('/static/')) {
     return NextResponse.next();
   }
@@ -11,8 +12,9 @@ export async function middleware(request) {
   const cookieStore = cookies();
   const cookie = cookieStore.get('ng-ct');
 
+  // Redirigir si no hay cookie
   if (!cookie) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión
   }
 
   // Verifica el token en la API
@@ -29,17 +31,18 @@ export async function middleware(request) {
       // Token es válido
       return NextResponse.next();
     } else {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión si el token no es válido
     }
   } catch (error) {
     console.error('Error al verificar el token:', error);
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión en caso de error
   }
 }
 
+// Configura las rutas que requieren autenticación
 export const config = {
-   matcher: [
-     '/admin/:path*', // Aplica a todas las rutas bajo /admin
-   ],
- };
- 
+  matcher: [
+    '/admin/:path*', // Aplica a todas las rutas bajo /admin
+    '/order/:path*', // Aplica a todas las rutas bajo /order
+  ],
+};

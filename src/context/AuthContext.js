@@ -9,27 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user profile on mount
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos del perfil");
-        }
-        const data = await response.json();
-        setUserData(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
-  // Function to handle user login
+  // Function to handle user login (fetching full user profile during login)
   const login = async (credentials) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
@@ -43,11 +23,38 @@ export const AuthProvider = ({ children }) => {
         throw new Error("Error en el inicio de sesión");
       }
       const data = await response.json();
-      setUserData(data); // Update userData on successful login
+
+      // Assuming the login now returns full user profile data including cart and other info
+      setUserData(data); // Set full user data on login
+      setLoading(false); // Set loading to false after login
     } catch (error) {
       setError(error.message);
+      setLoading(false); // Also set loading to false if there's an error
     }
   };
+
+  // Optional: This useEffect can be removed if you handle the data entirely in login
+  useEffect(() => {
+    // Only fetch profile if no userData exists (e.g., user refreshes the page)
+    const fetchUserProfile = async () => {
+      if (!userData) {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
+          if (!response.ok) {
+            throw new Error("Error al obtener los datos del perfil");
+          }
+          const data = await response.json();
+          setUserData(data); // Set profile data
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [userData]); // This effect runs only if userData is null
 
   return (
     <AuthContext.Provider value={{ userData, loading, error, login }}>

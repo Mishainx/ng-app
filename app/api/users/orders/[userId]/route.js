@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 export const GET = async (request, { params }) => {
     try {
       const { userId } = params;
-  
       // Obtener referencia al documento del usuario
       const userRef = doc(db, "users", userId);
       const userDoc = await getDoc(userRef);
