@@ -5,6 +5,7 @@ import MenuIcon from "@/icons/MenuIcon";
 import HomeIcon from "@/icons/HomeIcon"; // Asegúrate de tener este ícono
 import { useCategories } from "@/context/CategoriesContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
+import LoginButton from "../loginButton";
 
 const MenuList = ({ open, handleClose, pages }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(open);
