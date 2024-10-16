@@ -22,7 +22,7 @@ export default function CategoriesBanner({ selectedCategory, selectedSubcategory
   }
 
   return (
-    <div className="relative w-full h-[200px]">
+    <div className="relative w-full h-[200px] mb-3">
       <Image
         src={bannerImage} // URL de la imagen determinada
         alt={category.title} // Texto alternativo
