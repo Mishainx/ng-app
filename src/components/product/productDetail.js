@@ -6,6 +6,15 @@ import ActionButtons from './actionsButtons';
 const fallbackImage = '/images/default-product.png';
 
 export default function ProductDetail({ product }) {
+  // Arreglo de detalles del producto
+  const productDetails = [
+    { label: 'Presentación', value: capitalizeFirstLetter(product.shortDescription) },
+    { label: 'Descripción', value: capitalizeFirstLetter(product.longDescription) },
+    { label: 'Categoría', value: capitalizeFirstLetter(product.category) },
+    { label: 'Stock', value: product.stock ? 'Disponible' : 'Sin stock' },
+    { label: 'Sku', value: product.sku },
+  ];
+
   return (
     <div className="flex flex-col items-center sm:flex-row md:items-start gap-10 p-6">
       {/* Imagen del producto */}
@@ -30,7 +39,7 @@ export default function ProductDetail({ product }) {
       </div>
 
       {/* Detalles del producto */}
-      <div className="w-full md:w-1/2 ">
+      <div className="w-full md:w-1/2">
         <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left mb-2 flex items-center justify-center md:justify-start">
           {product.name.toUpperCase()}
           {product.discount > 0 && (
@@ -57,33 +66,19 @@ export default function ProductDetail({ product }) {
             </p>
           )}
         </div>
-        {/* Descripcion producto */}
 
+        {/* Descripción del producto */}
         <div className="text-sm text-gray-700 space-y-2 text-start">
-          <p>
-            <span className="font-medium">Presentación: </span>
-            {capitalizeFirstLetter(product.shortDescription)}
-          </p>
-          <p>
-            <span className="font-medium">Descripción: </span>
-            {capitalizeFirstLetter(product.longDescription)}
-          </p>
-          <p>
-            <span className="font-medium">Categoría: </span>
-            {capitalizeFirstLetter(product.category)}
-          </p>
-          <p>
-            <span className="font-medium">Stock: </span>
-            {product.stock ? 'Disponible' : 'Sin stock'}
-          </p>
-          <p>
-            <span className="font-medium">Sku: </span>
-            {product.sku}
-          </p>
+          {productDetails.map((detail, index) => (
+            <p key={index}>
+              <span className=" font-semibold">{detail.label}: </span>
+              {detail.value}
+            </p>
+          ))}
         </div>
 
         {/* Botones de acción */}
-        <div className="mt-1 flex items-center justify-center">
+        <div className="mt-1 flex items-center justify-center md:justify-start">
           <ActionButtons productSku={product.sku} stock={product.stock} />
         </div>
       </div>
