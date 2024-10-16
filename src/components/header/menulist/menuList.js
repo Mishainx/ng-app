@@ -110,6 +110,11 @@ const MenuList = ({ open, handleClose, pages }) => {
               </li>
             </ul>
           </nav>
+          
+          {/* Espaciado para el LoginButton */}
+          <div className="mt-auto w-full px-2" onClick={handleLinkClick}> {/* Ajuste de espaciado y alineación */}
+            <LoginButton />
+          </div>
         </aside>
       )}
     </div>
