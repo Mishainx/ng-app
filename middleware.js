@@ -43,6 +43,5 @@ export async function middleware(request) {
 export const config = {
   matcher: [
     '/admin/:path*', // Aplica a todas las rutas bajo /admin
-    '/order/:path*', // Aplica a todas las rutas bajo /order
   ],
 };
