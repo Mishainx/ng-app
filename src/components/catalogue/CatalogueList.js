@@ -50,9 +50,12 @@ export default function CatalogueList({ products }) {
     <div>
       {/* Usar grid para alinear las tarjetas */}
       <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
-        {products?.slice(0, visibleCount).map((product) => (
-          <ProductCard key={product.id} product={product} user={userData} />
-        ))}
+        {products
+          ?.slice(0, visibleCount)
+          .filter((product) => product.img) // Filtrar productos sin imagen
+          .map((product) => (
+            <ProductCard key={product.id} product={product} user={userData} />
+          ))}
       </div>
 
       {/* Mostrar enlace "Cargar más" si hay más productos por cargar */}

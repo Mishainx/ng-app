@@ -8,13 +8,13 @@ export default function ProductsByCategory({ products, selectedCategory, subcate
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("default");
 
-    // Filtrar productos por término de búsqueda
+    // Filtrar productos por término de búsqueda y asegurarse de que tengan imagen
     const filteredProducts = products.filter((product) => 
-        product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) && product?.img
     );
 
     // Usar los productos filtrados o los originales si no hay filtros aplicados
-    const productsToDisplay = searchTerm ? filteredProducts : products;
+    const productsToDisplay = searchTerm ? filteredProducts : products.filter((product) => product?.img);
 
     // Ordenar productos según la opción seleccionada
     const sortedProducts = [...productsToDisplay].sort((a, b) => {

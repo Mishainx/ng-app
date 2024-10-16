@@ -1,34 +1,58 @@
-import CategoriesBanner from '@/components/categories/categoriesBanner';
-import ProductsByCategoryContainer from '@/components/product/productByCategoryContainer';
+"use client";
 
-export async function generateMetadata({ params }) {
-  const category = params.category || "Categoría"; // Asume que `params` tiene una categoría dinámica
-  const title = `Nippongame - ${category}`;
-  const description = `Explora la mejor selección de productos en la categoría de ${category} en Nippongame. Encuentra lo que necesitas al mejor precio.`;
+import { useState, useEffect } from "react";
+import ProductCard from "@/components/product/productCard";
+import Loader from "@/components/loader/Loader";
 
-  return {
-    title,
-    description,
-  };
-}
+const ProductsByCategoryContainer = ({ selectedCategory, selectedSubcategory }) => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-export default function Subcategories({ params }) {
-  const selectedCategory = params.category 
-  const selectedSubcategory = params.subcategory;
+    // Fetch data only once based on category and subcategory
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?category=${selectedCategory}&subcategory=${selectedSubcategory}`, {
+                    cache: "no-store",
+                });
+                const data = await response.json();
+                // Filter out products without images
+                const validProducts = data.payload.filter(product => product?.img);
+                setProducts(validProducts); // Set products in state
+                setLoading(false); // Set loading to false when data is fetched
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                setLoading(false); // Set loading to false if there is an error
+            }
+        };
 
-  return (
-    <main>
-      <CategoriesBanner selectedCategory={selectedCategory} selectedSubcategory={selectedSubcategory}/>
-      <section>
-      <div className="relative text-center mb-2">
-        <h2 className="text-2xl font-bold text-gray-900 inline-block relative my-2">
-          Productos
-          <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
-        </h2>
-      </div>
-      <ProductsByCategoryContainer  selectedCategory={selectedCategory} selectedSubcategory={selectedSubcategory}/>
+        fetchProducts();
+    }, [selectedCategory, selectedSubcategory]);
 
-    </section>
-    </main>
-  );
-}
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <Loader />
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            {/* Usar grid para alinear las tarjetas */}
+            <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
+                {products.length > 0 ? (
+                    products.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))
+                ) : (
+                    <div className="col-span-full text-center p-4 text-gray-500">
+                        No se encontraron productos.
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default ProductsByCategoryContainer;

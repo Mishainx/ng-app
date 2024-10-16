@@ -31,7 +31,7 @@ const OfferProducts = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader/>
+        <Loader />
       </div>
     );
   }
@@ -44,16 +44,18 @@ const OfferProducts = () => {
       </div>
 
       {/* Grid layout for products */}
-      <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2"> {/* Reduce gap here */}
+      <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
         {offerProducts.length > 0 ? (
-          offerProducts.map((product, index) => (
-            <div
-              className="flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:scale-105 overflow-visible mx-2 my-2" // Added margins for spacing
-              key={`${product.id}-${index}`}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))
+          offerProducts
+            .filter((product) => product.img) // Filtrar productos sin imagen
+            .map((product, index) => (
+              <div
+                className="flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:scale-105 overflow-visible mx-2 my-2"
+                key={`${product.id}-${index}`}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))
         ) : (
           <p>No hay productos en oferta disponibles.</p>
         )}

@@ -57,30 +57,32 @@ const FeaturedProducts = () => {
       <div className="relative">
         <button
           onClick={() => scrollSlider("left")}
-          className="absolute -left-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md hover:bg-gray-400 focus:outline-none z-10 ml-2" // added ml-2 for margin
+          className="absolute -left-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md hover:bg-gray-400 focus:outline-none z-10 ml-2"
         >
           &#10094;
         </button>
         <button
           onClick={() => scrollSlider("right")}
-          className="absolute -right-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md hover:bg-gray-400 focus:outline-none z-10 mr-2" // added mr-2 for margin
+          className="absolute -right-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md hover:bg-gray-400 focus:outline-none z-10 mr-2"
         >
           &#10095;
         </button>
 
         <div
           id="featured-slider"
-          className="flex items-center overflow-x-hidden overflow-y-hidden whitespace-nowrap scroll-smooth no-scrollbar" // add no-scrollbar class
+          className="flex items-center h-80  overflow-x-hidden overflow-y-visible whitespace-nowrap scroll-smooth no-scrollbar"
         >
           {featuredProducts?.length > 0 ? (
-            featuredProducts.map((product, index) => (
-              <div
-                className="flex-shrink-0 h-72 rounded-lg p-4 whitespace-normal transform transition-transform duration-300 hover:scale-105 overflow-visible"
-                key={`${product.id}-${index}`}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))
+            featuredProducts
+              .filter((product) => product.img) // Filtrar productos sin imagen
+              .map((product, index) => (
+                <div
+                  className="flex-shrink-0  rounded-lg p-4 whitespace-normal transform transition-transform duration-300 hover:scale-105 overflow-visible"
+                  key={`${product.id}-${index}`}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
           ) : (
             <p>No hay productos destacados disponibles.</p>
           )}
@@ -91,3 +93,4 @@ const FeaturedProducts = () => {
 };
 
 export default FeaturedProducts;
+
