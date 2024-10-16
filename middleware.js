@@ -42,6 +42,7 @@ export async function middleware(request) {
 // Configura las rutas que requieren autenticación
 export const config = {
   matcher: [
-    '/admin/:path*', // Aplica a todas las rutas bajo /admin
+    '/order/:path*',
+    '/admin/:path*' // Aplica a todas las rutas bajo /admin
   ],
 };
