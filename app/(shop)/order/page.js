@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import TrashIcon from "@/icons/TrashIcon";
 import Link from "next/link";
+import Loader from "@/components/loader/Loader";
 
 export default function Order() {
   const { userData, loading } = useAuth();
@@ -118,7 +119,7 @@ export default function Order() {
   const whatsappNumber = "+5491154041650"; // Número de WhatsApp
 
   if (loading || isCartLoading || isProductsLoading) {
-    return <p className="text-center">Cargando...</p>;
+    return <Loader/>;
   }
 
   if (error) {
