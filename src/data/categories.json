@@ -1,222 +1,318 @@
- [
-    {
-      "categoryId": 1,
-      "title": "Gaming",
-      "src": "/category/gaming-section-2.jpg",
-      "srcMenu":"/category/circle/gaming.png",
-      "href": "./categorias/gaming",
-      "subcategory": [
-        { 
-          "title": "joysticks", 
-          "subCategoryId": 1, 
-          "src": "/subcategories/joystick.png", 
-          "href": "./categories/gaming/joysticks",
-          "types": [
-            { "typeId": 1, "title": "ps1", "src": "/subcategory/joysticks/ps1.png", "href": "./categories/gaming/joysticks/ps1" },
-            { "typeId": 2, "title": "ps2", "src": "/subcategory/joysticks/ps2.png", "href": "./categories/gaming/joysticks/ps2" },
-            { "typeId": 3, "title": "xbox", "src": "/subcategory/joysticks/xbox.png", "href": "./categories/gaming/joysticks/xbox" }
-          ]
-        },
-        { 
-          "title": "accesorios", 
-          "subCategoryId": 2, 
-          "src": "/subcategories/accesorios.png", 
-          "href": "./categories/gaming/accesorios",
-          "types": [
-            { "typeId": 1, "title": "auriculares", "src": "/subcategory/accesorios/auriculares.png", "href": "./categories/gaming/accesorios/auriculares" },
-            { "typeId": 2, "title": "cargadores", "src": "/subcategory/accesorios/cargadores.png", "href": "./categories/gaming/accesorios/cargadores" },
-            { "typeId": 3, "title": "fundas", "src": "/subcategory/accesorios/fundas.png", "href": "./categories/gaming/accesorios/fundas" }
-          ]
-        },
-        { 
-          "title": "consolas", 
-          "subCategoryId": 3, 
-          "src": "/subcategories/consolas.png", 
-          "href": "./categories/gaming/consolas",
-          "types": [
-            { "typeId": 1, "title": "ps4", "src": "/subcategory/consolas/ps4.png", "href": "./categories/gaming/consolas/ps4" },
-            { "typeId": 2, "title": "xbox one", "src": "/subcategory/consolas/xboxone.png", "href": "./categories/gaming/consolas/xboxone" },
-            { "typeId": 3, "title": "nintendo switch", "src": "/subcategory/consolas/switch.png", "href": "./categories/gaming/consolas/switch" }
-          ]
-        },
-        { 
-          "title": "sillas", 
-          "subCategoryId": 4, 
-          "src": "/subcategories/sillas.png", 
-          "href": "./categories/gaming/sillas",
-          "types": [
-            { "typeId": 1, "title": "gaming", "src": "/subcategory/sillas/gaming.png", "href": "./categories/gaming/sillas/gaming" },
-            { "typeId": 2, "title": "oficina", "src": "/subcategory/sillas/oficina.png", "href": "./categories/gaming/sillas/oficina" }
-          ]
-        },
-        { 
-          "title": "perifericos", 
-          "subCategoryId": 5, 
-          "src": "/subcategories/perifericos.png", 
-          "href": "./categories/gaming/perifericos",
-          "types": [
-            { "typeId": 1, "title": "teclados", "src": "/subcategory/perifericos/teclados.png", "href": "./categories/gaming/perifericos/teclados" },
-            { "typeId": 2, "title": "ratones", "src": "/subcategory/perifericos/ratones.png", "href": "./categories/gaming/perifericos/ratones" },
-            { "typeId": 3, "title": "monitores", "src": "/subcategory/perifericos/monitores.png", "href": "./categories/gaming/perifericos/monitores" }
-          ]
-        }
-      ]
-    },
-    {
-      "categoryId": 2,
-      "title": "Holder",
-      "src": "/category/holders-section.png",
-      "srcMenu":"/category/circle/holders.png",
-      "href": "./categorias/holder",
-      "subcategory": [
-        { 
-          "title": "soporte tv", 
-          "subCategoryId": 6, 
-          "src": "/category/holder/soporte_tv.png", 
-          "href": "./categories/holder/soporte_tv",
-          "types": [
-            { "typeId": 1, "title": "fijo", "src": "/subcategory/soporte_tv/fijo.png", "href": "./categories/holder/soporte_tv/fijo" },
-            { "typeId": 2, "title": "inclinable", "src": "/subcategory/soporte_tv/inclinable.png", "href": "./categories/holder/soporte_tv/inclinable" },
-            { "typeId": 3, "title": "articulado", "src": "/subcategory/soporte_tv/articulado.png", "href": "./categories/holder/soporte_tv/articulado" }
-          ]
-        },
-        { 
-          "title": "soporte auto", 
-          "subCategoryId": 7, 
-          "src": "/category/holder/soporte_auto.png", 
-          "href": "./categories/holder/soporte_auto",
-          "types": [
-            { "typeId": 1, "title": "parabrisas", "src": "/subcategory/soporte_auto/parabrisas.png", "href": "./categories/holder/soporte_auto/parabrisas" },
-            { "typeId": 2, "title": "ventilacion", "src": "/subcategory/soporte_auto/ventilacion.png", "href": "./categories/holder/soporte_auto/ventilacion" },
-            { "typeId": 3, "title": "carga", "src": "/subcategory/soporte_auto/carga.png", "href": "./categories/holder/soporte_auto/carga" }
-          ]
-        },
-        { 
-          "title": "A/V", 
-          "subCategoryId": 8, 
-          "src": "/category/holder/av.png", 
-          "href": "./categories/holder/av",
-          "types": [
-            { "typeId": 1, "title": "hdmi", "src": "/subcategory/av/hdmi.png", "href": "./categories/holder/av/hdmi" },
-            { "typeId": 2, "title": "rca", "src": "/subcategory/av/rca.png", "href": "./categories/holder/av/rca" },
-            { "typeId": 3, "title": "optico", "src": "/subcategory/av/optico.png", "href": "./categories/holder/av/optico" }
-          ]
-        },
-        { 
-          "title": "soporte tablets", 
-          "subCategoryId": 9, 
-          "src": "/category/holder/soporte_tablets.png", 
-          "href": "./categories/holder/soporte_tablets",
-          "types": [
-            { "typeId": 1, "title": "mesa", "src": "/subcategory/soporte_tablets/mesa.png", "href": "./categories/holder/soporte_tablets/mesa" },
-            { "typeId": 2, "title": "auto", "src": "/subcategory/soporte_tablets/auto.png", "href": "./categories/holder/soporte_tablets/auto" },
-            { "typeId": 3, "title": "pared", "src": "/subcategory/soporte_tablets/pared.png", "href": "./categories/holder/soporte_tablets/pared" }
-          ]
-        }
-      ]
-    },
-    {
-      "categoryId": 3,
-      "title": "Movilidad",
-      "src": "/category/movilidad.png",
-      "srcMenu":"/category/circle/movilidad.png", 
-      "href": "/categorias/movilidad.png",
-      "subcategory": [
-        { 
-          "title": "monopatín", 
-          "subCategoryId": 10, 
-          "src": "/category/movilidad.png",
-          "srcMenu":"/category/movilidad.png", 
-          "href": "./categories/movilidad/monopatin",
-          "types": [
-            { "typeId": 1, "title": "eléctrico", "src": "/subcategory/monopatin/electrico.png", "href": "./categories/movilidad/monopatin/electrico" },
-            { "typeId": 2, "title": "manual", "src": "/subcategory/monopatin/manual.png", "href": "./categories/movilidad/monopatin/manual" }
-          ]
-        }
-      ]
-    },
-    {
-      "categoryId": 4,
-      "title": "Sonido",
-      "src": "/category/sonido-section.png",
-      "srcMenu":"/category/circle/sonido.png",
-      "href": "./categorias/sonido",
-      "subcategory": [
-        { 
-          "title": "auriculares", 
-          "subCategoryId": 11, 
-          "src": "/category/sonido/auriculares.png", 
-          "href": "./categories/sonido/auriculares",
-          "types": [
-            { "typeId": 1, "title": "diadema", "src": "/subcategory/auriculares/diadema.png", "href": "./categories/sonido/auriculares/diadema" },
-            { "typeId": 2, "title": "in-ear", "src": "/subcategory/auriculares/inear.png", "href": "./categories/sonido/auriculares/inear" },
-            { "typeId": 3, "title": "wireless", "src": "/subcategory/auriculares/wireless.png", "href": "./categories/sonido/auriculares/wireless" }
-          ]
-        },
-        { 
-          "title": "parlantes", 
-          "subCategoryId": 12, 
-          "src": "/category/sonido/parlantes.png", 
-          "href": "./categories/sonido/parlantes",
-          "types": [
-            { "typeId": 1, "title": "Bluetooth", "src": "/subcategory/parlantes/bluetooth.png", "href": "./categories/sonido/parlantes/bluetooth" },
-            { "typeId": 2, "title": "Home Theater", "src": "/subcategory/parlantes/hometheater.png", "href": "./categories/sonido/parlantes/hometheater" },
-            { "typeId": 3, "title": "Portátil", "src": "/subcategory/parlantes/portatil.png", "href": "./categories/sonido/parlantes/portatil" }
-          ]
-        },
-        { 
-          "title": "barras de sonido", 
-          "subCategoryId": 13, 
-          "src": "/category/sonido/barra_sonido.png", 
-          "href": "./categories/sonido/barra_sonido",
-          "types": [
-            { "typeId": 1, "title": "tv", "src": "/subcategory/barras_sonido/tv.png", "href": "./categories/sonido/barra_sonido/tv" },
-            { "typeId": 2, "title": "home theater", "src": "/subcategory/barras_sonido/hometheater.png", "href": "./categories/sonido/barra_sonido/hometheater" },
-            { "typeId": 3, "title": "portátil", "src": "/subcategory/barras_sonido/portatil.png", "href": "./categories/sonido/barra_sonido/portatil" }
-          ]
-        }
-      ]
-    },
-    {
-      "categoryId": 5,
-      "title": "Home",
-      "src": "/category/hogar.png",
-      "srcMenu": "/category/circle/home.png",
-      "href": "./categorias/home",
-      "subcategory": [
-        { 
-          "title": "componentes", 
-          "subCategoryId": 14, 
-          "src": "/category/pc/componentes.png", 
-          "href": "./categories/pc/componentes",
-          "types": [
-            { "typeId": 1, "title": "CPU", "src": "/subcategory/componentes/cpu.png", "href": "./categories/pc/componentes/cpu" },
-            { "typeId": 2, "title": "GPU", "src": "/subcategory/componentes/gpu.png", "href": "./categories/pc/componentes/gpu" },
-            { "typeId": 3, "title": "RAM", "src": "/subcategory/componentes/ram.png", "href": "./categories/pc/componentes/ram" }
-          ]
-        },
-        { 
-          "title": "accesorios", 
-          "subCategoryId": 15, 
-          "src": "/category/pc/accesorios.png", 
-          "href": "./categories/pc/accesorios",
-          "types": [
-            { "typeId": 1, "title": "teclados", "src": "/subcategory/accesorios/teclados.png", "href": "./categories/pc/accesorios/teclados" },
-            { "typeId": 2, "title": "ratones", "src": "/subcategory/accesorios/ratones.png", "href": "./categories/pc/accesorios/ratones" },
-            { "typeId": 3, "title": "monitores", "src": "/subcategory/accesorios/monitores.png", "href": "./categories/pc/accesorios/monitores" }
-          ]
-        },
-        { 
-          "title": "laptops", 
-          "subCategoryId": 16, 
-          "src": "/category/pc/laptops.png", 
-          "href": "./categories/pc/laptops",
-          "types": [
-            { "typeId": 1, "title": "gaming", "src": "/subcategory/laptops/gaming.png", "href": "./categories/pc/laptops/gaming" },
-            { "typeId": 2, "title": "oficina", "src": "/subcategory/laptops/oficina.png", "href": "./categories/pc/laptops/oficina" },
-            { "typeId": 3, "title": "portátil", "src": "/subcategory/laptops/portatil.png", "href": "./categories/pc/laptops/portatil" }
-          ]
-        }
-      ]
-    }
+[
+  {
+  "id": "34EXTp6eT1OGrmkdL8jn",
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_home.png?alt=media&token=53fc265c-3b7c-49d9-9553-f62d5ad441ea",
+  "showInMenu": true,
+  "title": "hogar",
+  "slug": "hogar",
+  "createdAt": "2024-10-09T12:34:40.667Z",
+  "subcategories": [],
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fgaming-section-2.jpg?alt=media&token=f348e1d7-2090-469e-99be-b2b526b17139"
+  },
+  {
+  "id": "FH6Q9xDVkLrDW3bSAAIn",
+  "title": "aire libre",
+  "createdAt": "2024-10-09T12:32:31.209Z",
+  "showInMenu": true,
+  "slug": "aire-libre",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fholders.png?alt=media&token=ab3474b0-0745-47e5-b5f5-435a91efd584",
+  "subcategories": [],
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_luz-biciclate-icon-nippongame.jpg?alt=media&token=9c6185e6-dfab-4513-9c70-22d163058aa5"
+  },
+  {
+  "id": "NdCBtudQI5nj9O19tRq1",
+  "slug": "celular",
+  "subcategories": [
+  {
+  "showInMenu": false,
+  "title": "android",
+  "slug": "celular-android",
+  "icon": null,
+  "img": null,
+  "createdAt": "2024-10-09T18:28:36.524Z"
+  },
+  {
+  "icon": null,
+  "showInMenu": false,
+  "title": "ios",
+  "slug": "celular-ios",
+  "img": null,
+  "createdAt": "2024-10-09T18:28:42.999Z"
+  }
+  ],
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_home.png?alt=media&token=87aa1bb8-ce07-40e6-9434-0e9bb0d67296",
+  "title": "celular",
+  "createdAt": "2024-10-09T18:27:17.681Z",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fgaming-section-2.jpg?alt=media&token=509502a5-b4de-41d8-bd22-718c48389517",
+  "showInMenu": true
+  },
+  {
+  "id": "TS5ytedIdCHkRsVkpme5",
+  "title": "holder",
+  "createdAt": "2024-10-09T12:31:56.969Z",
+  "slug": "holder",
+  "showInMenu": true,
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fholders-section.png?alt=media&token=b8723610-7204-4641-aa4e-8508c4e47f11",
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_holders.png?alt=media&token=d42d4676-297d-4df5-9442-576e54da1e6e",
+  "subcategories": []
+  },
+  {
+  "id": "dVaAyJO3yRU3wcrzLEJb",
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_sonido.png?alt=media&token=ad1d63d2-8b0f-4f19-8862-fd2dd37afc42",
+  "title": "sonido",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fsonido-section.png?alt=media&token=5e937f0c-761a-4594-bb2a-c68a062f9bed",
+  "createdAt": "2024-10-09T12:22:23.675Z",
+  "subcategories": [
+  {
+  "showInMenu": false,
+  "slug": "sonido-celular",
+  "img": null,
+  "title": "celular",
+  "createdAt": "2024-10-09T18:18:16.077Z",
+  "icon": null
+  },
+  {
+  "showInMenu": false,
+  "icon": null,
+  "createdAt": "2024-10-09T18:18:27.376Z",
+  "img": null,
+  "slug": "sonido-pc",
+  "title": "pc"
+  },
+  {
+  "slug": "sonido-playstation",
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:18:33.270Z",
+  "title": "playstation",
+  "icon": null,
+  "img": null
+  }
+  ],
+  "slug": "sonido",
+  "showInMenu": true
+  },
+  {
+  "id": "gjIvxGCHiGkkUVhLFmij",
+  "createdAt": "2024-10-09T12:33:04.909Z",
+  "title": "movilidad",
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_movilidad.png?alt=media&token=46399622-1e62-43dd-be69-9ca7e7ce8fae",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fgaming-section-2.jpg?alt=media&token=9fab9d0b-f538-4b99-9837-c25071ff9c24",
+  "showInMenu": true,
+  "slug": "movilidad",
+  "subcategories": []
+  },
+  {
+  "id": "l4zp32LNKsQD726lsOEX",
+  "createdAt": "2024-10-09T12:17:47.955Z",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fgaming-section-2.jpg?alt=media&token=d371a8fc-76d4-4b11-9f4e-dd03d7573f01",
+  "title": "gaming",
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_gaming.png?alt=media&token=685287e5-f1d8-4f3b-882d-40fa2c7b15f8",
+  "subcategories": [
+  {
+  "showInMenu": true,
+  "slug": "gaming-ps5",
+  "icon": null,
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/subcategories%2Fps5-subcategory-image.png?alt=media&token=cf2c6119-a24d-46d5-92bc-c0fbae68c9c9",
+  "title": "ps5",
+  "createdAt": "2024-10-09T12:17:53.471Z"
+  },
+  {
+  "createdAt": "2024-10-09T12:21:22.983Z",
+  "showInMenu": true,
+  "slug": "gaming-ps4",
+  "title": "ps4",
+  "icon": null,
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/subcategories%2Fps4-subactegory-banner-nippongame.png?alt=media&token=d77e57cd-6863-497e-9ca1-e7f607a23045"
+  },
+  {
+  "title": "ps3",
+  "img": null,
+  "createdAt": "2024-10-09T12:22:45.122Z",
+  "icon": null,
+  "slug": "gaming-ps3",
+  "showInMenu": true
+  },
+  {
+  "icon": null,
+  "img": null,
+  "showInMenu": true,
+  "createdAt": "2024-10-09T12:22:48.496Z",
+  "slug": "gaming-ps2",
+  "title": "ps2"
+  },
+  {
+  "title": "ps1",
+  "img": null,
+  "icon": null,
+  "createdAt": "2024-10-09T12:22:52.112Z",
+  "slug": "gaming-ps1",
+  "showInMenu": false
+  },
+  {
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:15:03.281Z",
+  "img": null,
+  "title": "wii",
+  "icon": null,
+  "slug": "gaming-wii"
+  },
+  {
+  "icon": null,
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:15:16.148Z",
+  "img": null,
+  "slug": "gaming-pc",
+  "title": "pc"
+  },
+  {
+  "createdAt": "2024-10-09T18:15:24.032Z",
+  "img": null,
+  "showInMenu": false,
+  "title": "xbox",
+  "slug": "gaming-xbox",
+  "icon": null
+  },
+  {
+  "createdAt": "2024-10-09T18:15:32.194Z",
+  "title": "16bit",
+  "slug": "gaming-16bit",
+  "showInMenu": false,
+  "img": null,
+  "icon": null
+  },
+  {
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:15:40.930Z",
+  "img": null,
+  "slug": "gaming-hdmi",
+  "title": "hdmi",
+  "icon": null
+  },
+  {
+  "img": null,
+  "icon": null,
+  "showInMenu": false,
+  "title": "arcade",
+  "slug": "gaming-arcade",
+  "createdAt": "2024-10-09T18:15:49.830Z"
+  },
+  {
+  "createdAt": "2024-10-09T18:15:58.274Z",
+  "showInMenu": false,
+  "img": null,
+  "slug": "gaming-m8",
+  "icon": null,
+  "title": "m8"
+  },
+  {
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:16:01.369Z",
+  "img": null,
+  "slug": "gaming-m15",
+  "title": "m15",
+  "icon": null
+  },
+  {
+  "createdAt": "2024-10-09T18:16:10.547Z",
+  "title": "switch oled",
+  "icon": null,
+  "img": null,
+  "showInMenu": false,
+  "slug": "gaming-switch-oled"
+  },
+  {
+  "slug": "gaming-8bit",
+  "title": "8bit",
+  "img": null,
+  "showInMenu": false,
+  "icon": null,
+  "createdAt": "2024-10-09T18:16:22.263Z"
+  },
+  {
+  "img": null,
+  "title": "sup",
+  "showInMenu": false,
+  "slug": "gaming-sup",
+  "createdAt": "2024-10-09T18:16:28.922Z",
+  "icon": null
+  },
+  {
+  "img": null,
+  "slug": "gaming-emulador",
+  "showInMenu": false,
+  "title": "emulador",
+  "createdAt": "2024-10-09T18:16:35.329Z",
+  "icon": null
+  },
+  {
+  "img": null,
+  "title": "android",
+  "slug": "gaming-android",
+  "createdAt": "2024-10-09T18:16:43.905Z",
+  "icon": null,
+  "showInMenu": false
+  },
+  {
+  "showInMenu": false,
+  "icon": null,
+  "img": null,
+  "title": "switch",
+  "createdAt": "2024-10-09T18:16:53.239Z",
+  "slug": "gaming-switch"
+  },
+  {
+  "img": null,
+  "title": "gamestick",
+  "createdAt": "2024-10-09T18:17:09.407Z",
+  "icon": null,
+  "slug": "gaming-gamestick",
+  "showInMenu": false
+  },
+  {
+  "title": "pc",
+  "img": null,
+  "createdAt": "2024-10-09T21:07:04.124Z",
+  "slug": "gaming-pc-1728508024555",
+  "icon": null,
+  "showInMenu": false
+  },
+  {
+  "img": null,
+  "icon": null,
+  "slug": "gaming-ps2-1728509105675",
+  "showInMenu": false,
+  "title": "ps2",
+  "createdAt": "2024-10-09T21:25:05.151Z"
+  }
+  ],
+  "slug": "gaming",
+  "showInMenu": true
+  },
+  {
+  "id": "xZqxHgMqGC2ZuCaNB7LQ",
+  "subcategories": [
+  {
+  "title": "pc",
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:17:25.875Z",
+  "img": null,
+  "slug": "periferico-pc",
+  "icon": null
+  },
+  {
+  "slug": "periferico-multimedia",
+  "title": "multimedia",
+  "icon": null,
+  "img": null,
+  "showInMenu": false,
+  "createdAt": "2024-10-09T18:20:56.115Z"
+  }
+  ],
+  "slug": "periferico",
+  "img": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Fgaming-section-2.jpg?alt=media&token=7324072b-00b6-4735-93b0-c250421280b5",
+  "showInMenu": true,
+  "icon": "https://firebasestorage.googleapis.com/v0/b/nippon-game-ce4b2.appspot.com/o/categories%2Ficon_home.png?alt=media&token=2bac0d82-4eb8-4768-b85b-81aeddb00d1a",
+  "title": "periferico",
+  "createdAt": "2024-10-09T12:35:08.491Z"
+  }
   ]
