@@ -6,6 +6,7 @@ import WhatsappButton from "../../src/components/whatsapp/Whatsapp";
 import TopButton from "../../src/components/topbutton/TopButton";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +20,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className= {`${inter.className}  bg-slate-100`}>
+
         <AuthProvider>
         <CategoriesProvider>
-            <Header/>
-                {children}
+              <Header/>
+              <ToastContainer/>
+              {children}
               <Footer/>
               <TopButton/>
               <WhatsappButton/>
           </CategoriesProvider>
         </AuthProvider>
+
       </body>
     </html>
   );

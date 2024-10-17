@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from "next/link";
+import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function AddProductButton({ productSku, stock, quantity }) {
   const [userId, setUserId] = useState(null);
@@ -34,6 +37,7 @@ export default function AddProductButton({ productSku, stock, quantity }) {
 
   const handleAddToCart = async () => {
     if (!userId) {
+      toast.error("Usuario no registrado");
       console.error("User ID is not available");
       return;
     }
@@ -54,6 +58,7 @@ export default function AddProductButton({ productSku, stock, quantity }) {
         const errorData = await response.json();
         throw new Error(`Error adding product to cart: ${errorData.message || 'Unknown error'}`);
       } else {
+        toast.success("Producto agregado al pedido");
         console.log("Product added to cart successfully");
       }
     } catch (error) {

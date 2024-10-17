@@ -6,6 +6,8 @@ import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import TrashIcon from "@/icons/TrashIcon";
 import Link from "next/link";
 import Loader from "@/components/loader/Loader";
+import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Order() {
   const { userData, loading } = useAuth();
@@ -14,6 +16,7 @@ export default function Order() {
   const [cartProducts, setCartProducts] = useState([]);
   const [isCartLoading, setIsCartLoading] = useState(true); // Para manejar el estado de carga del carrito
   const [isProductsLoading, setIsProductsLoading] = useState(true); // Para manejar el estado de carga de productos
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -86,6 +89,8 @@ export default function Order() {
       }
 
       setCartProducts(prevCart => prevCart.filter(item => item.productSku !== productSku));
+      toast.success("Producto eliminado del pedido");
+
     } catch (error) {
       setError("Error al eliminar el producto");
     }
