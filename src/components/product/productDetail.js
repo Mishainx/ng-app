@@ -1,11 +1,18 @@
+"use client"
+
 import Image from 'next/image';
 import { capitalizeFirstLetter, formatPriceToUSD } from '@/utils/stringsManager';
 import ActionButtons from './actionsButtons';
+import { useAuth } from "@/context/AuthContext";
+import Link from 'next/link';
+import EyeIcon from '@/icons/EyeIcon';
 
 // Imagen de fallback si la imagen del producto es null
 const fallbackImage = '/images/default-product.png';
 
 export default function ProductDetail({ product }) {
+  const { userData, loading } = useAuth();
+
   // Arreglo de detalles del producto
   const productDetails = [
     { label: 'Presentación', value: capitalizeFirstLetter(product.shortDescription) },
@@ -49,29 +56,38 @@ export default function ProductDetail({ product }) {
           )}
         </h1>
 
-        {/* Mostrar el precio con descuento si existe */}
-        <div className="mb-4 text-center md:text-left">
-          {product.discount > 0 ? (
-            <>
-              <p className="text-xs font-semibold text-red-500 line-through">
+        {/* Mostrar el precio y descuento solo si hay un usuario autenticado */}
+        {userData ? (
+          <div className="mb-4 text-center md:text-left">
+            {product.discount > 0 ? (
+              <>
+                <p className="text-xs font-semibold text-red-500 line-through">
+                  {formatPriceToUSD(product.price)}
+                </p>
+                <p className="text-2xl font-semibold text-red-500">
+                  {formatPriceToUSD(product.price - (product.price * product.discount / 100))}
+                </p>
+              </>
+            ) : (
+              <p className="text-2xl font-semibold text-red-500">
                 {formatPriceToUSD(product.price)}
               </p>
-              <p className="text-2xl font-semibold text-red-500">
-                {formatPriceToUSD(product.price - (product.price * product.discount / 100))}
-              </p>
-            </>
-          ) : (
-            <p className="text-2xl font-semibold text-red-500">
-              {formatPriceToUSD(product.price)}
-            </p>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <Link href="/login" >
+          <p className="my-2 flex items-center justify-center md:justify-start text-slate-400 text-xs hover:text-slate-600 transition-colors duration-300">
+            <EyeIcon width="20" height="20" className="mr-1" />
+            Para ver los precios debes estar registrado {/* Mostrar ícono con texto de acceso a precios */}
+          </p>
+        </Link>
+        )}
 
         {/* Descripción del producto */}
         <div className="text-sm text-gray-700 space-y-2 text-start">
           {productDetails.map((detail, index) => (
             <p key={index}>
-              <span className=" font-semibold">{detail.label}: </span>
+              <span className="font-semibold">{detail.label}: </span>
               {detail.value}
             </p>
           ))}
