@@ -36,6 +36,7 @@ export default function AddProductButton({ productSku, stock, quantity }) {
 
   const handleAddToCart = async () => {
     if (!userId) {
+      toast.error("usuario no registrado")
       console.error("Usuario no registrado");
       return;
     }
