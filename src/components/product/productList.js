@@ -7,6 +7,7 @@ export default async function ProductList() {
   console.log(data.total)
   return (
     <div className="w-full flex flex-wrap justify-center">
+      <p>{data.total}</p>
       <CatalogueContainer products={products} total={data.total} /> {/* Añadido el total para paginación */}
     </div>
   );
