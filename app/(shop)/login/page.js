@@ -25,14 +25,16 @@ const LoginForm = () => {
     e.preventDefault();
   
     try {
-      // Llama a la función login en lugar de hacer la solicitud manualmente
-      await login(values); 
-      router.push("/"); // Redirigir al inicio después de iniciar sesión
+      const response = await login(values); // Llama a la función login
+      if (response) {
+        router.push("/"); // Redirigir al inicio solo si se loguea correctamente
+      }
     } catch (err) {
-      setError(err.message); // Establecer el mensaje de error
+      setError("Error al iniciar sesión"); // Establece el mensaje de error
     }
   };
   
+
   return (
     <div className="flex justify-center items-center w-full h-screen bg-gray-900">
       <form
@@ -42,6 +44,7 @@ const LoginForm = () => {
         <h2 className="text-2xl font-bold text-center text-white mb-6">
           Inicia sesión o regístrate
         </h2>
+        {/* Mostrar el mensaje de error si existe */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <input
           type="email"
@@ -82,3 +85,5 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+

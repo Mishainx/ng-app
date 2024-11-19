@@ -53,6 +53,7 @@ export const POST = async (request) => {
             delete userData.repeatPassword; // Eliminar el campo de repetición de contraseña si existe
 
             // Asignar datos adicionales
+            userData.id = userUid;
             userData.cart = [];
             userData.tickets = userUid; // Asignar el UID a tickets
             userData.role = "user"; // Asignar el rol

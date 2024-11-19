@@ -115,14 +115,14 @@ const buttons = [
     icon: <PackageIcon className="h-5 w-5 text-gray-500" />,
   },
   {
-    id: 'orders',
-    text: 'Ordenes',
-    icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
-  },
-  {
     id: 'customers',
     text: 'Clientes',
     icon: <UsersIcon className="h-5 w-5 text-gray-500" />,
+  },
+  {
+    id: 'orders',
+    text: 'Ordenes',
+    icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
   },
   {
     id: 'settings',

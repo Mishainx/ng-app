@@ -1,24 +1,31 @@
+"use client";
 import { useEffect, useState } from "react";
 import ProductCard from "../product/productCard";
 import ArrowIcon from "@/icons/ArrowIcon";
+import { usePage } from "@/context/PageContext";
 
 export default function CatalogueList({ products }) {
-  const [visibleCount, setVisibleCount] = useState(20);
+  const { currentPage, setCurrentPage } = usePage();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
-          method: "GET",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`,
+          {
+            method: "GET",
+          }
+        );
 
         if (!response.ok) {
           setUserData(null);
-          setLoading(false); // Detener el estado de carga
-          return; // Salir si no es exitoso
+          setLoading(false);
+          return;
         }
 
         const data = await response.json();
@@ -26,7 +33,7 @@ export default function CatalogueList({ products }) {
       } catch (err) {
         setError(err.message);
       } finally {
-        setLoading(false); // Detener el estado de carga
+        setLoading(false);
       }
     };
 
@@ -34,41 +41,80 @@ export default function CatalogueList({ products }) {
   }, []);
 
   if (loading) {
-    return <p className="text-gray-500 text-sm">Cargando...</p>; // Mensaje de carga
+    return <p className="text-gray-500 text-sm">Cargando...</p>;
   }
 
   if (error) {
     return <p className="text-red-500 text-sm">Error: {error}</p>;
   }
 
-  // Función para cargar más productos
-  const loadMore = () => {
-    setVisibleCount((prevCount) => prevCount + 20); // Aumentar en 20 el conteo visible
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const visibleProducts = products.slice(startIndex, startIndex + itemsPerPage);
+
+  const goToPage = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    const newItemsPerPage = parseInt(e.target.value, 10);
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
   };
 
   return (
     <div>
-      {/* Usar grid para alinear las tarjetas */}
       <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
-        {products
-          ?.slice(0, visibleCount)
-          .filter((product) => product.img) // Filtrar productos sin imagen
-          .map((product) => (
-            <ProductCard key={product.id} product={product} user={userData} />
-          ))}
+        {visibleProducts.map((product) => (
+          <ProductCard key={product.id} product={product} user={userData} />
+        ))}
       </div>
 
-      {/* Mostrar enlace "Cargar más" si hay más productos por cargar */}
-      <div>
-        {visibleCount < products.length && (
-          <span
-            onClick={loadMore}
-            className="mt-4 cursor-pointer hover:underline flex items-center justify-center gap-2"
+      <div className="mt-6 flex flex-col items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-6 mt-4 lg:flex-row lg:gap-8">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`p-3 transition-all duration-300 ease-in-out ${
+              currentPage === 1
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-red-500 hover:bg-gray-100"
+            }`}
           >
-            Cargar más
-            <ArrowIcon className={"w-3 h-3 transform rotate-90"} />
+            <ArrowIcon className="w-5 h-5 transform rotate-180" />
+          </button>
+
+          <span className="text-sm text-gray-600 font-semibold">
+            Página {currentPage} de {totalPages}
           </span>
-        )}
+
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`p-3 transition-all duration-300 ease-in-out ${
+              currentPage === totalPages
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-red-500 hover:bg-gray-100"
+            }`}
+          >
+            <ArrowIcon className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-4 text-gray-600 mt-4 lg:flex-row lg:gap-8">
+          <span className="text-sm font-semibold">Mostrar</span>
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="border-2 border-gray-300 rounded-lg p-2 text-sm transition-all duration-300 ease-out focus:ring-2 focus:ring-red-500 focus:border-red-500 hover:bg-gray-100"
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={30}>30</option>
+            <option value={40}>40</option>
+          </select>
+        </div>
       </div>
     </div>
   );

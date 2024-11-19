@@ -1,14 +1,16 @@
-import ProductDashboard from "./ProductDashboard"
+import ProductDashboard from "./ProductDashboard/ProductDashboard";
+import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
 
 export default function ContentAdmin({ selectedContent }) {
     const renderContent = () => {
         switch (selectedContent) {
             case 'products':
                 return <ProductDashboard/>
+                case 'customers':
+                    return <CustomerDashboard/>
             case 'orders':
                 return <p className="text-base text-muted-foreground">Here are your orders.</p>;
-            case 'customers':
-                return <p className="text-base text-muted-foreground">Here are your customers.</p>;
+
             case 'settings':
                 return <p className="text-base text-muted-foreground">Here are your settings.</p>;
             default:

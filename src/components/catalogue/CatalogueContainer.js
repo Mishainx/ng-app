@@ -1,20 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CatalogueList from "./CatalogueList";
 import FilterComponent from "./FilterComponent";
 import { useCategories } from "@/context/CategoriesContext";
 
-export default function CatalogueContainer({ products }) {
+export default function CatalogueContainer({ products, total }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
-  const {categories} = useCategories()
+  const [itemsPerPage, setItemsPerPage] = useState(20); // Estado para la cantidad de productos por página
+  const { categories } = useCategories();
+
 
   const sortProducts = (productsToSort, key, direction) => {
     return productsToSort.sort((a, b) => {
       const valA = a[key];
       const valB = b[key];
-
       if (direction === "asc") {
         return valA > valB ? 1 : -1;
       } else {
@@ -28,17 +29,14 @@ export default function CatalogueContainer({ products }) {
 
     // Filtrar por categoría
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (product) => product.category === selectedCategory
-      );
+      filtered = filtered.filter((product) => product.category === selectedCategory);
     }
 
-    // Filtrar por subcategoría (si se selecciona una)
+    // Filtrar por subcategoría
     if (selectedSubcategory) {
-      filtered = filtered.filter((product) => {
-        // Comprobar si alguna subcategoría del producto coincide con la subcategoría seleccionada
-        return product.subcategory.includes(selectedSubcategory);
-      });
+      filtered = filtered.filter((product) =>
+        product?.subcategory?.includes(selectedSubcategory)
+      );
     }
 
     // Filtrar por término de búsqueda
@@ -48,10 +46,9 @@ export default function CatalogueContainer({ products }) {
         const matchesName = product?.name?.toLowerCase().includes(searchLower);
         const matchesLongDescription = product?.longDescription?.toLowerCase().includes(searchLower);
         const matchesCategory = product?.category?.toLowerCase().includes(searchLower);
-        const matchesSubcategory = product?.subcategory.some((subcat) =>
+        const matchesSubcategory = product?.subcategory?.some((subcat) =>
           subcat.toLowerCase().includes(searchLower)
         );
-
         return matchesName || matchesLongDescription || matchesCategory || matchesSubcategory;
       });
     }
@@ -67,6 +64,7 @@ export default function CatalogueContainer({ products }) {
     setFilteredProducts(sorted);
   };
 
+
   return (
     <section className="w-full flex flex-col items-center justify-center">
       <FilterComponent
@@ -74,7 +72,11 @@ export default function CatalogueContainer({ products }) {
         onFilter={handleFilter}
         onSortChange={handleSortChange}
       />
-      <CatalogueList products={filteredProducts} />
+      {/* Mostrar la cantidad de productos filtrados */}
+      <p className="text-center mt-4">
+        {filteredProducts.length} productos encontrados de {total}
+      </p>
+      <CatalogueList products={filteredProducts} total={total} /> {/* Pasamos total */}
     </section>
   );
 }

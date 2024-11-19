@@ -6,7 +6,7 @@ import { capitalizeFirstLetter } from "@/utils/stringsManager";
 export default function FilterComponent({
   categories,
   onFilter,
-  onSortChange,
+  onSortChange,  
 }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
@@ -111,7 +111,10 @@ export default function FilterComponent({
             <option value="price-desc">Precio (Mayor a Menor)</option>
           </select>
         </div>
+
+        
       </div>
+      
     </div>
   );
 }

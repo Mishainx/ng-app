@@ -1,5 +1,8 @@
 import "../globals.css";
-import { ProductProvider } from "@/context/ProductsContext";
+import { CategoriesProvider } from "@/context/CategoriesContext";
+import { ProductsProvider } from "@/context/ProductsContext";
+import { ClientsProvider } from "@/context/ClientsContext";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: 'Admin Panel',
@@ -10,9 +13,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ProductProvider>
-          {children}
-        </ProductProvider>
+        <ClientsProvider>
+        <CategoriesProvider>
+          <ProductsProvider>
+            <ToastContainer/>
+              {children}
+          </ProductsProvider>
+        </CategoriesProvider>
+        </ClientsProvider>
+
       </body>
     </html>
   )

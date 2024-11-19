@@ -7,6 +7,7 @@ import TopButton from "../../src/components/topbutton/TopButton";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
+import { PageProvider } from "@/context/PageContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,12 +24,14 @@ export default function RootLayout({ children }) {
 
         <AuthProvider>
         <CategoriesProvider>
+          <PageProvider>
               <Header/>
               <ToastContainer/>
               {children}
               <Footer/>
               <TopButton/>
               <WhatsappButton/>
+              </PageProvider>
           </CategoriesProvider>
         </AuthProvider>
 

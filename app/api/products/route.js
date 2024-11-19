@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDocs, collection, addDoc } from 'firebase/firestore';
+import { getDocs, collection, addDoc, query, limit, startAfter, where } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { cookies } from "next/headers";
 import { createSlug, slugExists } from '@/utils/createSlug';
@@ -12,15 +12,68 @@ import { subcategoryExists } from '@/utils/subcategoryExits';
 import { productExists } from '@/utils/productExits';
 
 // `GET` para obtener los valores actuales de las categorías
-export const GET = async () => {
+export const GET = async (req) => {
   try {
-    const productsSnapshot = await getDocs(collection(db, 'products'));
+    const { searchParams } = new URL(req.url);
+
+    // Obtener los parámetros de la query
+    const limitParam = parseInt(searchParams.get('limit')) || null; // Si no se pasa limit, será null
+    const offsetParam = parseInt(searchParams.get('offset')) || 0; // Desplazamiento para la paginación (default: 0)
+    const categoryParam = searchParams.get('category'); // Filtrar por categoría
+    const subcategoryParam = searchParams.get('subcategory'); // Filtrar por subcategoría
+
+    // Referencia a la colección
+    const collectionRef = collection(db, 'products');
+
+    // Crear la query dinámica
+    let productQuery = query(collectionRef);
+
+    // Filtrar por categoría si existe el parámetro
+    if (categoryParam) {
+      productQuery = query(productQuery, where('category', '==', categoryParam));
+    }
+
+    // Filtrar por subcategoría si existe el parámetro
+    if (subcategoryParam) {
+      productQuery = query(productQuery, where('subcategory', '==', subcategoryParam));
+    }
+
+    // Si no hay límite, devolvemos todos los productos
+    let productCountQuery = query(collectionRef); // Query para contar productos
+    if (categoryParam) {
+      productCountQuery = query(productCountQuery, where('category', '==', categoryParam));
+    }
+    if (subcategoryParam) {
+      productCountQuery = query(productCountQuery, where('subcategory', '==', subcategoryParam));
+    }
+
+    // Contar los productos (esto es necesario para obtener el total sin aplicar limitación)
+    const countSnapshot = await getDocs(productCountQuery);
+    const totalProducts = countSnapshot.size; // Total de productos según los filtros
+
+    // Limitar resultados solo si limitParam no es null
+    if (limitParam !== null) {
+      productQuery = query(productQuery, limit(limitParam));
+    }
+
+    // Aplicar paginación usando offset si es necesario
+    if (offsetParam > 0) {
+      const offsetSnapshot = await getDocs(query(collectionRef, limit(offsetParam)));
+      const lastVisible = offsetSnapshot.docs[offsetSnapshot.docs.length - 1];
+      productQuery = query(productQuery, startAfter(lastVisible));
+    }
+
+    // Ejecutar la query de productos
+    const productsSnapshot = await getDocs(productQuery);
+
     const products = productsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Devolver la respuesta con los productos y el total
     return NextResponse.json(
-      { message: 'success', payload: products },
+      { message: 'success', payload: products, total: totalProducts },
       { status: 200 }
     );
   } catch (error) {
@@ -30,6 +83,7 @@ export const GET = async () => {
     );
   }
 };
+
 
 export const POST = async (req) => {
   try {
@@ -57,7 +111,7 @@ export const POST = async (req) => {
 
     // Obtener datos del producto del cuerpo de la solicitud
     const formData = await req.formData();
-    const title = formData.get('title');
+    const name = formData.get('name');
     const category = formData.get('category');
     const subcategories = formData.getAll('subcategory'); // Obtener un array de subcategorías
     const price = formData.get('price');
@@ -67,7 +121,7 @@ export const POST = async (req) => {
     const featured = formData.get('featured') === 'true';
     const visible = formData.get('visible') === 'true';
     const stock = formData.get('stock') === 'true';
-    let img = formData.get('imgFile');
+    let img = formData.get('img');
     const brand = formData.get('brand');
 
     // Obtener los SKU de productos relacionados desde el formulario
@@ -85,7 +139,7 @@ export const POST = async (req) => {
     // Verificar la existencia de cada subcategoría y almacenar solo las válidas
     const validSubcategories = [];
     for (const subcategory of subcategories) {
-      const exists = await subcategoryExists(subcategory);
+      const exists = await subcategoryExists(category, subcategory);
       if (exists) {
         validSubcategories.push(subcategory); // Solo agregar subcategorías válidas
       }
@@ -115,10 +169,10 @@ export const POST = async (req) => {
     }
 
     // Crear un slug único
-    const uniqueSlug = await createSlug(title, slugExists);
+    const uniqueSlug = await createSlug(name, slugExists);
 
     const productData = {
-      title,
+      name,
       category,
       subcategories: validSubcategories, // Usar el array de subcategorías válidas
       price: parseFloat(price),
@@ -135,14 +189,6 @@ export const POST = async (req) => {
       relatedProds: validRelatedSkus.length > 0 ? validRelatedSkus : [],
       gallery: [] // Asignar SKU de productos relacionados, o array vacío
     };
-
-    // Verificar que existan subcategorías válidas antes de crear el producto
-    if (validSubcategories.length === 0) {
-      return NextResponse.json(
-        { message: 'Error: No hay subcategorías válidas' },
-        { status: 400 }
-      );
-    }
 
     // Crear el producto en Firestore
     await addDoc(collection(db, 'products'), productData);

@@ -19,19 +19,24 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(credentials),
       });
+  
       if (!response.ok) {
-        throw new Error("Error en el inicio de sesión");
+        // Lanza un error con el mensaje que viene del backend (si es posible) o usa un mensaje genérico
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "Error en el inicio de sesión");
       }
+  
       const data = await response.json();
-
-      // Assuming the login now returns full user profile data including cart and other info
-      setUserData(data); // Set full user data on login
-      setLoading(false); // Set loading to false after login
+      setUserData(data); // Almacena los datos del usuario
+      setLoading(false); // Detiene el estado de carga
+      return data; // Retorna los datos para que los componentes que llaman puedan usarlos si es necesario
     } catch (error) {
       setError(error.message);
-      setLoading(false); // Also set loading to false if there's an error
+      setLoading(false);
+      throw error; // Propaga el error hacia los componentes que llamen a esta función
     }
   };
+  
 
   // Optional: This useEffect can be removed if you handle the data entirely in login
   useEffect(() => {

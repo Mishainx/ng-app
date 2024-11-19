@@ -1,25 +1,32 @@
-"use client"
+"use client";
 
-import Image from 'next/image';
-import { capitalizeFirstLetter, formatPriceToUSD } from '@/utils/stringsManager';
-import ActionButtons from './actionsButtons';
+import Image from "next/image";
+import { capitalizeFirstLetter, formatPriceToUSD } from "@/utils/stringsManager";
+import ActionButtons from "./actionsButtons";
 import { useAuth } from "@/context/AuthContext";
-import Link from 'next/link';
-import EyeIcon from '@/icons/EyeIcon';
+import Link from "next/link";
+import EyeIcon from "@/icons/EyeIcon";
 
 // Imagen de fallback si la imagen del producto es null
-const fallbackImage = '/images/default-product.png';
+const fallbackImage = "/images/default-product.png";
 
 export default function ProductDetail({ product }) {
   const { userData, loading } = useAuth();
 
   // Arreglo de detalles del producto
   const productDetails = [
-    { label: 'Presentación', value: capitalizeFirstLetter(product.shortDescription) },
-    { label: 'Descripción', value: capitalizeFirstLetter(product.longDescription) },
-    { label: 'Categoría', value: capitalizeFirstLetter(product.category) },
-    { label: 'Stock', value: product.stock ? 'Disponible' : 'Sin stock' },
-    { label: 'Sku', value: product.sku },
+    { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
+    { label: "Descripción", value: capitalizeFirstLetter(product.longDescription) },
+    { label: "Categoría", value: capitalizeFirstLetter(product.category) },
+    { label: "Stock", value: product.stock ? "Disponible" : "Sin stock" },
+    { label: "Sku", value: product.sku },
+    // Nueva clave subcategorías
+    {
+      label: "Subcategorías",
+      value: product.subcategory
+        ? product.subcategory.map((sub) => capitalizeFirstLetter(sub)).join(", ")
+        : "No disponible",
+    },
   ];
 
   return (
@@ -65,7 +72,7 @@ export default function ProductDetail({ product }) {
                   {formatPriceToUSD(product.price)}
                 </p>
                 <p className="text-2xl font-semibold text-red-500">
-                  {formatPriceToUSD(product.price - (product.price * product.discount / 100))}
+                  {formatPriceToUSD(product.price - (product.price * product.discount) / 100)}
                 </p>
               </>
             ) : (
@@ -75,12 +82,12 @@ export default function ProductDetail({ product }) {
             )}
           </div>
         ) : (
-          <Link href="/login" >
-          <p className="my-2 flex items-center justify-center md:justify-start text-slate-400 text-xs hover:text-slate-600 transition-colors duration-300">
-            <EyeIcon width="20" height="20" className="mr-1" />
-            Para ver los precios debes estar registrado {/* Mostrar ícono con texto de acceso a precios */}
-          </p>
-        </Link>
+          <Link href="/login">
+            <p className="my-2 flex items-center justify-center md:justify-start text-slate-400 text-xs hover:text-slate-600 transition-colors duration-300">
+              <EyeIcon width="20" height="20" className="mr-1" />
+              Para ver los precios debes estar registrado {/* Mostrar ícono con texto de acceso a precios */}
+            </p>
+          </Link>
         )}
 
         {/* Descripción del producto */}
