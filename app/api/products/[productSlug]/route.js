@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/firebase/config';
-import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc,deleteDoc } from 'firebase/firestore';
 import { createSlug,slugExists } from '@/utils/createSlug';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/firebase/config';
@@ -63,6 +63,8 @@ export const DELETE = async (req, { params }) => {
       );
     }
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       { message: 'Error al eliminar el producto', error: error.message },
       { status: 500 }
