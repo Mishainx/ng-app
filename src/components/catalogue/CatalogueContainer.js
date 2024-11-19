@@ -7,8 +7,9 @@ import { useCategories } from "@/context/CategoriesContext";
 
 export default function CatalogueContainer({ products, total }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
+  console.log(filteredProducts);
+  console.log(products)
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
-  const [itemsPerPage, setItemsPerPage] = useState(20); // Estado para la cantidad de productos por página
   const { categories } = useCategories();
 
   // Función para ordenar productos
