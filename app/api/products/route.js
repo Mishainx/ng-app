@@ -25,7 +25,7 @@ export const GET = async (req) => {
     // Referencia a la colección
     const collectionRef = collection(db, 'products');
 
-    // Crear la query dinámica
+    // Crear la query dinámica para los productos
     let productQuery = query(collectionRef);
 
     // Filtrar por categoría si existe el parámetro
@@ -37,19 +37,6 @@ export const GET = async (req) => {
     if (subcategoryParam) {
       productQuery = query(productQuery, where('subcategory', '==', subcategoryParam));
     }
-
-    // Si no hay límite, devolvemos todos los productos
-    let productCountQuery = query(collectionRef); // Query para contar productos
-    if (categoryParam) {
-      productCountQuery = query(productCountQuery, where('category', '==', categoryParam));
-    }
-    if (subcategoryParam) {
-      productCountQuery = query(productCountQuery, where('subcategory', '==', subcategoryParam));
-    }
-
-    // Contar los productos (esto es necesario para obtener el total sin aplicar limitación)
-    const countSnapshot = await getDocs(productCountQuery);
-    const totalProducts = countSnapshot.size; // Total de productos según los filtros
 
     // Limitar resultados solo si limitParam no es null
     if (limitParam !== null) {
@@ -63,13 +50,25 @@ export const GET = async (req) => {
       productQuery = query(productQuery, startAfter(lastVisible));
     }
 
-    // Ejecutar la query de productos
+    // Obtener los productos según la query
     const productsSnapshot = await getDocs(productQuery);
-
     const products = productsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Crear la query para contar los productos
+    let productCountQuery = query(collectionRef); // Query para contar productos
+    if (categoryParam) {
+      productCountQuery = query(productCountQuery, where('category', '==', categoryParam));
+    }
+    if (subcategoryParam) {
+      productCountQuery = query(productCountQuery, where('subcategory', '==', subcategoryParam));
+    }
+
+    // Contar los productos (esto es necesario para obtener el total sin aplicar limitación)
+    const countSnapshot = await getDocs(productCountQuery);
+    const totalProducts = countSnapshot.size; // Total de productos según los filtros
 
     // Devolver la respuesta con los productos y el total
     return NextResponse.json(
