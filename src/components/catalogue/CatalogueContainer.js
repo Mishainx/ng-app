@@ -11,9 +11,10 @@ export default function CatalogueContainer({ products, total }) {
   const [itemsPerPage, setItemsPerPage] = useState(20); // Estado para la cantidad de productos por página
   const { categories } = useCategories();
 
-
+  // Función para ordenar productos
   const sortProducts = (productsToSort, key, direction) => {
-    return productsToSort.sort((a, b) => {
+    const sortedProducts = [...productsToSort]; // Copiar el array
+    return sortedProducts.sort((a, b) => {
       const valA = a[key];
       const valB = b[key];
       if (direction === "asc") {
@@ -24,8 +25,9 @@ export default function CatalogueContainer({ products, total }) {
     });
   };
 
-  const handleFilter = (selectedCategory, selectedSubcategory, searchTerm) => {
-    let filtered = products;
+  // Función de filtro para manejar los productos
+  const handleFilter = (selectedCategory = "all", selectedSubcategory = "", searchTerm = "") => {
+    let filtered = [...products]; // Copiar los productos para evitar mutar el original
 
     // Filtrar por categoría
     if (selectedCategory !== "all") {
@@ -58,12 +60,17 @@ export default function CatalogueContainer({ products, total }) {
     setFilteredProducts(filtered);
   };
 
+  // Cambiar la opción de orden
   const handleSortChange = (key, direction) => {
     setSortOption({ key, direction });
     const sorted = sortProducts([...filteredProducts], key, direction);
     setFilteredProducts(sorted);
   };
 
+  // UseEffect para manejar cambios en el array de productos y asegurarse de que la lista de productos filtrados se actualice
+  useEffect(() => {
+    setFilteredProducts(products); // Inicia con todos los productos
+  }, [products]);
 
   return (
     <section className="w-full flex flex-col items-center justify-center">
@@ -74,7 +81,7 @@ export default function CatalogueContainer({ products, total }) {
       />
       {/* Mostrar la cantidad de productos filtrados */}
       <p className="text-center mt-4">
-        {filteredProducts.length} productos encontrados de {total}
+        {filteredProducts.length} productos encontrados
       </p>
       <CatalogueList products={filteredProducts} total={total} /> {/* Pasamos total */}
     </section>
