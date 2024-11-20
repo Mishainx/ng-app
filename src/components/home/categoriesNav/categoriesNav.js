@@ -60,24 +60,23 @@ const CategoriesNav = () => {
           id="categories-container"
           className="flex space-x-6 p-2 overflow-x-auto scrollbar-hide me-4 md:me-0"
         >
-{categories.map((category) => (
-  <Link href={`categorias/${category.slug}`} key={category.categoryId}>
-    <button className="block p-4 rounded-lg hover:bg-gray-200 hover:shadow-lg transform hover:-translate-y-1 transition duration-200 w-full">
-      <div className="flex flex-col items-center">
-        <div className="relative w-24 h-24">
-          <Image
-            src={category.icon}
-            fill={true}
-            alt={`${category.title} category`}
-            className="hover:scale-110 transition-transform duration-700 ease-in-out"
-          />
-        </div>
-        <h3 className="mt-2 text-center">{category.title}</h3>
-      </div>
-    </button>
-  </Link>
-))}
-
+          {categories.map((category) => (
+            <Link href={`categorias/${category.slug}`} key={category.slug}> {/* Usamos slug como key */}
+              <button className="block p-4 rounded-lg hover:bg-gray-200 hover:shadow-lg transform hover:-translate-y-1 transition duration-200 w-full">
+                <div className="flex flex-col items-center">
+                  <div className="relative w-24 h-24">
+                    <Image
+                      src={category.icon}
+                      fill={true}
+                      alt={`${category.title} category`}
+                      className="hover:scale-110 transition-transform duration-700 ease-in-out"
+                    />
+                  </div>
+                  <h3 className="mt-2 text-center">{category.title}</h3>
+                </div>
+              </button>
+            </Link>
+          ))}
         </div>
         {isOverflowing && (
           <button

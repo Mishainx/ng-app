@@ -7,8 +7,7 @@ import { useCategories } from "@/context/CategoriesContext";
 
 export default function CatalogueContainer({ products, total }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
-  console.log(filteredProducts);
-  console.log(products)
+
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
   const { categories } = useCategories();
 
