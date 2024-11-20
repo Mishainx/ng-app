@@ -4,16 +4,19 @@ import { useState, useEffect } from "react";
 import CatalogueList from "./CatalogueList";
 import FilterComponent from "./FilterComponent";
 import { useCategories } from "@/context/CategoriesContext";
+import { useProducts } from "@/context/ProductsContext";
 
-export default function CatalogueContainer({ products, total }) {
+export default function CatalogueContainer() {
+  // Get products from ProductsContext
+  const { products } = useProducts();
+  
   const [filteredProducts, setFilteredProducts] = useState(products);
-
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
   const { categories } = useCategories();
 
-  // Función para ordenar productos
+  // Function to sort products
   const sortProducts = (productsToSort, key, direction) => {
-    const sortedProducts = [...productsToSort]; // Copiar el array
+    const sortedProducts = [...productsToSort]; // Copy the array
     return sortedProducts.sort((a, b) => {
       const valA = a[key];
       const valB = b[key];
@@ -25,23 +28,23 @@ export default function CatalogueContainer({ products, total }) {
     });
   };
 
-  // Función de filtro para manejar los productos
+  // Handle filtering products
   const handleFilter = (selectedCategory = "all", selectedSubcategory = "", searchTerm = "") => {
-    let filtered = [...products]; // Copiar los productos para evitar mutar el original
+    let filtered = [...products]; // Copy the products to avoid mutating the original array
 
-    // Filtrar por categoría
+    // Filter by category
     if (selectedCategory !== "all") {
       filtered = filtered.filter((product) => product.category === selectedCategory);
     }
 
-    // Filtrar por subcategoría
+    // Filter by subcategory
     if (selectedSubcategory) {
       filtered = filtered.filter((product) =>
         product?.subcategory?.includes(selectedSubcategory)
       );
     }
 
-    // Filtrar por término de búsqueda
+    // Filter by search term
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter((product) => {
@@ -55,21 +58,21 @@ export default function CatalogueContainer({ products, total }) {
       });
     }
 
-    // Ordenar los productos según el criterio seleccionado
+    // Sort the products according to the selected criteria
     filtered = sortProducts(filtered, sortOption.key, sortOption.direction);
     setFilteredProducts(filtered);
   };
 
-  // Cambiar la opción de orden
+  // Change the sort option
   const handleSortChange = (key, direction) => {
     setSortOption({ key, direction });
     const sorted = sortProducts([...filteredProducts], key, direction);
     setFilteredProducts(sorted);
   };
 
-  // UseEffect para manejar cambios en el array de productos y asegurarse de que la lista de productos filtrados se actualice
+  // Update filtered products when the products context changes
   useEffect(() => {
-    setFilteredProducts(products); // Inicia con todos los productos
+    setFilteredProducts(products); // Initialize with all products
   }, [products]);
 
   return (
@@ -79,11 +82,11 @@ export default function CatalogueContainer({ products, total }) {
         onFilter={handleFilter}
         onSortChange={handleSortChange}
       />
-      {/* Mostrar la cantidad de productos filtrados */}
+      {/* Display the number of filtered products */}
       <p className="text-center mt-4">
-        {filteredProducts.length} productos encontrados
+        {filteredProducts?.length} productos encontrados
       </p>
-      <CatalogueList products={filteredProducts} total={total} /> {/* Pasamos total */}
+      <CatalogueList products={filteredProducts}  />
     </section>
   );
 }

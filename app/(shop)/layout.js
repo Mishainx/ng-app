@@ -8,6 +8,7 @@ import { CategoriesProvider } from "@/context/CategoriesContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import { PageProvider } from "@/context/PageContext";
+import { ProductsProvider } from "@/context/ProductsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
 
         <AuthProvider>
         <CategoriesProvider>
+          <ProductsProvider>
           <PageProvider>
               <Header/>
               <ToastContainer/>
@@ -32,6 +34,7 @@ export default function RootLayout({ children }) {
               <TopButton/>
               <WhatsappButton/>
               </PageProvider>
+              </ProductsProvider>
           </CategoriesProvider>
         </AuthProvider>
 
