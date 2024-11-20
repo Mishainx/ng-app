@@ -14,25 +14,27 @@ export default function ProductDetail({ product }) {
   const { userData, loading } = useAuth();
 
   // Arreglo de detalles del producto
-  const productDetails = [
-    { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
-    { label: "Marca", value: capitalizeFirstLetter(product.brand) },
-    { label: "Descripción", value: capitalizeFirstLetter(product.longDescription) },
-    { label: "Categoría", value: capitalizeFirstLetter(product.category) },
-    { label: "Stock", value: product.stock ? "Disponible" : "Sin stock" },
-    { label: "Sku", value: product.sku },
-    // Nueva clave subcategorías
-    {
-      label: "Subcategorías",
-      value: product.subcategory
-        ? product.subcategory
-            .map((sub) =>
-              capitalizeFirstLetter(sub.replace(`${product.category}-`, ""))
-            )
-            .join(", ")
-        : "No disponible",
-    }
-  ];
+const productDetails = [
+  { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
+  { label: "Marca", value: capitalizeFirstLetter(product.brand) },
+  { label: "Descripción", value: capitalizeFirstLetter(product.longDescription) },
+  { label: "Categoría", value: capitalizeFirstLetter(product.category) },
+  { label: "Stock", value: product.stock ? "Disponible" : "Sin stock" },
+  { label: "Sku", value: product.sku },
+];
+
+// Solo agregar "Subcategorías" si existen
+if (product.subcategories && product.subcategory.length > 0) {
+  productDetails.push({
+    label: "Subcategorías",
+    value: product.subcategory
+      .map((sub) =>
+        capitalizeFirstLetter(sub.replace(`${product.category}-`, ""))
+      )
+      .join(", "),
+  });
+}
+
 
   return (
     <div className="flex flex-col items-center sm:flex-row md:items-start gap-10 p-6">
@@ -78,7 +80,9 @@ export default function ProductDetail({ product }) {
                   {formatPriceToUSD(product.price)}
                 </p>
                 <p className="text-2xl font-semibold text-red-500">
-                  {formatPriceToUSD(product.price - (product.price * product.discount) / 100)}
+                  {formatPriceToUSD(
+                    product.price - (product.price * product.discount) / 100
+                  )}
                 </p>
               </>
             ) : (
@@ -91,7 +95,7 @@ export default function ProductDetail({ product }) {
           <Link href="/login">
             <p className="my-2 flex items-center justify-center md:justify-start text-slate-400 text-xs hover:text-slate-600 transition-colors duration-300">
               <EyeIcon width="20" height="20" className="mr-1" />
-              Para ver los precios debes estar registrado {/* Mostrar ícono con texto de acceso a precios */}
+              Para ver los precios debes estar registrado
             </p>
           </Link>
         )}
