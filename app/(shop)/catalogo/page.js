@@ -1,19 +1,25 @@
 import ProductList from "@/components/product/productList";
 
 export default async function Catalogo() {
-  const getProducts = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-      next: { revalidate: 60 } // Configura la revalidación si es necesario
-    });
-    if (!response.ok) {
-      throw new Error('Failed to fetch products');
-    }
-    const data = await response.json();
-    return data.payload || [];
-  };
+  async function getProducts() {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`); // Ajusta la URL según sea necesario
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+  
+      const products = data.payload;
+      return products;
+    } catch (error) {
 
-  const products = await getProducts();
-  console.log(products);
+      console.error("Error fetching products:", error);
+      return null; // O ajusta esto según cómo quieras manejar el error en tu aplicación
+    }
+  }
+  const products = await getProducts()
 
   return (
     <main className="w-full flex flex-col items-center justify-start min-h-screen py-10">
