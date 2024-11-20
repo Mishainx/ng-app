@@ -1,3 +1,4 @@
+"use client"
 import CatalogueContainer from '../catalogue/CatalogueContainer';
 
 export default async function ProductList() {
