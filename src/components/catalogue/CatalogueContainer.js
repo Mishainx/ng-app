@@ -8,7 +8,7 @@ import { useProducts } from "@/context/ProductsContext";
 
 export default function CatalogueContainer() {
   // Get products from ProductsContext
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [sortOption, setSortOption] = useState({ key: "name", direction: "asc" });
@@ -86,7 +86,7 @@ export default function CatalogueContainer() {
       <p className="text-center mt-4">
         {filteredProducts?.length} productos encontrados
       </p>
-      <CatalogueList products={filteredProducts}  />
-    </section>
+      <CatalogueList products={filteredProducts} loading={loading} />
+       </section>
   );
 }

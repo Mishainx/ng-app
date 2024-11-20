@@ -4,11 +4,11 @@ import ProductCard from "../product/productCard";
 import ArrowIcon from "@/icons/ArrowIcon";
 import { usePage } from "@/context/PageContext";
 
-export default function CatalogueList({ products }) {
+export default function CatalogueList({ products, loading }) {
   const { currentPage, setCurrentPage } = usePage();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
@@ -40,7 +40,7 @@ export default function CatalogueList({ products }) {
     fetchUserProfile();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <p className="text-gray-500 text-sm">Cargando...</p>;
   }
 
@@ -67,7 +67,7 @@ export default function CatalogueList({ products }) {
     <div>
       <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
         {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product} user={userData} />
+          <ProductCard key={product.id} product={product} user={userData} loading={loading}/>
         ))}
       </div>
 

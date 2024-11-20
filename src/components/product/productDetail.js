@@ -40,6 +40,7 @@ export default function ProductDetail({ product }) {
             width={400}
             height={400}
             className="object-cover shadow-lg rounded-lg"
+            loading="lazy"
           />
         ) : (
           <Image
