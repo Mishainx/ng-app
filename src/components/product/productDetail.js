@@ -16,6 +16,7 @@ export default function ProductDetail({ product }) {
   // Arreglo de detalles del producto
   const productDetails = [
     { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
+    { label: "Marca", value: capitalizeFirstLetter(product.brand) },
     { label: "Descripción", value: capitalizeFirstLetter(product.longDescription) },
     { label: "Categoría", value: capitalizeFirstLetter(product.category) },
     { label: "Stock", value: product.stock ? "Disponible" : "Sin stock" },

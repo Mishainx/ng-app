@@ -3,6 +3,7 @@ import DesktopMenu from "../desktopmenu/desktopMenu";
 import MobileMenu from "../mobilemenu/mobileMenu";
 import ProductsIcon from "@/icons/ProductsIcon";
 import CartIcon from "@/icons/CartIcon";
+import { Suspense } from "react";
 
 const pages=[
   {title:"Catalogo", href:"/catalogo",src:<ProductsIcon width="20" height="20" />},

@@ -3,6 +3,7 @@ import CategoriesList from "../../src/components/home/categoriesList/categoriesL
 import HeroCarousel from "../../src/components/home/hero/hero";
 import FeaturedProducts from "../../src/components/product/FeaturedProducts";
 import NavCard from "../../src/components/product/navCard";
+import Loader from "@/components/loader/Loader";
 
 export default function Home() {
 
