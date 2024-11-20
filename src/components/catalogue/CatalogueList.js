@@ -10,6 +10,8 @@ export default function CatalogueList({ products, loading }) {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [isPageChanging, setIsPageChanging] = useState(false);
+
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
   useEffect(() => {
@@ -17,9 +19,7 @@ export default function CatalogueList({ products, loading }) {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`,
-          {
-            method: "GET",
-          }
+          { method: "GET" }
         );
 
         if (!response.ok) {
@@ -53,8 +53,15 @@ export default function CatalogueList({ products, loading }) {
 
   const goToPage = (page) => {
     if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
+      setIsPageChanging(true); // Activamos la animación
+      setTimeout(() => {
+        setCurrentPage(page);
+        setIsPageChanging(false); // Terminamos la animación
+      }, 500); // Retraso más largo para hacer la transición más suave
     }
+    window.scrollTo({
+      top: 0, // Posición superior
+    });
   };
 
   const handleItemsPerPageChange = (e) => {
@@ -65,9 +72,20 @@ export default function CatalogueList({ products, loading }) {
 
   return (
     <div>
-      <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
+      <div
+        className={`grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10 ${
+          isPageChanging
+            ? "opacity-0 transition-opacity duration-1000 ease-in-out" // Duración más larga y curva suave
+            : "opacity-100 transition-opacity duration-1000 ease-in-out" // Transición suave
+        }`}
+      >
         {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product} user={userData} loading={loading}/>
+          <ProductCard
+            key={product.id}
+            product={product}
+            user={userData}
+            loading={loading}
+          />
         ))}
       </div>
 
