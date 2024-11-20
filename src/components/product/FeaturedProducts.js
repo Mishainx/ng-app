@@ -6,8 +6,6 @@ import ProductCard from "./productCard";
 const FeaturedProducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(featuredProducts)
-
   // Fetch data only once
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
