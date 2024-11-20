@@ -14,65 +14,19 @@ import { productExists } from '@/utils/productExits';
 // `GET` para obtener los valores actuales de las categorías
 export const GET = async (req) => {
   try {
-    const { searchParams } = new URL(req.url);
-
-    // Obtener los parámetros de la query
-    const limitParam = parseInt(searchParams.get('limit')) || null; // Si no se pasa limit, será null
-    const offsetParam = parseInt(searchParams.get('offset')) || 0; // Desplazamiento para la paginación (default: 0)
-    const categoryParam = searchParams.get('category'); // Filtrar por categoría
-    const subcategoryParam = searchParams.get('subcategory'); // Filtrar por subcategoría
-
     // Referencia a la colección
     const collectionRef = collection(db, 'products');
 
-    // Crear la query dinámica para los productos
-    let productQuery = query(collectionRef);
-
-    // Filtrar por categoría si existe el parámetro
-    if (categoryParam) {
-      productQuery = query(productQuery, where('category', '==', categoryParam));
-    }
-
-    // Filtrar por subcategoría si existe el parámetro
-    if (subcategoryParam) {
-      productQuery = query(productQuery, where('subcategory', '==', subcategoryParam));
-    }
-
-    // Limitar resultados solo si limitParam no es null
-    if (limitParam !== null) {
-      productQuery = query(productQuery, limit(limitParam));
-    }
-
-    // Aplicar paginación usando offset si es necesario
-    if (offsetParam > 0) {
-      const offsetSnapshot = await getDocs(query(collectionRef, limit(offsetParam)));
-      const lastVisible = offsetSnapshot.docs[offsetSnapshot.docs.length - 1];
-      productQuery = query(productQuery, startAfter(lastVisible));
-    }
-
-    // Obtener los productos según la query
-    const productsSnapshot = await getDocs(productQuery);
+    // Obtener todos los productos sin filtros ni paginación
+    const productsSnapshot = await getDocs(collectionRef);
     const products = productsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Crear la query para contar los productos
-    let productCountQuery = query(collectionRef); // Query para contar productos
-    if (categoryParam) {
-      productCountQuery = query(productCountQuery, where('category', '==', categoryParam));
-    }
-    if (subcategoryParam) {
-      productCountQuery = query(productCountQuery, where('subcategory', '==', subcategoryParam));
-    }
-
-    // Contar los productos (esto es necesario para obtener el total sin aplicar limitación)
-    const countSnapshot = await getDocs(productCountQuery);
-    const totalProducts = countSnapshot.size; // Total de productos según los filtros
-
-    // Devolver la respuesta con los productos y el total
+    // Devolver la respuesta con los productos
     return NextResponse.json(
-      { message: 'success', payload: products, total: totalProducts },
+      { message: 'success', payload: products },
       { status: 200 }
     );
   } catch (error) {
@@ -82,7 +36,6 @@ export const GET = async (req) => {
     );
   }
 };
-
 
 export const POST = async (req) => {
   try {
