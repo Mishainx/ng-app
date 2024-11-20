@@ -25,9 +25,13 @@ export default function ProductDetail({ product }) {
     {
       label: "Subcategorías",
       value: product.subcategory
-        ? product.subcategory.map((sub) => capitalizeFirstLetter(sub)).join(", ")
+        ? product.subcategory
+            .map((sub) =>
+              capitalizeFirstLetter(sub.replace(`${product.category}-`, ""))
+            )
+            .join(", ")
         : "No disponible",
-    },
+    }
   ];
 
   return (
