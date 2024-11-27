@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import { PageProvider } from "@/context/PageContext";
 import { ProductsProvider } from "@/context/ProductsContext";
+import { TicketsProvider } from "@/context/TicketsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,12 +28,14 @@ export default function RootLayout({ children }) {
         <CategoriesProvider>
           <ProductsProvider>
           <PageProvider>
+            <TicketsProvider>
               <Header/>
               <ToastContainer/>
               {children}
               <Footer/>
               <TopButton/>
               <WhatsappButton/>
+              </TicketsProvider>
               </PageProvider>
               </ProductsProvider>
           </CategoriesProvider>

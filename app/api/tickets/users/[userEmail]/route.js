@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { authAdmin } from "@/firebase/authManager"; // Verificación del token
 
 export const GET = async (request, { params }) => {
-  const { userId } = params;
+  const { userEmail } = params; // Ahora buscamos por `email`
 
   try {
     // Obtener las cookies y el token
@@ -32,8 +32,8 @@ export const GET = async (request, { params }) => {
       );
     }
 
-    // Validar que el `userId` pertenece al usuario autenticado
-    if (decodedToken.uid !== userId) {
+    // Validar que el `email` proporcionado corresponde al usuario autenticado
+    if (decodedToken.email !== userEmail) {
       return NextResponse.json(
         { message: "Unauthorized: Access denied" },
         { status: 403 }
@@ -42,7 +42,7 @@ export const GET = async (request, { params }) => {
 
     // Consultar los tickets del usuario en Firestore
     const ticketsRef = collection(db, "tickets");
-    const q = query(ticketsRef, where("userId", "==", userId));
+    const q = query(ticketsRef, where("email", "==", userEmail)); // Buscar por `email`
     const querySnapshot = await getDocs(q);
 
     // Mapear los tickets obtenidos
@@ -53,7 +53,7 @@ export const GET = async (request, { params }) => {
 
     return NextResponse.json(tickets, { status: 200 });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching tickets:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }

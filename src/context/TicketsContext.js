@@ -120,6 +120,17 @@ const archiveTicket = async (ticketId) => {
   }
 };
 
+const getUserTickets = async (userEmail) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/users/${userEmail}`);
+    if (!response.ok) throw new Error("Error al cargar los tickets del usuario");
+    const data = await response.json();
+    setTickets(data); // Actualiza los tickets en el estado
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
 // Función para manejar la acción de archivar o desarchivar
 const handleArchiveTicket = async (ticketId, e) => {
   e.stopPropagation(); // Evitar que se propague el evento
@@ -144,7 +155,7 @@ const handleArchiveTicket = async (ticketId, e) => {
 
   return (
     <TicketsContext.Provider value={{
-      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket
+      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket,getUserTickets
     }}>
       {children}
     </TicketsContext.Provider>
