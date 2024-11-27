@@ -1,5 +1,6 @@
 import ProductDashboard from "./ProductDashboard/ProductDashboard";
 import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
+import TicketDashboard from "./ticketsDashboard/TicketsDashboard";
 
 export default function ContentAdmin({ selectedContent }) {
     const renderContent = () => {
@@ -8,8 +9,8 @@ export default function ContentAdmin({ selectedContent }) {
                 return <ProductDashboard/>
                 case 'customers':
                     return <CustomerDashboard/>
-            case 'orders':
-                return <p className="text-base text-muted-foreground">Here are your orders.</p>;
+            case 'tickets':
+                return <TicketDashboard/>;
 
             case 'settings':
                 return <p className="text-base text-muted-foreground">Here are your settings.</p>;

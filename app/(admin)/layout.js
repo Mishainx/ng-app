@@ -3,6 +3,7 @@ import { CategoriesProvider } from "@/context/CategoriesContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { ClientsProvider } from "@/context/ClientsContext";
 import { ToastContainer } from "react-toastify";
+import { TicketsProvider } from "@/context/TicketsContext";
 
 export const metadata = {
   title: 'Admin Panel',
@@ -16,8 +17,10 @@ export default function RootLayout({ children }) {
         <ClientsProvider>
         <CategoriesProvider>
           <ProductsProvider>
+            <TicketsProvider>
             <ToastContainer/>
               {children}
+              </TicketsProvider>
           </ProductsProvider>
         </CategoriesProvider>
         </ClientsProvider>

@@ -31,11 +31,11 @@ export const GET = async (request, { params }) => {
 export const POST = async (request, { params }) => {
   try {
     const { userId } = params;
-    const { productSku, quantity } = await request.json();
+    const { sku, quantity } = await request.json();
 
     // Validar formato del SKU (ejemplo: PRO-XXXXX donde XXXXX son números)
     const skuRegex = /^PRO-\d{5}$/;
-    if (!productSku || !skuRegex.test(productSku)) {
+    if (!sku || !skuRegex.test(sku)) {
       return NextResponse.json(
         { message: "Invalid product SKU format" },
         { status: 400 }
@@ -52,7 +52,7 @@ export const POST = async (request, { params }) => {
 
     // Comprobar si el producto existe en la colección de productos
     const productsRef = collection(db, "products"); // Asegúrate de que esta sea la colección correcta
-    const productQuery = query(productsRef, where("sku", "==", productSku));
+    const productQuery = query(productsRef, where("sku", "==", sku));
     const productSnapshot = await getDocs(productQuery);
 
     if (productSnapshot.empty) {
@@ -74,7 +74,7 @@ export const POST = async (request, { params }) => {
     let cart = userData.cart || [];
 
     // Buscar si el producto ya está en el carrito
-    const existingProductIndex = cart.findIndex(item => item.productSku === productSku);
+    const existingProductIndex = cart.findIndex(item => item.sku === sku);
 
     if (existingProductIndex > -1) {
       // Actualizar la cantidad si el producto ya existe en el carrito
@@ -82,7 +82,7 @@ export const POST = async (request, { params }) => {
     } else {
       // Agregar un nuevo producto al carrito
       cart.push({
-        productSku,
+        sku,
         quantity,
       });
     }
@@ -104,11 +104,11 @@ export const POST = async (request, { params }) => {
 export const PATCH = async (request, { params }) => {
     try {
       const { userId } = params;
-      const { productSku, quantity } = await request.json();
+      const { sku, quantity } = await request.json();
   
       // Validar SKU del producto
       const skuRegex = /^PRO-\d{5}$/;
-      if (!productSku || !skuRegex.test(productSku)) {
+      if (!sku || !skuRegex.test(sku)) {
         return NextResponse.json(
           { message: "Invalid product SKU format" },
           { status: 400 }
@@ -135,7 +135,7 @@ export const PATCH = async (request, { params }) => {
       let cart = userData.cart || [];
   
       // Buscar el índice del producto en el carrito
-      const productIndex = cart.findIndex(item => item.productSku === productSku);
+      const productIndex = cart.findIndex(item => item.sku === sku);
   
       if (productIndex === -1) {
         return NextResponse.json({ message: "Product not found in cart" }, { status: 404 });
@@ -161,11 +161,11 @@ export const PATCH = async (request, { params }) => {
 export const DELETE = async (request, { params }) => {
     try {
       const { userId } = params;
-      const { productSku } = await request.json();
+      const { sku } = await request.json();
   
       // Validar formato del SKU (ejemplo: PRO-XXXXX donde XXXXX son números)
       const skuRegex = /^PRO-\d{5}$/;
-      if (!productSku || !skuRegex.test(productSku)) {
+      if (!sku || !skuRegex.test(sku)) {
         return NextResponse.json(
           { message: "Invalid product SKU format" },
           { status: 400 }
@@ -184,7 +184,7 @@ export const DELETE = async (request, { params }) => {
       let cart = userData.cart || [];
   
       // Buscar si el producto está en el carrito
-      const productIndex = cart.findIndex(item => item.productSku === productSku);
+      const productIndex = cart.findIndex(item => item.sku === sku);
   
       if (productIndex === -1) {
         return NextResponse.json(

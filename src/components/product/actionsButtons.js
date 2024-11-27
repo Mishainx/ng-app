@@ -5,7 +5,7 @@ import { useState } from 'react';
 import AddProductButton from './addProductButton';
 import Link from 'next/link';
 
-export default function ActionButtons({ productSku, stock }) {
+export default function ActionButtons({ sku, stock }) {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (e) => {
@@ -37,7 +37,7 @@ export default function ActionButtons({ productSku, stock }) {
           </div>
 
           {/* Botón para agregar al carrito */}
-          <AddProductButton productSku={productSku} stock={stock} quantity={quantity} />
+          <AddProductButton sku={sku} stock={stock} quantity={quantity} />
         </>
       ) : (
         <div className='flex flex-col gap-2'>

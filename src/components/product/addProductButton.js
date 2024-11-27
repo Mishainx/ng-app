@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-export default function AddProductButton({ productSku, stock, quantity }) {
+export default function AddProductButton({ sku, stock, quantity }) {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false); // Estado para controlar el loading del botón
@@ -50,7 +50,7 @@ export default function AddProductButton({ productSku, stock, quantity }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productSku,
+          sku,
           quantity,
         }),
       });

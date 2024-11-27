@@ -1,23 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import TrashIcon from "@/icons/TrashIcon";
 import Link from "next/link";
 import Loader from "@/components/loader/Loader";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import OrderButton from "@/components/order/OrderButton";
 
 export default function Order() {
-  const { userData, loading } = useAuth();
+  const [userData, setUserData] = useState(null);
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
   const [cartProducts, setCartProducts] = useState([]);
-  const [isCartLoading, setIsCartLoading] = useState(true); // Para manejar el estado de carga del carrito
-  const [isProductsLoading, setIsProductsLoading] = useState(true); // Para manejar el estado de carga de productos
-  
+  const [error, setError] = useState(null);
+  const [isCartLoading, setIsCartLoading] = useState(true);
+  const [isProductsLoading, setIsProductsLoading] = useState(true);
+  const [isOrderSent, setIsOrderSent] = useState(false);
 
+  // Fetch user profile on page load
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
+
+        if (!response.ok) {
+          throw new Error("Error al obtener el perfil del usuario");
+        }
+        const data = await response.json();
+        setUserData(data);
+      } catch (err) {
+        setError("Error al obtener el perfil del usuario");
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -37,23 +57,23 @@ export default function Order() {
     fetchProducts();
   }, []);
 
+  // Fetch cart products
   useEffect(() => {
     const fetchCartProducts = async () => {
-      if (userData?.user) {
+      if (userData) {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.user.uid}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.id}`);
           if (!response.ok) {
             throw new Error("Error al obtener el carrito");
           }
           const data = await response.json();
 
-          // Mapeo del carrito para combinar la información del producto con la cantidad del carrito
           const updatedCartProducts = data.cart.map(cartItem => {
-            const productInfo = products.find(product => product.sku === cartItem.productSku);
+            const productInfo = products.find(product => product.sku === cartItem.sku);
             return {
               ...cartItem,
-              name: productInfo?.name || "Producto no encontrado", // Si no encuentra el producto
-              price: productInfo?.price || 0 // Precio por defecto en caso de que no esté disponible
+              name: productInfo?.name || "Producto no encontrado",
+              price: productInfo?.price || 0,
             };
           });
 
@@ -67,30 +87,29 @@ export default function Order() {
       }
     };
 
-    if (products.length > 0) { // Esperar a que los productos estén cargados antes de obtener el carrito
+    if (products.length > 0 && userData) {
       fetchCartProducts();
     }
   }, [userData, products]);
 
-  const removeProduct = async (productSku) => {
-    if (!userData.user) return;
+  const removeProduct = async sku => {
+    if (!userData) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.user.uid}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ productSku }),
+        body: JSON.stringify({ sku }),
       });
 
       if (!response.ok) {
         throw new Error("Error al eliminar el producto");
       }
 
-      setCartProducts(prevCart => prevCart.filter(item => item.productSku !== productSku));
+      setCartProducts(prevCart => prevCart.filter(item => item.sku !== sku));
       toast.success("Producto eliminado del pedido");
-
     } catch (error) {
       setError("Error al eliminar el producto");
     }
@@ -98,45 +117,16 @@ export default function Order() {
 
   const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-
-  const updateQuantity = (productSku, newQuantity) => {
-    setCartProducts(prevCart => 
-      prevCart.map(item => 
-        item.productSku === productSku 
-          ? { ...item, quantity: newQuantity } 
-          : item
+  const updateQuantity = (sku, newQuantity) => {
+    setCartProducts(prevCart =>
+      prevCart.map(item =>
+        item.sku === sku ? { ...item, quantity: newQuantity } : item
       )
     );
   };
-  
 
-  const generateWhatsAppMessage = () => {
-    if (!userData.user || cartProducts.length === 0) return "";
-
-    let message = `*Pedido de ${capitalizeFirstLetter(userData.user.name)} ${capitalizeFirstLetter(userData.user.surname)}*\n\n`;
-
-    message += "*Productos:\n*";
-    cartProducts.forEach(item => {
-      message += `${item.quantity} x ${capitalizeFirstLetter(item.name)} - $${item.price.toFixed(2)}\n`;
-    });
-
-    message += `\n*Total:* $${total.toFixed(2)}\n\n`;
-
-    message += "*Información del usuario:*\n";
-    message += `Nombre: ${capitalizeFirstLetter(userData.user.name)} ${capitalizeFirstLetter(userData.user.surname)}\n`;
-    message += `Email: ${userData.user.email}\n`;
-    message += `Teléfono: ${userData.user.whatsapp}\n`;
-    message += `Dirección: ${capitalizeFirstLetter(userData.user.address)}, ${capitalizeFirstLetter(userData.user.city)}, ${capitalizeFirstLetter(userData.user.province)}, ${capitalizeFirstLetter(userData.user.country)}\n`;
-    message += `CUIT: ${userData.user.cuit}\n`;
-    message += `Razón Social: ${capitalizeFirstLetter(userData.user.businessName)}\n`;
-
-    return encodeURIComponent(message);
-  };
-
-  const whatsappNumber = "+5491154041650"; // Número de WhatsApp
-
-  if (loading || isCartLoading || isProductsLoading) {
-    return <Loader/>;
+  if (isCartLoading || isProductsLoading) {
+    return <Loader />;
   }
 
   if (error) {
@@ -150,13 +140,28 @@ export default function Order() {
 
         <div className="mb-2">
           <h2 className="text-xl font-semibold mb-2">Información del Usuario</h2>
-          <p className="text-sm md:text-base"><strong>Nombre:</strong> {capitalizeFirstLetter(userData.user.name)}</p>
-          <p className="text-sm md:text-base"><strong>Apellido:</strong> {capitalizeFirstLetter(userData.user.surname)}</p>
-          <p className="text-sm md:text-base"><strong>Email:</strong> {userData.user.email}</p>
-          <p className="text-sm md:text-base"><strong>Teléfono:</strong> {userData.user.whatsapp}</p>
-          <p className="text-sm md:text-base"><strong>Dirección:</strong> {capitalizeFirstLetter(userData.user.address)}, {capitalizeFirstLetter(userData.user.city)}, {capitalizeFirstLetter(userData.user.province)}, {capitalizeFirstLetter(userData.user.country)}</p>
-          <p className="text-sm md:text-base"><strong>CUIT:</strong> {userData.user.cuit}</p>
-          <p className="text-sm md:text-base"><strong>Razón Social:</strong> {capitalizeFirstLetter(userData.user.businessName)}</p>
+          <p className="text-sm md:text-base">
+            <strong>Nombre:</strong> {capitalizeFirstLetter(userData?.name)}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>Apellido:</strong> {capitalizeFirstLetter(userData?.surname)}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>Email:</strong> {userData?.email}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>Teléfono:</strong> {userData?.whatsapp}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>Dirección:</strong>{" "}
+            {capitalizeFirstLetter(userData?.address)}, {capitalizeFirstLetter(userData?.city)}, {capitalizeFirstLetter(userData?.province)}, {capitalizeFirstLetter(userData?.country)}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>CUIT:</strong> {userData?.cuit}
+          </p>
+          <p className="text-sm md:text-base">
+            <strong>Razón Social:</strong> {capitalizeFirstLetter(userData?.businessName)}
+          </p>
         </div>
 
         {cartProducts.length > 0 ? (
@@ -166,53 +171,67 @@ export default function Order() {
               {cartProducts.map(item => {
                 const subtotal = item.price * item.quantity;
                 return (
-                  <div key={item.productSku} className="flex flex-col items-center xxs:flex-row justify-between xxs:items-start py-4">
+                  <div
+                    key={item.sku}
+                    className="flex flex-col items-center xxs:flex-row justify-between xxs:items-start py-4"
+                  >
                     <div className="flex-1 flex flex-col text-center xxs:text-start">
-                      <div className="font-medium text-sm md:text-base mb-1">{capitalizeFirstLetter(item.name)}</div>
-                      <div className="text-xs md:text-sm text-gray-500 xxs:text-start">{capitalizeFirstLetter(item.productSku)}</div>
-                      <div className="text-xs md:text-sm text-gray-500">Precio unitario: ${item.price.toFixed(2)}</div>
+                      <div className="font-medium text-sm md:text-base mb-1">
+                        {capitalizeFirstLetter(item.name)}
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-500 xxs:text-start">
+                        {capitalizeFirstLetter(item.sku)}
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-500">
+                        Precio unitario: ${item.price.toFixed(2)}
+                      </div>
                       <div className="flex items-center justify-center xxs:justify-start mt-1">
-  <button
-    className="text-red-500 mx-2"
-    onClick={() => updateQuantity(item.productSku, Math.max(item.quantity - 1, 1))} // Decremento
-  >
-    -
-  </button>
-  <span className="mx-2">{item.quantity}</span>
-  <button
-    className="text-green-500 mx-2"
-    onClick={() => updateQuantity(item.productSku, item.quantity + 1)} // Incremento
-  >
-    +
-  </button>
-</div>
-
+                        <button
+                          className="text-red-500 mx-2"
+                          onClick={() => updateQuantity(item.sku, Math.max(item.quantity - 1, 1))}
+                        >
+                          -
+                        </button>
+                        <span className="mx-2">{item.quantity}</span>
+                        <button
+                          className="text-green-500 mx-2"
+                          onClick={() => updateQuantity(item.sku, item.quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                     <div className="flex flex-col xxs:flex-row items-center mt-2 md:mt-0">
-                      <span className="text-lg font-bold text-red-600"> ${subtotal.toFixed(2)}</span>
+                      <div className="text-sm md:text-base font-semibold text-green-600">
+                        ${subtotal.toFixed(2)}
+                      </div>
                       <button
-                        className="text-red-500 ml-2"
-                        onClick={() => removeProduct(item.productSku)}
+                        onClick={() => removeProduct(item.sku)}
+                        className="mt-2 text-red-500 hover:underline ml-4 flex items-center gap-1"
                       >
-                        <TrashIcon className="text-center" />
+                        <TrashIcon /> Eliminar
                       </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-            <h3 className="mt-4 text-lg md:text-xl font-bold">Total: ${total.toFixed(2)}</h3>
-            <Link
-              href={`https://wa.me/${whatsappNumber}?text=${generateWhatsAppMessage()}`}
-              target="_blank"
-            >
-              <button className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition duration-200">
-                Realizar pedido
-              </button>
-            </Link>
+
+            <div className="flex justify-between mt-4">
+              <div className="font-semibold text-xl">Total: ${total.toFixed(2)}</div>
+              {cartProducts.length > 0 && (
+                <OrderButton
+                  whatsappNumber="+5491154041650"
+                  userData={userData}
+                  cartProducts={cartProducts}
+                  isOrderSent={isOrderSent}
+                  setIsOrderSent={setIsOrderSent}
+                />
+              )}
+            </div>
           </div>
         ) : (
-          <p className="text-center text-gray-500 mt-4">No hay productos en el carrito.</p>
+          <p className="text-center text-lg text-gray-500">Tu carrito está vacío</p>
         )}
       </section>
     </main>

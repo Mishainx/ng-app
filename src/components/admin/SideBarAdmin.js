@@ -120,8 +120,8 @@ const buttons = [
     icon: <UsersIcon className="h-5 w-5 text-gray-500" />,
   },
   {
-    id: 'orders',
-    text: 'Ordenes',
+    id: 'tickets',
+    text: 'Tickets',
     icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
   },
   {

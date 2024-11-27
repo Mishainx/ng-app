@@ -112,7 +112,7 @@ if (product.subcategories && product.subcategory.length > 0) {
 
         {/* Botones de acción */}
         <div className="mt-1 flex items-center justify-center md:justify-start">
-          <ActionButtons productSku={product.sku} stock={product.stock} />
+          <ActionButtons sku={product.sku} stock={product.stock} />
         </div>
       </div>
     </div>
