@@ -14,7 +14,7 @@ export async function middleware(request) {
 
   // Redirigir si no hay cookie
   if (!cookie) {
-    return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión
+    return NextResponse.redirect(new URL('/proximamente', request.url)); // Redirige a la página de inicio de sesión
   }
 
   // Verifica el token en la API
@@ -31,17 +31,17 @@ export async function middleware(request) {
       // Token es válido
       return NextResponse.next();
     } else {
-      return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión si el token no es válido
+      return NextResponse.redirect(new URL('/proximamente', request.url)); // Redirige a la página de inicio de sesión si el token no es válido
     }
   } catch (error) {
     console.error('Error al verificar el token:', error);
-    return NextResponse.redirect(new URL('/login', request.url)); // Redirige a la página de inicio de sesión en caso de error
+    return NextResponse.redirect(new URL('/proximamente', request.url)); // Redirige a la página de inicio de sesión en caso de error
   }
 }
 
 // Configura las rutas que requieren autenticación
 export const config = {
   matcher: [
-    '/admin/:path*' // Aplica a todas las rutas bajo /admin
+    '/((?!api/auth|public|proximamente|login|_next/static|_next/image|static|favicon.ico).*)'
   ],
 };

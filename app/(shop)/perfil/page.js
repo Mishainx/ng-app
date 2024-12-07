@@ -11,8 +11,6 @@ export default function Perfil() {
   const { tickets, loading: ticketsLoading, error: ticketsError, getUserTickets } = useTickets();
   const [expandedTicket, setExpandedTicket] = useState(null); // Estado para gestionar la expansión de los tickets
 
-  console.log(tickets);
-
   // Obtener los tickets del usuario cuando se cargue la página
   useEffect(() => {
     if (userData?.email) {

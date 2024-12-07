@@ -9,6 +9,7 @@ export const CategoriesProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Función para traer las categorías
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,8 +29,28 @@ export const CategoriesProvider = ({ children }) => {
     fetchCategories();
   }, []);
 
+  // Función para agregar una categoría
+  const addCategory = async (formData) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear la categoría');
+      }
+
+      const result = await response.json();
+      setCategories((prevCategories) => [...prevCategories, result.payload]); // Añadir la nueva categoría a la lista
+    } catch (error) {
+      setError(error.message);
+      throw error; // Lanza el error para que pueda ser manejado en el componente
+    }
+  };
+
   return (
-    <CategoriesContext.Provider value={{ categories, loading, error }}>
+    <CategoriesContext.Provider value={{ categories, loading, error, addCategory }}>
       {children}
     </CategoriesContext.Provider>
   );

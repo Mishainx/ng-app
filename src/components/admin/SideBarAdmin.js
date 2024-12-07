@@ -125,8 +125,8 @@ const buttons = [
     icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
   },
   {
-    id: 'settings',
-    text: 'Configuración',
+    id: 'categories',
+    text: 'Categories',
     icon: <SettingsIcon className="h-5 w-5 text-gray-500" />,
   },
   {
