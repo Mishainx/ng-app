@@ -52,7 +52,7 @@ export default function Proximamente() {
         </div>
 
         {/* Mario */}
-        <div className="hidden lg:block w-32 drop-shadow-2xl transition-opacity duration-1000">
+        <div className="w-32 drop-shadow-2xl transition-opacity duration-1000">
           <Image
             src="/proximamente/mario-nippongame.png"
             alt="Mario Nippon Game"
