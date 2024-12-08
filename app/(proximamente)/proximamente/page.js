@@ -22,8 +22,8 @@ export default function Proximamente() {
           <Image
             src="/proximamente/sonic-nippongame.png"
             alt="Sonic Nippon Game"
-            width={130}
-            height={130}
+            width={100} 
+            height={100}
             className="object-contain drop-shadow-lg"
           />
         </div>
@@ -49,6 +49,17 @@ export default function Proximamente() {
             className="object-contain drop-shadow-lg"
           />
         </div>
+      </div>
+
+      {/* Solo en mobile: Mario debajo del logo */}
+      <div className="lg:hidden mt-6">
+        <Image
+          src="/proximamente/mario-nippongame.png"
+          alt="Mario Nippon Game"
+          width={130}
+          height={130}
+          className="object-contain drop-shadow-lg"
+        />
       </div>
 
       {/* Subtítulo */}
