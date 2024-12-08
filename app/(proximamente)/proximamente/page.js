@@ -35,6 +35,7 @@ export default function Proximamente() {
             width={120}
             height={120}
             className="object-contain"
+            priority // Carga prioritaria
           />
         </div>
 
@@ -46,7 +47,7 @@ export default function Proximamente() {
             width={400}
             height={240}
             className="object-contain"
-            onLoadingComplete={handleLogoLoad} // Marca la carga como completa
+            onLoad={handleLogoLoad} // Usando onLoad en vez de onLoadingComplete
           />
         </div>
 
@@ -58,6 +59,7 @@ export default function Proximamente() {
             width={120}
             height={120}
             className="object-contain"
+            priority // Carga prioritaria
           />
         </div>
       </div>

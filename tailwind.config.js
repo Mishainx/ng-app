@@ -26,7 +26,7 @@ module.exports = {
         pulse5: 'pulse 2s infinite ease-in-out 0s',
         fadeInShort: 'fadeIn 1s ease-out',   // 1s duración
         fadeInMedium: 'fadeIn 2s ease-out',  // 2s duración
-        fadeInLong: 'fadeIn 5s ease-out',    // 3s duración
+        fadeInLong: 'fadeIn 7s ease-out',    // 3s duración
       },
       keyframes: {
         pulse: {
