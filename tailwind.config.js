@@ -16,7 +16,7 @@ module.exports = {
       },
       boxShadow: {
         white: '0 0 10px 5px rgba(255, 255, 255, 0.1)',
-        hero: 'inset 0 0 80px rgba(0, 0, 0, 0.8)' // Ajusta el tamaño y color según sea necesario  
+        hero: 'inset 0 0 80px rgba(0, 0, 0, 0.8)', // Ajusta el tamaño y color según sea necesario  
       },
       animation: {
         pulse1: 'pulse 2s infinite ease-in-out -0.8s',
@@ -24,6 +24,9 @@ module.exports = {
         pulse3: 'pulse 2s infinite ease-in-out -0.4s',
         pulse4: 'pulse 2s infinite ease-in-out -0.2s',
         pulse5: 'pulse 2s infinite ease-in-out 0s',
+        fadeInShort: 'fadeIn 1s ease-out',   // 1s duración
+        fadeInMedium: 'fadeIn 2s ease-out',  // 2s duración
+        fadeInLong: 'fadeIn 5s ease-out',    // 3s duración
       },
       keyframes: {
         pulse: {
@@ -41,6 +44,14 @@ module.exports = {
             transform: 'scale(0.8)',
             backgroundColor: '#EA3324',
             boxShadow: '0 0 0 0 rgba(234, 51, 36, 0.7)',
+          },
+        },
+        fadeIn: {
+          '0%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 1,
           },
         },
       },
