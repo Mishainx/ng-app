@@ -90,7 +90,7 @@ export default function Proximamente() {
         <div
           className="cursor-pointer p-3 text-white rounded-full bg-red-500/90 hover:bg-red-800 transition duration-200 ease-in-out flex items-center justify-center hover:shadow-xl hover:scale-105"
         >
-          <Link href="mailto:nippongame@gmail.com">
+          <Link href="mailto:ventas@nippongame.com.ar">
             <MailIcon className="w-6 h-6" />
           </Link>
         </div>
