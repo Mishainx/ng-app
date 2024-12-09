@@ -42,6 +42,6 @@ export async function middleware(request) {
 // Configura las rutas que requieren autenticación
 export const config = {
   matcher: [
-    '/((?!api/auth|public|proximamente|login|_next/static|_next/image|static|favicon.ico).*)'
+    '/((?!api|public|proximamente|login|_next/static|_next/image|static|favicon.ico).*)'
   ],
 };
