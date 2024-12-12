@@ -27,15 +27,17 @@ const ProductTable = ({
         product?.subcategory?.includes(selectedSubcategory)
       : true;
 
-    const matchesSearchTerm = searchTerm
-      ? Object.keys(product).some((key) => {
-          if (key === "img") return false;
-          const value = product[key];
-          return (
-            typeof value === "string" &&
-            value.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        })
+      const matchesSearchTerm = searchTerm
+      ? product && typeof product === "object" // Verificar que `product` es un objeto
+        ? Object.keys(product).some((key) => {
+            if (key === "img") return false;
+            const value = product[key];
+            return (
+              typeof value === "string" &&
+              value.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+          })
+        : false
       : true;
 
     return matchesCategory && matchesSubcategory && matchesSearchTerm;
@@ -165,14 +167,16 @@ const ProductTable = ({
                   : "-"}
               </td>
               <td className="py-2 px-3 hidden md:table-cell text-center align-middle">
-                {product.brand ? capitalizeFirstLetter(product.brand) : "-"}
-              </td>
-              <td className="py-2 px-3 text-center align-middle flex justify-center space-x-2">
+  {typeof product.brand === "string" && product.brand.trim()  && product.brand != "null"
+    ? capitalizeFirstLetter(product.brand) 
+    : "-"}
+</td>
+              <td className="py-2 px-3 text-center md:table-cell flex justify-center center space-x-2 align-middle">
                 <button
                   onClick={() => handleViewChange("edit", product)}
                   className="text-yellow-500 hover:text-yellow-700 transition"
                 >
-                  <EditIcon className="w-5 h-5" />
+                  <EditIcon className="w-5 h-5 " />
                 </button>
                 <button
                   onClick={() => deleteProduct(product.slug)}

@@ -15,16 +15,27 @@ export default function DesktopMenu({ pages }) {
           return null; // No renderiza este elemento si no hay usuario
         }
 
+        const isOrderPage = page.href === "/order";
+        const cartItemCount = userData?.cart?.length || 0;
+
         return (
           <li
             key={index}
             className="relative flex items-center justify-center gap-3 cursor-pointer py-2 text-xs text-black hover:text-red-500 group"
           >
             <Link href={page.href} className="relative z-10 flex items-center justify-center gap-2">
-              {page.src}
-              {page.title}
+              <div className="relative flex items-center">
+                {page.src}
+
+                {/* Mostrar círculo rojo con el número de productos en el carrito */}
+                {isOrderPage && cartItemCount > 0 && (
+                  <span className="absolute -top-1 right-2 flex items-center justify-center w-3 h-3 text-white text-xs font-bold bg-red-500 rounded-full">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
+              <span>{page.title}</span>
             </Link>
-            <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-500 transition-transform duration-500 ease-in-out transform scale-x-0 group-hover:scale-x-100" />
           </li>
         );
       })}

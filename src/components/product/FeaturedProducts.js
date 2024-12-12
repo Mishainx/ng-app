@@ -10,9 +10,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, {
-          cache: "no-store",
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, { next: { revalidate: 3600 }});
         const data = await response.json();
         setFeaturedProducts(data.payload || []); // Set products in state
         setLoading(false); // Set loading to false when data is fetched
@@ -91,4 +89,3 @@ const FeaturedProducts = () => {
 };
 
 export default FeaturedProducts;
-

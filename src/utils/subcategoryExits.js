@@ -20,8 +20,6 @@ export const subcategoryExists = async (category, subcategorySlug) => {
       categoryData.subcategories.some(subcategory => subcategory.slug === subcategorySlug) // Verifica que la subcategoría exista
     );
 
-    console.log(`Category: ${category}, SubcategorySlug: ${subcategorySlug}`);
-    console.log(`Exists: ${exists}`);
 
     return exists; // Devuelve true si se encuentra la subcategoría, false si no
   } catch (error) {

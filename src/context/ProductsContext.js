@@ -35,15 +35,12 @@ export const ProductsProvider = ({ children }) => {
       // Agregar los campos al FormData
       for (const key in newProduct) {
         if (key === "subcategories" && Array.isArray(newProduct[key])) {
-          // Agregar cada subcategoría individualmente
           newProduct[key].forEach((subcategory) => {
             formData.append("subcategory", subcategory);
           });
         } else if (key === "img" && newProduct.img) {
-          // Manejar el archivo de imagen
           formData.append(key, newProduct.img);
         } else {
-          // Agregar otros campos
           formData.append(key, newProduct[key]);
         }
       }
@@ -51,19 +48,24 @@ export const ProductsProvider = ({ children }) => {
       // Realizar la petición al backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
         method: "POST",
-        body: formData, // Enviar el FormData
+        body: formData,
       });
-  
+
+ 
       if (!response.ok) {
-        throw new Error("Error al agregar producto");
+        const errorData = await response.json(); // Parsear el error desde el backend
+        throw new Error(errorData.message || "Error al agregar producto");
       }
   
       const createdProduct = await response.json();
-      setProducts((prevProducts) => [...prevProducts, createdProduct.payload]); // Agregar el producto a la lista
+      setProducts((prevProducts) => [...prevProducts, createdProduct.product]);
+      return createdProduct; // Retornar el producto creado
     } catch (error) {
       setError(error.message);
+      throw error; // Lanzar el error para manejarlo en el componente
     }
   };
+  
   
   
   

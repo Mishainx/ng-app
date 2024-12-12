@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useProducts } from "@/context/ProductsContext";
 import { useCategories } from "@/context/CategoriesContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
-import TrashIcon from "@/icons/TrashIcon";
-import PlusIcon from "@/icons/PlusIcon";
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import ButtonWithSpinner from "@/components/loader/ButtonWithSpinner";
 
 const CreateProductForm = ({ setView }) => {
   const { addProduct } = useProducts();
@@ -30,26 +29,34 @@ const CreateProductForm = ({ setView }) => {
     discount: 0, // 
   });
 
-  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Estado para la subcategoría seleccionada
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const createdProduct = await addProduct(productData);
-      setView(false); // Cambiar la vista si es necesario
+      if (!createdProduct) {
+        throw new Error("No se pudo crear el producto.");
+      }
       toast.success("Producto creado exitosamente");
+      // Redirigir a la vista de lista de productos
+      setTimeout(() => {
+        setView("list"); // Cambiar a la vista "list" después de un breve retraso
+      }, 2000); // Retardo para ver el mensaje de éxito
     } catch (error) {
-      toast.error(error.message); // Mostrar el error específico
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
-  // Obtener las subcategorías correspondientes a la categoría seleccionada
-  const getSubcategories = (categorySlug) => {
-    const selectedCategory = categories.find(cat => cat.slug === categorySlug);
-    return selectedCategory && selectedCategory.subcategories ? selectedCategory.subcategories : [];
-  };
 
-  // Verificación de si la URL es una imagen válida
+const getSubcategories = (categorySlug) => {
+  const selectedCategory = categories.find(cat => cat.slug === categorySlug);
+  return selectedCategory?.subcategories ?? []; // Si no hay subcategorías, devolver un array vacío
+};
+
   const isValidImageFile = (file) => {
     const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/svg+xml"];
     return file && validTypes.includes(file.type);
@@ -64,26 +71,29 @@ const CreateProductForm = ({ setView }) => {
     }
   };
 
-
   const handleSubcategoryAdd = () => {
     if (selectedSubcategory && !productData.subcategories.includes(selectedSubcategory)) {
       setProductData((prevData) => ({
         ...prevData,
-        subcategories: [...prevData.subcategories, selectedSubcategory],
+        subcategories: [...prevData.subcategories, selectedSubcategory]
       }));
       setSelectedSubcategory(""); // Limpiar la selección
     }
   };
   
-  const handleSubcategoryRemove = (subcategory) => {
+
+  const handleSubcategoryRemove = (subcategorySlug) => {
     setProductData((prevData) => ({
       ...prevData,
-      subcategories: prevData.subcategories.filter((sub) => sub !== subcategory),
+      subcategories: prevData.subcategories.filter((sub) => sub !== subcategorySlug)
     }));
   };
+  
 
   return (
+    
     <form onSubmit={handleSubmit} className="bg-white shadow-md p-4 rounded-lg">
+
       <h2 className="text-xl font-semibold mb-4 text-gray-800">Crear Producto</h2>
 
       {/* Nombre */}
@@ -91,6 +101,7 @@ const CreateProductForm = ({ setView }) => {
         <label className="text-sm text-gray-700">Nombre</label>
         <input
           type="text"
+          required
           className="border rounded w-full py-1 px-2"
           value={productData.name}
           onChange={(e) => setProductData({ ...productData, name: e.target.value })}
@@ -102,6 +113,7 @@ const CreateProductForm = ({ setView }) => {
       <div className="mb-3">
         <label className="text-sm text-gray-700">Precio</label>
         <input
+          required
           type="text" // Cambiar a tipo "text" para evitar los botones
           className="border rounded w-full py-1 px-2"
           value={productData.price}
@@ -115,11 +127,11 @@ const CreateProductForm = ({ setView }) => {
         />
       </div>
 
-            {/* Descuento */}
-            <div className="mb-3">
+      {/* Descuento */}
+      <div className="mb-3">
         <label className="text-sm text-gray-700">Descuento</label>
         <input
-          type="text" // Cambiar a tipo "text" para evitar los botones
+          type="text"
           className="border rounded w-full py-1 px-2"
           value={productData.discount}
           onChange={(e) => {
@@ -195,27 +207,28 @@ const CreateProductForm = ({ setView }) => {
 
       {/* Imagen */}
       <div className="mb-3">
-  <label className="text-sm text-gray-700">Selecciona una Imagen</label>
-  <input
-    type="file"
-    accept="image/*"
-    className="border rounded w-full py-1 px-2"
-    onChange={handleImageChange}
-  />
-  {/* Vista previa de la imagen */}
-  {productData.img && (
-    <div className="mt-2 relative">
-      <Image
-        src={URL.createObjectURL(productData.img)} // Usando el objeto URL para crear la imagen local
-        alt="Vista previa"
-        layout="intrinsic" // Usando el layout intrinsic para mantener las proporciones
-        width={500} // Puedes ajustar el tamaño según tus necesidades
-        height={500} // Puedes ajustar el tamaño según tus necesidades
-        className="max-w-full h-auto"
-      />
-    </div>
-  )}
-</div>
+        <label className="text-sm text-gray-700">Selecciona una Imagen</label>
+        <input
+          required
+          type="file"
+          accept="image/*"
+          className="border rounded w-full py-1 px-2"
+          onChange={handleImageChange}
+        />
+        {/* Vista previa de la imagen */}
+        {productData.img && (
+          <div className="mt-2 relative">
+            <Image
+              src={URL.createObjectURL(productData.img)} // Usando el objeto URL para crear la imagen local
+              alt="Vista previa"
+              layout="intrinsic" // Usando el layout intrinsic para mantener las proporciones
+              width={500} // Puedes ajustar el tamaño según tus necesidades
+              height={500} // Puedes ajustar el tamaño según tus necesidades
+              className="max-w-full h-auto"
+            />
+          </div>
+        )}
+      </div>
 
       {/* Marca */}
       <div className="mb-3">
@@ -223,7 +236,7 @@ const CreateProductForm = ({ setView }) => {
         <input
           type="text"
           className="border rounded w-full py-1 px-2"
-          value={productData.brand || ""}
+          value={productData.brand}
           onChange={(e) => {
             const value = e.target.value;
             if (value.length <= 30) { // Limita a 30 caracteres
@@ -234,85 +247,106 @@ const CreateProductForm = ({ setView }) => {
         />
       </div>
 
-      {/* Categoría */}
-      <div className="mb-3">
-        <label className="text-sm text-gray-700">Categoría</label>
-        <select
-          className="border rounded w-full py-1 px-2"
-          value={productData.category}
-          onChange={(e) => {
-            const category = e.target.value;
-            setProductData({
-              ...productData,
-              category,
-              subcategories: [] // Resetear subcategorías cuando cambia la categoría
-            });
-          }}
-        >
-          <option value="">Selecciona una categoría</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.slug}>
-              {capitalizeFirstLetter(category.title)}
-            </option>
-          ))}
-        </select>
-      </div>
+{/* Categoría */}
+<div className="mb-3">
+  <label className="text-sm text-gray-700">Categoría</label>
+  <select
+    className="border rounded w-full py-1 px-2"
+    required
+    value={productData.category}
+    onChange={(e) => {
+      const categorySlug = e.target.value;
+      setProductData({
+        ...productData,
+        category: categorySlug,
+        subcategories: [] // Limpiar las subcategorías seleccionadas al cambiar de categoría
+      });
+    }}
+  >
+    <option value="">Seleccionar Categoría</option>
+    {categories.map((category) => (
+      <option key={category.slug} value={category.slug}>
+        {capitalizeFirstLetter(category.title)}
+      </option>
+    ))}
+  </select>
+</div>
 
 {/* Subcategorías */}
 {productData.category && (
   <div className="mb-3">
-    <label className="text-sm text-gray-700">Subcategoría</label>
-    <div className="flex items-center">
+    <label className="text-sm text-gray-700">Subcategorías</label>
+    <div className="flex gap-2">
       <select
-        className="border rounded w-full py-1 px-2"
         value={selectedSubcategory}
         onChange={(e) => setSelectedSubcategory(e.target.value)}
+        className="border rounded w-full py-1 px-2"
       >
-        <option value="">Selecciona una subcategoría</option>
+        <option value="">Seleccionar Subcategoría</option>
         {getSubcategories(productData.category).map((subcategory) => (
-          <option key={subcategory.id} value={subcategory.slug}>
+          <option key={subcategory.slug} value={subcategory.slug}>
             {capitalizeFirstLetter(subcategory.title)}
           </option>
         ))}
       </select>
       <button
         type="button"
-        className="ml-2 p-2 bg-red-500 text-white rounded hover:bg-red-600"
         onClick={handleSubcategoryAdd}
+        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700"
       >
-        <PlusIcon className="w-5 h-5" />
+        +
       </button>
     </div>
-    {/* Mostrar subcategorías agregadas */}
-    {productData.subcategories.length > 0 && (
-      <ul className="mt-2">
-        {productData.subcategories.map((subcategory) => (
-          <li
-            key={subcategory}
-            className="flex justify-between items-center mb-1 p-2 border-b"
+
+    {/* Lista de subcategorías añadidas */}
+    <div className="flex flex-wrap gap-2 mt-2">
+      {productData.subcategories.map((subcategorySlug) => {
+        const subcategory = getSubcategories(productData.category).find(sub => sub.slug === subcategorySlug);
+        return (
+          <span
+            key={subcategorySlug}
+            className="flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full"
           >
-            <span>{capitalizeFirstLetter(subcategory)}</span>
+            {capitalizeFirstLetter(subcategory?.title || subcategorySlug)}
             <button
               type="button"
-              className="text-red-500 hover:text-red-600"
-              onClick={() => handleSubcategoryRemove(subcategory)}
+              className="ml-2 text-red-500 hover:text-red-700"
+              onClick={() => handleSubcategoryRemove(subcategorySlug)}
             >
-              <TrashIcon className="w-5 h-5" />
+              ✕
             </button>
-          </li>
-        ))}
-      </ul>
-    )}
+          </span>
+        );
+      })}
+    </div>
   </div>
 )}
 
 
-      <button
-        type="submit"
-        className="mt-4 bg-red-500 text-white px-6 py-2 rounded hover:bg-red-700"
-      >
-        Crear Producto
-      </button>
+{/* Botones: Volver y Crear Producto */}
+<div className="flex flex-col gap-4 w-full flex-wrap md:flex-row md:flex-nowrap">
+
+  {/* Botón de envío */}
+  <ButtonWithSpinner
+    isLoading={isSubmitting}
+    label="Crear Producto"
+    loadingText="Creando producto..."
+    onClick={handleSubmit}
+    className=" sm:w-[300px]"
+    padding="py-2 px-5"
+  />
+    {/* Botón de volver al menú */}
+    <button
+    type="button"
+    onClick={() => setView("list")} // Cambiar la vista a la lista de productos
+    className="bg-gray-500 text-white py-2 px-5 rounded hover:bg-gray-700  md:w-[150px]"
+  >
+    Volver al menú
+  </button>
+</div>
+
+
+
     </form>
   );
 };

@@ -97,7 +97,7 @@ export default function Proximamente() {
         <div
           className="cursor-pointer p-3 text-white rounded-full bg-red-500/90 hover:bg-red-800 transition duration-200 ease-in-out flex items-center justify-center hover:shadow-xl hover:scale-105"
         >
-          <Link href="https://wa.me/5491154041650?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!">
+          <Link href="https://wa.me/5491164316975?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!">
             <WhatsappIcon className="w-6 h-6" />
           </Link>
         </div>

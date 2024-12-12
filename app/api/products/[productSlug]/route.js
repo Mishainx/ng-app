@@ -109,14 +109,17 @@ export const PUT = async (req, { params }) => {
       }
 
       // Subir el archivo si existe
-      if (file) {
-        console.log(file)
+      if (file && file.size > 0) {
         const storageRef = ref(storage, `ProductImg/${file.name}`);
         await uploadBytes(storageRef, file);
         updatedData.img = await getDownloadURL(storageRef);
       }
 
       // Actualizar documento
+      if (!file || file.size === 0) {
+        delete updatedData.img; // Asegurarse de no actualizar la imagen si no se proporciona
+      }
+
       await updateDoc(productDocRef, updatedData);
 
       return NextResponse.json(

@@ -7,6 +7,7 @@ import PlusIcon from "@/icons/PlusIcon";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import ButtonWithSpinner from "@/components/loader/ButtonWithSpinner";
 
 const EditProductForm = ({ editingProduct, setView }) => {
   const { updateProduct } = useProducts();
@@ -17,24 +18,30 @@ const EditProductForm = ({ editingProduct, setView }) => {
   });
 
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(productData)
+    setIsSubmitting(true);
     try {
-      await updateProduct(productData); // Asume que `updateProduct` es la función para actualizar productos
-      setView(false); // Cierra el formulario
+      const updatedProduct = await updateProduct(productData); // Asume que `updateProduct` es la función para actualizar productos
+      if (!updateProduct) {
+        throw new Error("No se pudo actualizar el producto.");
+      }  
       toast.success("Producto actualizado exitosamente");
+      setTimeout(() => {
+        setView("list"); // Cambiar a la vista "list" después de un breve retraso
+      }, 2000); 
     } catch (error) {
       toast.error(error.message);
+    }finally {
+      setIsSubmitting(false);
     }
   };
 
   const getSubcategories = (categorySlug) => {
-    const selectedCategory = categories.find((cat) => cat.slug === categorySlug);
-    return selectedCategory && selectedCategory.subcategories
-      ? selectedCategory.subcategories
-      : [];
+    const selectedCategory = categories.find(cat => cat.slug === categorySlug);
+    return selectedCategory?.subcategories ?? []; // Si no hay subcategorías, devolver un array vacío
   };
 
   const isValidImageFile = (file) => {
@@ -59,19 +66,18 @@ const EditProductForm = ({ editingProduct, setView }) => {
   };
 
   const handleSubcategoryAdd = () => {
-    if (selectedSubcategory && !productData.subcategories.includes(selectedSubcategory)) {
+    if (selectedSubcategory && !productData.subcategory.includes(selectedSubcategory)) {
       setProductData((prevData) => ({
         ...prevData,
-        subcategories: [...prevData.subcategories, selectedSubcategory],
+        subcategory: [...prevData.subcategory, selectedSubcategory]
       }));
-      setSelectedSubcategory("");
+      setSelectedSubcategory(""); // Limpiar la selección
     }
   };
-
-  const handleSubcategoryRemove = (subcategory) => {
+  const handleSubcategoryRemove = (subcategorySlug) => {
     setProductData((prevData) => ({
       ...prevData,
-      subcategories: prevData.subcategories.filter((sub) => sub !== subcategory),
+      subcategory: prevData.subcategory.filter((sub) => sub !== subcategorySlug)
     }));
   };
 
@@ -297,13 +303,27 @@ const EditProductForm = ({ editingProduct, setView }) => {
           )}
         </div>
       )}
+{/* Botones: Volver y Crear Producto */}
+<div className="flex flex-col gap-4 w-full flex-wrap md:flex-row md:flex-nowrap">
 
-      <button
-        type="submit"
-        className="mt-4 bg-red-500 text-white px-6 py-2 rounded hover:bg-red-700"
-      >
-        Actualizar Producto
-      </button>
+  {/* Botón de envío */}
+  <ButtonWithSpinner
+    isLoading={isSubmitting}
+    label="Actualizar product"
+    loadingText="actualizando producto..."
+    onClick={handleSubmit}
+    className=" sm:w-[300px]"
+    padding="py-2 px-5"
+  />
+    {/* Botón de volver al menú */}
+    <button
+    type="button"
+    onClick={() => setView("list")} // Cambiar la vista a la lista de productos
+    className="bg-gray-500 text-white py-2 px-5 rounded hover:bg-gray-700  md:w-[150px]"
+  >
+    Volver al menú
+  </button>
+</div>
     </form>
   );
 };

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDocs, collection, addDoc, query, limit, startAfter, where } from 'firebase/firestore';
+import { getDocs, collection, addDoc } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { cookies } from "next/headers";
 import { createSlug, slugExists } from '@/utils/createSlug';
@@ -14,17 +14,13 @@ import { productExists } from '@/utils/productExits';
 // `GET` para obtener los valores actuales de las categorías
 export const GET = async (req) => {
   try {
-    // Referencia a la colección
     const collectionRef = collection(db, 'products');
-
-    // Obtener todos los productos sin filtros ni paginación
     const productsSnapshot = await getDocs(collectionRef);
     const products = productsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Devolver la respuesta con los productos
     return NextResponse.json(
       { message: 'success', payload: products },
       { status: 200 }
@@ -41,16 +37,16 @@ export const POST = async (req) => {
   try {
     const cookieStore = cookies();
     const cookie = cookieStore.get("ng-ct");
-    
+
     if (!cookie || !cookie.value) {
       return NextResponse.json(
         { message: 'Unauthorized: No token provided' },
         { status: 401 }
       );
     }
-    
+
     const token = cookie.value;
-    
+
     let decodedToken;
     try {
       decodedToken = await authAdmin.verifyIdToken(token);
@@ -61,13 +57,12 @@ export const POST = async (req) => {
       );
     }
 
-    // Obtener datos del producto del cuerpo de la solicitud
     const formData = await req.formData();
     const name = formData.get('name');
     const category = formData.get('category');
-    const subcategories = formData.getAll('subcategory'); // Obtener un array de subcategorías
-    const price = formData.get('price');
-    const discount = formData.get('discount');
+    const subcategories = formData.getAll('subcategory');
+    let price = parseFloat(formData.get('price'));
+    let discount = parseFloat(formData.get('discount')) || 0;
     const shortDescription = formData.get('shortDescription');
     const longDescription = formData.get('longDescription');
     const featured = formData.get('featured') === 'true';
@@ -75,11 +70,53 @@ export const POST = async (req) => {
     const stock = formData.get('stock') === 'true';
     let img = formData.get('img');
     const brand = formData.get('brand');
+    const relatedSkus = formData.getAll('relatedSkus') || [];
+    console.log(subcategories)
 
-    // Obtener los SKU de productos relacionados desde el formulario
-    const relatedSkus = formData.getAll('relatedSkus') || []; // Cambia 'relatedSkus' según tu input
+    // Validaciones
+    if (!name || name.length < 3 || name.length > 70) {
+      return NextResponse.json(
+        { message: 'Error: El nombre debe tener entre 3 y 70 caracteres' },
+        { status: 400 }
+      );
+    }
 
-    // Verificar si la categoría existe
+    if (shortDescription && shortDescription.length > 30) {
+      return NextResponse.json(
+        { message: 'Error: La descripción corta no puede superar los 30 caracteres' },
+        { status: 400 }
+      );
+    }
+
+    if (longDescription && longDescription.length > 500) {
+      return NextResponse.json(
+        { message: 'Error: La descripción larga no puede superar los 500 caracteres' },
+        { status: 400 }
+      );
+    }
+
+    if (typeof featured !== 'boolean' || typeof visible !== 'boolean' || typeof stock !== 'boolean') {
+      return NextResponse.json(
+        { message: 'Error: Los valores de featured, visible y stock deben ser booleanos' },
+        { status: 400 }
+      );
+    }
+
+    if (isNaN(price) || price <= 0) {
+      return NextResponse.json(
+        { message: 'Error: El precio es requerido y debe ser un número mayor a 0' },
+        { status: 400 }
+      );
+    }
+
+    if (isNaN(discount) || discount < 0) {
+      discount = 0;
+    }
+
+    // Ajustar precio y descuento a formato decimal
+    price = parseFloat(price.toFixed(2));
+    discount = parseFloat(discount.toFixed(2));
+
     const categoryExistsCheck = await categoryExists(category);
     if (!categoryExistsCheck) {
       return NextResponse.json(
@@ -88,25 +125,22 @@ export const POST = async (req) => {
       );
     }
 
-    // Verificar la existencia de cada subcategoría y almacenar solo las válidas
     const validSubcategories = [];
     for (const subcategory of subcategories) {
       const exists = await subcategoryExists(category, subcategory);
       if (exists) {
-        validSubcategories.push(subcategory); // Solo agregar subcategorías válidas
+        validSubcategories.push(subcategory);
       }
     }
 
-    // Validar que los productos relacionados existan
     const validRelatedSkus = [];
     for (const sku of relatedSkus) {
       const exists = await productExists(sku);
       if (exists) {
-        validRelatedSkus.push(sku); // Solo agregar SKUs válidos
+        validRelatedSkus.push(sku);
       }
     }
 
-    // Si no hay SKUs válidos, devolver un error
     if (validRelatedSkus.length !== relatedSkus.length) {
       return NextResponse.json(
         { message: 'Error: Algunos productos relacionados no existen' },
@@ -120,14 +154,13 @@ export const POST = async (req) => {
       img = await getDownloadURL(storageRef);
     }
 
-    // Crear un slug único
     const uniqueSlug = await createSlug(name, slugExists);
 
     const productData = {
       name,
       category,
-      subcategories: validSubcategories, // Usar el array de subcategorías válidas
-      price: parseFloat(price),
+      subcategory: validSubcategories,
+      price,
       discount,
       shortDescription,
       longDescription,
@@ -136,17 +169,19 @@ export const POST = async (req) => {
       stock,
       img,
       brand,
-      slug: uniqueSlug, // Usar el slug único
+      slug: uniqueSlug,
       sku: await generateSequentialSku("products"),
       relatedProds: validRelatedSkus.length > 0 ? validRelatedSkus : [],
-      gallery: [] // Asignar SKU de productos relacionados, o array vacío
+      gallery: []
     };
 
-    // Crear el producto en Firestore
-    await addDoc(collection(db, 'products'), productData);
+    const newProduct = await addDoc(collection(db, 'products'), productData);
 
     return NextResponse.json(
-      { message: 'Product created successfully' },
+      { 
+        message: 'Product created successfully', 
+        product: { id: newProduct.id, ...productData } // Incluye el ID y los datos del producto
+      },
       { status: 201 }
     );
   } catch (error) {

@@ -68,7 +68,7 @@ const Footer = () => {
 
               </li>
               <li >
-                <Link href="https://wa.me/5491154041650?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                <Link href="https://wa.me/5491164316975?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
                   <WhatsappIcon />
                   <p>+54911222222</p>
                 </Link>

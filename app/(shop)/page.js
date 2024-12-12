@@ -3,7 +3,25 @@ import CategoriesList from "../../src/components/home/categoriesList/categoriesL
 import HeroCarousel from "../../src/components/home/hero/hero";
 import FeaturedProducts from "../../src/components/product/FeaturedProducts";
 import NavCard from "../../src/components/product/navCard";
-import Loader from "@/components/loader/Loader";
+
+export const metadata = {
+  title: "Nippon Game - Videojuegos",
+  description: "Ecommerce mayorista de videojuegos",
+  openGraph: {
+    title: 'Nippongame - Ecommerce mayorista experto en videojuegos',
+    description: 'Ecommerce mayorista experto en videojuegos',
+    url: 'https://www.nippongame.com.ar',
+    images: [
+      {
+        url: '/proximamente/nippon-game-logo.png',  // Ruta de la imagen
+        width: 1200,  // Ancho de la imagen
+        height: 630,  // Alto de la imagen
+        alt: 'Nippongame logo',  // Descripción alternativa de la imagen
+      },
+    ],
+  }
+};
+
 
 export default function Home() {
 
@@ -18,7 +36,7 @@ export default function Home() {
         <NavCard imgSrc='/navCard/local-nav-card.png' title='Local' href='/local'/>
         <NavCard imgSrc='/navCard/catalogo-nav-card.png' title='Ofertas' href='/ofertas'/>
       </div>
-      <FeaturedProducts/>
+{/*    <FeaturedProducts/>*/}
     </main>
     </>
 
