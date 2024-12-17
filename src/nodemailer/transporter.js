@@ -61,7 +61,7 @@ export const sendOrderEmail = async (customerEmail, order) => {
   
       const emailHTML = `
         <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-          <p style="text-align: center; font-size: 32px; color: #EB3324; font-weight: bold;">Nippongame</p>
+          <p style="text-align: center; font-size: 26px; color: #EB3324; font-weight: bold;">Nippongame</p>
           <h2 style="text-align: center; font-weight: bold;">¡Nuevo Pedido Realizado!</h2>
           <p>Hola <strong>${userName}</strong>,</p>
           <p>Gracias por realizar tu pedido. Aquí están los detalles:</p>
