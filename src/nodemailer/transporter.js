@@ -99,6 +99,7 @@ export const sendOrderEmail = async (customerEmail, order) => {
           </table>
   
           <p style="margin-top: 20px;">Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos.</p>
+          <p><a href="https://wa.me/5491164316975" target="_blank">WhatsApp: 5491164316975</a></p>
           <p>¡Gracias por confiar en nosotros!</p>
           <p style="font-style: italic;">Este es un correo generado automáticamente. Por favor, no respondas a este correo.</p>
         </div>
