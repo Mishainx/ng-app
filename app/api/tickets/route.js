@@ -53,7 +53,12 @@ export const POST = async (request) => {
             }
         }
         // Calcular el monto total
-        const totalAmount = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
+        const totalAmount = products.reduce((acc, product) => {
+            const amount = product.discount > 0
+              ? product.discount * product.quantity // Si tiene descuento, usamos el descuento por cantidad
+              : product.price * product.quantity; // Si no, usamos el precio por cantidad
+            return acc + amount;
+          }, 0);        
         // Crear los datos del ticket
         const ticket = {
             date: serverTimestamp(), // Fecha de creación del ticket

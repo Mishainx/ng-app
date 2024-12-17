@@ -256,7 +256,7 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
                             {product?.discount == null || product?.discount === 0 ? "-" : `U$D ${product?.discount.toFixed(2)}`}
                             </td>
                             <td className="py-2 px-4">
-                            U$D {(product.quantity * (product.discount != null ? product.discount : product.price)).toFixed(2)}
+                            U$D {(product.quantity * (product.discount > 0 ? product.discount : product.price)).toFixed(2)}
 
                             </td>
                             
@@ -267,7 +267,7 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
 
                     {/* Total de la factura */}
                     <div className="flex justify-end mt-4 font-bold text-xl">
-                      Total: U$D {getTotalAmount(ticket).toFixed(2)}
+                      Total: U$D {ticket?.totalAmount?.toFixed(2)}
                     </div>
                   </div>
                 </td>
@@ -398,7 +398,7 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
 
             {/* Total de la factura */}
             <div className="font-bold text-xl mt-4">
-              Total: U$D {getTotalAmount(ticket).toFixed(2)}
+              Total: U$D {ticket?.totalAmount?.toFixed(2)}
             </div>
           </div>
         )}
