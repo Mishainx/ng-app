@@ -90,12 +90,16 @@ export const sendOrderEmail = async (customerEmail, order) => {
             <tbody>
               ${productsTable}
             </tbody>
-            <tfoot>
-              <tr style="background-color: #f4f4f4;">
-                <td colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: right; font-weight: bold;">Total</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: right; font-weight: bold;">USD$${total}</td>
-              </tr>
-            </tfoot>
+<tfoot>
+  <tr style="background-color: #f4f4f4;">
+    <td colspan="4" style="padding: 8px; border: 1px solid #ddd; text-align: right; font-weight: bold;">
+      Total
+    </td>
+    <td style="padding: 8px; border: 1px solid #ddd; text-align: right; font-weight: bold;">
+      USD$${total}
+    </td>
+  </tr>
+</tfoot>
           </table>
   
           <p style="margin-top: 20px;">Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos.</p>
