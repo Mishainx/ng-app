@@ -107,6 +107,25 @@ function UsersIcon(props) {
   );
 }
 
+// Definición de la función de logout
+const handleLogout = async () => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
+      method: 'POST',
+      credentials: 'include', // Asegúrate de incluir las cookies de sesión
+    });
+
+    if (response.ok) {
+      // Redireccionar o actualizar el estado local
+      window.location.reload(); // Recargar la página para actualizar el estado
+    } else {
+      console.error("Error al cerrar sesión:", await response.json());
+    }
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+  }
+};
+
 // Definición de los botones
 const buttons = [
   {
@@ -126,7 +145,7 @@ const buttons = [
   },
   {
     id: 'categories',
-    text: 'Categories',
+    text: 'Categorias',
     icon: <SettingsIcon className="h-5 w-5 text-gray-500" />,
   },
   {
@@ -147,32 +166,29 @@ const buttons = [
       <path d="M17 12H7" />
       <path d="M4 21V3" />
     </svg>,
+    onClick: handleLogout, // Aquí agregamos el onClick específico para logout
   },
 ];
-
-
-// Definición de iconos SVG
-// ... (Los iconos se mantienen igual)
 
 export default function SideBarAdmin({ onSelect }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 flex flex-col w-14 lg:w-60 border-r bg-gray-50 h-full">
       <div className="flex items-center justify-between border-b px-4 py-2 lg:px-6 lg:py-4 text-black">
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
-            <Image
+          <Image
             src="/nippon-game-logo.png"
             width={30}
             height={30}
             alt="nippon game logo"
-            />
+          />
           <span className="text-base font-semibold text-black hidden lg:block">Nippon Game</span>
         </Link>
       </div>
       <nav className="flex flex-col flex-1 overflow-auto px-2 py-4 lg:px-4">
-        {buttons.map(({ id, text, icon }) => (
+        {buttons.map(({ id, text, icon, onClick }) => (
           <button
             key={id}
-            onClick={() => onSelect(id)}
+            onClick={onClick || (() => onSelect(id))} // Si onClick está definido (en el caso de logout), lo usamos; sino, usamos onSelect
             className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-colors hover:bg-gray-200 hover:text-black"
           >
             {icon}
@@ -183,4 +199,3 @@ export default function SideBarAdmin({ onSelect }) {
     </aside>
   );
 }
-

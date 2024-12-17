@@ -10,7 +10,6 @@ const TrashIcon = ({ className = "", width = "24", height = "24" }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="24" height="24" fill="white" />
       <path
         d="M5 7.5H19L18 21H6L5 7.5Z"
         stroke="currentColor"

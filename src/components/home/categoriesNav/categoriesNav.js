@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import categories from "../../../data/categories.json";
+import { useCategories } from "@/context/CategoriesContext";
+import { capitalizeFirstLetter } from "@/utils/stringsManager";
 
 const CategoriesNav = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
+  const { categories } = useCategories();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -44,46 +46,52 @@ const CategoriesNav = () => {
     }
   };
 
+  // Filtrar categorías donde showInMenu sea true
+  const filteredCategories = categories.filter(category => category.showInMenu);
+
   return (
     <section className="w-full flex flex-col items-center justify-center">
-      <div className="overflow-hidden w-full flex items-center justify-evenly px-4">
+      <div className="overflow-hidden w-full flex items-center justify-between px-4 lg:px-12">
+        {/* Flecha izquierda */}
         {isOverflowing && (
           <button
             onClick={handleScrollLeft}
-            className="w-10 h-10 flex items-center justify-center p-2 bg-white rounded-full shadow-md z-10"
+            className="w-12 h-12 flex items-center justify-center p-3 bg-white rounded-full shadow-lg transform hover:scale-110 transition duration-200"
           >
-            &#8249;
+            <span className="text-xl text-gray-600">&lt;</span>
           </button>
         )}
+
+        {/* Contenedor de categorías */}
         <div
           ref={containerRef}
           id="categories-container"
-          className="flex space-x-6 p-2 overflow-x-auto scrollbar-hide me-4 md:me-0"
+          className="flex space-x-6 p-4 overflow-x-auto scrollbar-hide"
         >
-          {categories.map((category) => (
-            <Link href={`categorias/${category.slug}`} key={category.slug}> {/* Usamos slug como key */}
-              <button className="block p-4 rounded-lg hover:bg-gray-200 hover:shadow-lg transform hover:-translate-y-1 transition duration-200 w-full">
-                <div className="flex flex-col items-center">
-                  <div className="relative w-24 h-24">
-                    <Image
-                      src={category.icon}
-                      fill={true}
-                      alt={`${category.title} category`}
-                      className="hover:scale-110 transition-transform duration-700 ease-in-out"
-                    />
-                  </div>
-                  <h3 className="mt-2 text-center">{category.title}</h3>
+          {filteredCategories.map((category) => (
+            <Link href={`categorias/${category.slug}`} key={category.slug}>
+              <button className="block p-6 rounded-xl hover:bg-gray-100 transform hover:-translate-y-1 transition duration-300 w-full flex flex-col items-center">
+                <div className="relative w-20 h-20">
+                  <Image
+                    src={category.icon}
+                    fill={true}
+                    alt={`${category.title} category`}
+                    className="hover:scale-110 transition-transform duration-700 ease-in-out"
+                  />
                 </div>
+                <h3 className="mt-2 text-center text-sm font-medium text-gray-700">{capitalizeFirstLetter(category.title)}</h3>
               </button>
             </Link>
           ))}
         </div>
+
+        {/* Flecha derecha */}
         {isOverflowing && (
           <button
             onClick={handleScrollRight}
-            className="w-10 h-10 flex items-center justify-center p-2 bg-white rounded-full shadow-md z-10"
+            className="w-12 h-12 flex items-center justify-center p-3 bg-white rounded-full shadow-lg transform hover:scale-110 transition duration-200"
           >
-            &#8250;
+            <span className="text-xl text-gray-600">&gt;</span>
           </button>
         )}
       </div>

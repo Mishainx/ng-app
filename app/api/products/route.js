@@ -57,9 +57,17 @@ export const POST = async (req) => {
       );
     }
 
+        // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+      return NextResponse.json(
+        { message: 'Unauthorized: Admin privileges required' },
+        { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+      );
+    }
+
     const formData = await req.formData();
     const name = formData.get('name');
-    const category = formData.get('category');
+    let category = formData.get('category');
     const subcategories = formData.getAll('subcategory');
     let price = parseFloat(formData.get('price'));
     let discount = parseFloat(formData.get('discount')) || 0;
@@ -69,9 +77,8 @@ export const POST = async (req) => {
     const visible = formData.get('visible') === 'true';
     const stock = formData.get('stock') === 'true';
     let img = formData.get('img');
-    const brand = formData.get('brand');
+    const brand = formData.get('brand')?.trim() || "";
     const relatedSkus = formData.getAll('relatedSkus') || [];
-    console.log(subcategories)
 
     // Validaciones
     if (!name || name.length < 3 || name.length > 70) {
@@ -117,10 +124,17 @@ export const POST = async (req) => {
     price = parseFloat(price.toFixed(2));
     discount = parseFloat(discount.toFixed(2));
 
+    if (category === "undefined" || category === null|| category === undefined ) {
+      category = "otros"; // Asignar "otros" si es undefined o null
+    }
+    
+  
     const categoryExistsCheck = await categoryExists(category);
+    
     if (!categoryExistsCheck) {
+      // Si "otros" tampoco existe, manejar el error adecuadamente
       return NextResponse.json(
-        { message: 'Error: La categoría no existe' },
+        { message: "Error: La categoría no existe, incluso la categoría 'otros' no está definida." },
         { status: 400 }
       );
     }

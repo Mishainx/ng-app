@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useClients } from "@/context/ClientsContext";
+import ButtonWithSpinner from "@/components/loader/ButtonWithSpinner";
 
 const ClientForm = ({ editingClient, setView }) => {
   const { updateClient } = useClients();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [businessName, setBusinessName] = useState("");
   const [name, setName] = useState("");
@@ -31,6 +33,8 @@ const ClientForm = ({ editingClient, setView }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     const clientData = {
       businessName,
       name,
@@ -44,28 +48,29 @@ const ClientForm = ({ editingClient, setView }) => {
     };
 
     if (editingClient) {
-      await updateClient(editingClient.id, clientData); // Llama a la función de contexto
+      await updateClient(editingClient.id, clientData);
     }
 
-    setView("list"); // Cambia la vista a la lista de clientes
+    setIsLoading(false);
+    setView("list");
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-10">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">
+    <div className="w-full mx-auto bg-white rounded-lg shadow-md p-4 mt-5 sm:px-6 md:px-8 lg:px-12">
+      <h2 className="text-xl font-semibold m-2 text-center text-gray-900">
         {editingClient ? "Actualizar Cliente" : "Crear Cliente"}
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-2">
         {/* Email (deshabilitado) */}
         <div>
           <label className="block text-gray-800 mb-1">Email:</label>
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)} // Si quieres que no sea actualizable, puedes eliminar esta línea
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            onChange={(e) => setEmail(e.target.value)}
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: cliente@ejemplo.com"
-            disabled // Deshabilita el campo para que no sea editable
+            disabled
             required
           />
         </div>
@@ -76,7 +81,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Mi Empresa S.A."
             required
           />
@@ -88,7 +93,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Juan"
             required
           />
@@ -100,7 +105,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Pérez"
             required
           />
@@ -112,7 +117,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Buenos Aires"
             required
           />
@@ -124,7 +129,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Calle Falsa 123"
             required
           />
@@ -136,7 +141,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={province}
             onChange={(e) => setProvince(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: Buenos Aires"
             required
           />
@@ -148,7 +153,7 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={whatsapp}
             onChange={(e) => setWhatsapp(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: +5491123456789"
             required
           />
@@ -160,23 +165,26 @@ const ClientForm = ({ editingClient, setView }) => {
             type="text"
             value={cuit}
             onChange={(e) => setCuit(e.target.value)}
-            className="border rounded-md w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500"
+            className="border rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-800 placeholder-gray-500 text-sm"
             placeholder="Ej: 20-12345678-9"
             required
           />
         </div>
         {/* Botones */}
         <div className="flex justify-between mt-6">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-          >
-            {editingClient ? "Actualizar Cliente" : "Crear Cliente"}
-          </button>
+          <ButtonWithSpinner
+            isLoading={isLoading}
+            label={editingClient ? "Actualizar Cliente" : "Crear Cliente"}
+            onClick={handleSubmit}
+            width="auto"
+            padding="py-2 px-6"
+            fontSize="text-base"
+            loadingText="Actualizando..."
+          />
           <button
             type="button"
             onClick={() => setView("list")}
-            className="bg-gray-500 text-white px-5 py-2 rounded-md hover:bg-gray-600 transition duration-200"
+            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200 text-sm"
           >
             Cancelar
           </button>

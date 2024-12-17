@@ -32,6 +32,14 @@ export const GET = async (request, { params }) => {
             );
         }
 
+                // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+        return NextResponse.json(
+          { message: 'Unauthorized: Admin privileges required' },
+          { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+        );
+      }
+
         const userRef = doc(db, "users", userId); // Get a reference to the user document
         const userSnapshot = await getDoc(userRef); // Use getDoc instead of getDocs
 
@@ -95,6 +103,14 @@ export const DELETE = async (request, { params }) => {
                 { status: 401 }
             );
         }
+
+                // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+        return NextResponse.json(
+          { message: 'Unauthorized: Admin privileges required' },
+          { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+        );
+      }
 
         // Obtener referencia al usuario en Firestore
         const userRef = doc(db, "users", userId);

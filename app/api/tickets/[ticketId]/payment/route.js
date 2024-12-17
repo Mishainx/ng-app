@@ -1,4 +1,4 @@
-// pages/api/tickets/[ticketId]/archive.js
+// pages/api/tickets/[ticketId]/payment-status.js
 
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config"; // Firebase config importada
@@ -34,13 +34,13 @@ export const PATCH = async (request, { params }) => {
       );
     }
 
-            // Verifica si el usuario tiene privilegios de admin
-            if (!decodedToken.admin) {
-              return NextResponse.json(
-                { message: 'Unauthorized: Admin privileges required' },
-                { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
-              );
-            }
+    // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+      return NextResponse.json(
+        { message: 'Unauthorized: Admin privileges required' },
+        { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+      );
+    }
 
     // Obtener el ticket por su ID
     const ticketRef = doc(db, "tickets", ticketId);
@@ -55,16 +55,23 @@ export const PATCH = async (request, { params }) => {
 
     const ticketData = ticketSnapshot.data();
 
-    // Cambiar el estado de "processed"
-    const newProcessedValue = ticketData.processed === true ? false : true;
+    // Obtener el nuevo estado de pago desde el cuerpo de la solicitud
+    const { paymentStatus } = await request.json(); // Asegúrate de que la solicitud incluya el estado de pago
 
-    // Actualizar el estado del ticket
+    if (typeof paymentStatus !== 'boolean') {
+      return NextResponse.json(
+        { message: 'Invalid paymentStatus value. It should be a boolean.' },
+        { status: 400 }
+      );
+    }
+
+    // Actualizar el estado de pago (paymentStatus) en el ticket
     await updateDoc(ticketRef, {
-      processed: newProcessedValue, // Invertir el valor de processed
+      paymentStatus, // Actualiza el estado de pago
       updatedAt: new Date() // Fecha de actualización
     });
 
-    return NextResponse.json({ message: `Ticket marked as ${newProcessedValue ? 'archived' : 'unarchived'}` }, { status: 200 });
+    return NextResponse.json({ message: `Ticket payment status updated to ${paymentStatus ? 'paid' : 'unpaid'}` }, { status: 200 });
 
   } catch (error) {
     console.error(error);

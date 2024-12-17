@@ -96,66 +96,89 @@ export const TicketsProvider = ({ children }) => {
     }
   };
 
-  // Función para archivar un ticket
-// Función para archivar o desarchivar un ticket
-const archiveTicket = async (ticketId) => {
-  try {
-    const ticket = tickets.find((t) => t.id === ticketId); // Encuentra el ticket actual
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/${ticketId}/archive`, {
-      method: 'PATCH', // Usamos el mismo método PATCH para ambos casos
-    });
-
-    if (!response.ok) throw new Error("Error al archivar o desarchivar el ticket");
-
-    // Actualizar el estado para reflejar que el ticket está archivado o desarchivado
-    setTickets((prevTickets) =>
-      prevTickets.map((ticket) =>
-        ticket.id === ticketId
-          ? { ...ticket, processed: !ticket.processed } // Cambiar el estado de 'processed' (archivado/desarchivado)
-          : ticket
-      )
-    );
-  } catch (err) {
-    setError(err.message);
-  }
-};
-
-const getUserTickets = async (userEmail) => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/users/${userEmail}`);
-    if (!response.ok) throw new Error("Error al cargar los tickets del usuario");
-    const data = await response.json();
-    setTickets(data); // Actualiza los tickets en el estado
-  } catch (err) {
-    setError(err.message);
-  }
-};
-
-// Función para manejar la acción de archivar o desarchivar
-const handleArchiveTicket = async (ticketId, e) => {
-  e.stopPropagation(); // Evitar que se propague el evento
-
-  const ticket = tickets.find((t) => t.id === ticketId); // Encuentra el ticket actual
-
-  const action = ticket.processed ? "desarchivar" : "archivar"; // Determina si estamos archivando o desarchivando
-  const actionMessage = action === "archivar" ? "archivado" : "desarchivado"; // Mensaje que se mostrará en el toast
-
-  if (confirm(`¿Estás seguro de que quieres ${action} este ticket?`)) {
+  // Función para archivar o desarchivar un ticket
+  const archiveTicket = async (ticketId) => {
     try {
-      await archiveTicket(ticketId); // Llamar a la función para archivar o desarchivar
-      toast.success(`Ticket ${actionMessage} con éxito.`); // Mensaje de éxito dinámico
-    } catch (error) {
-      console.error("Error al archivar o desarchivar el ticket:", error);
-      toast.error(`Error al ${action} el ticket. Intenta nuevamente.`); // Mensaje de error dinámico
-    }
-  }
-};
+      const ticket = tickets.find((t) => t.id === ticketId); // Encuentra el ticket actual
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/${ticketId}/archive`, {
+        method: 'PATCH', // Usamos el mismo método PATCH para ambos casos
+      });
 
-  
+      if (!response.ok) throw new Error("Error al archivar o desarchivar el ticket");
+
+      // Actualizar el estado para reflejar que el ticket está archivado o desarchivado
+      setTickets((prevTickets) =>
+        prevTickets.map((ticket) =>
+          ticket.id === ticketId
+            ? { ...ticket, processed: !ticket.processed } // Cambiar el estado de 'processed' (archivado/desarchivado)
+            : ticket
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Función para actualizar el estado de pago de un ticket
+  const updatePaymentStatus = async (ticketId, newStatus) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/${ticketId}/payment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ paymentStatus: newStatus }),
+      });
+
+      if (!response.ok) throw new Error("Error al actualizar el estado de pago");
+
+      // Actualizar el estado de pago localmente
+      setTickets((prevTickets) =>
+        prevTickets.map((ticket) =>
+          ticket.id === ticketId
+            ? { ...ticket, paymentStatus: newStatus } // Actualizamos el estado de pago
+            : ticket
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const getUserTickets = async (userEmail) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/users/${userEmail}`);
+      if (!response.ok) throw new Error("Error al cargar los tickets del usuario");
+      const data = await response.json();
+      setTickets(data); // Actualiza los tickets en el estado
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Función para manejar la acción de archivar o desarchivar
+  const handleArchiveTicket = async (ticketId, e) => {
+    e.stopPropagation(); // Evitar que se propague el evento
+
+    const ticket = tickets.find((t) => t.id === ticketId); // Encuentra el ticket actual
+
+    const action = ticket.processed ? "desarchivar" : "archivar"; // Determina si estamos archivando o desarchivando
+    const actionMessage = action === "archivar" ? "archivado" : "desarchivado"; // Mensaje que se mostrará en el toast
+
+    if (confirm(`¿Estás seguro de que quieres ${action} este ticket?`)) {
+      try {
+        await archiveTicket(ticketId); // Llamar a la función para archivar o desarchivar
+        toast.success(`Ticket ${actionMessage} con éxito.`); // Mensaje de éxito dinámico
+      } catch (error) {
+        console.error("Error al archivar o desarchivar el ticket:", error);
+        toast.error(`Error al ${action} el ticket. Intenta nuevamente.`); // Mensaje de error dinámico
+      }
+    }
+  };
 
   return (
     <TicketsContext.Provider value={{
-      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket,getUserTickets
+      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket, updatePaymentStatus, getUserTickets
     }}>
       {children}
     </TicketsContext.Provider>

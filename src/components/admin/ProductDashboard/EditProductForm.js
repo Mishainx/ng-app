@@ -17,7 +17,7 @@ const EditProductForm = ({ editingProduct, setView }) => {
     img: null, // Para manejar una nueva imagen cargada, si aplica
   });
 
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,7 +25,8 @@ const EditProductForm = ({ editingProduct, setView }) => {
     setIsSubmitting(true);
     try {
       const updatedProduct = await updateProduct(productData); // Asume que `updateProduct` es la función para actualizar productos
-      if (!updateProduct) {
+      
+    if (!updateProduct) {
         throw new Error("No se pudo actualizar el producto.");
       }  
       toast.success("Producto actualizado exitosamente");
@@ -66,12 +67,14 @@ const EditProductForm = ({ editingProduct, setView }) => {
   };
 
   const handleSubcategoryAdd = () => {
-    if (selectedSubcategory && !productData.subcategory.includes(selectedSubcategory)) {
+    if (selectedSubcategory && !productData.subcategory?.includes(selectedSubcategory)) {
       setProductData((prevData) => ({
         ...prevData,
-        subcategory: [...prevData.subcategory, selectedSubcategory]
+        subcategory: [...prevData?.subcategory, selectedSubcategory]
       }));
-      setSelectedSubcategory(""); // Limpiar la selección
+
+
+      setSelectedSubcategory([]); // Limpiar la selección
     }
   };
   const handleSubcategoryRemove = (subcategorySlug) => {
@@ -226,7 +229,7 @@ const EditProductForm = ({ editingProduct, setView }) => {
           onChange={(e) => {
             const value = e.target.value;
             if (value.length <= 30) { // Limita a 30 caracteres
-              setProductData({ ...productData, brand: value || null });
+              setProductData({ ...productData, brand: value || "" });
             }
           }}
           placeholder="Ej. Marca del producto"
@@ -282,25 +285,26 @@ const EditProductForm = ({ editingProduct, setView }) => {
               <PlusIcon className="w-5 h-5" />
             </button>
           </div>
-          {productData?.subcategories?.length > 0 && (
-            <ul className="mt-2">
-              {productData.subcategories.map((subcategory) => (
-                <li
-                  key={subcategory}
-                  className="flex justify-between items-center mb-1 p-2 border-b"
-                >
-                  <span>{capitalizeFirstLetter(subcategory)}</span>
-                  <button
-                    type="button"
-                    className="text-red-500 hover:text-red-600"
-                    onClick={() => handleSubcategoryRemove(subcategory)}
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="flex flex-wrap gap-2 mt-2">
+      {productData.subcategory?.map((subcategorySlug) => {
+        const subcategory = getSubcategories(productData.category).find(sub => sub.slug === subcategorySlug);
+        return (
+          <span
+            key={subcategorySlug}
+            className="flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full"
+          >
+            {capitalizeFirstLetter(subcategory?.title || subcategorySlug)}
+            <button
+              type="button"
+              className="ml-2 text-red-500 hover:text-red-700"
+              onClick={() => handleSubcategoryRemove(subcategorySlug)}
+            >
+              ✕
+            </button>
+          </span>
+        );
+      })}
+    </div>
         </div>
       )}
 {/* Botones: Volver y Crear Producto */}

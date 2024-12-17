@@ -4,6 +4,8 @@ import { collection, query, where, getDocs, updateDoc, doc,deleteDoc } from 'fir
 import { createSlug,slugExists } from '@/utils/createSlug';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/firebase/config';
+import { cookies } from 'next/headers';
+import { authAdmin } from '@/firebase/authManager';
 
 export const GET = async (req, { params }) => {
   const { productSlug } = params;
@@ -37,8 +39,39 @@ export const GET = async (req, { params }) => {
 
 export const DELETE = async (req, { params }) => {
   const { productSlug } = params;
-
   try {
+
+        const cookieStore = cookies();
+        const cookie = cookieStore.get("ng-ct");
+    
+        if (!cookie || !cookie.value) {
+
+          return NextResponse.json(
+            { message: 'Unauthorized: No token provided' },
+            { status: 401 }
+          );
+        }
+    
+        const token = cookie.value;
+    
+        let decodedToken;
+
+        try {
+          decodedToken = await authAdmin.verifyIdToken(token);
+        } catch (error) {
+          return NextResponse.json(
+            { message: 'Unauthorized: Invalid token' },
+            { status: 401 }
+          );
+        }
+    
+            // Verifica si el usuario tiene privilegios de admin
+        if (!decodedToken.admin) {
+          return NextResponse.json(
+            { message: 'Unauthorized: Admin privileges required' },
+            { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+          );
+        }
     // Crear una consulta para buscar el documento con el slug especificado
     const productsRef = collection(db, 'products');
     const q = query(productsRef, where('slug', '==', productSlug));
@@ -76,11 +109,41 @@ export const PUT = async (req, { params }) => {
   const { productSlug } = params;
 
   try {
-    const formData = await req.formData(); // Leer FormData de la solicitud
+    const cookieStore = cookies();
+        const cookie = cookieStore.get("ng-ct");
+    
+        if (!cookie || !cookie.value) {
+          return NextResponse.json(
+            { message: 'Unauthorized: No token provided' },
+            { status: 401 }
+          );
+        }
+    
+        const token = cookie.value;
+    
+        let decodedToken;
+        try {
+          decodedToken = await authAdmin.verifyIdToken(token);
+        } catch (error) {
+          return NextResponse.json(
+            { message: 'Unauthorized: Invalid token' },
+            { status: 401 }
+          );
+        }
+    
+            // Verifica si el usuario tiene privilegios de admin
+        if (!decodedToken.admin) {
+          return NextResponse.json(
+            { message: 'Unauthorized: Admin privileges required' },
+            { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+          );
+        }
+
+
+    const formData = await req.formData();
     const updatedData = {};
     let file = null;
 
-    // Iterar sobre los campos de FormData
     formData.forEach((value, key) => {
       if (key === "img") {
         file = value; // Asumimos que es un archivo
@@ -90,9 +153,22 @@ export const PUT = async (req, { params }) => {
         }
         updatedData[key].push(value); // Manejar múltiples subcategorías
       } else {
-        updatedData[key] = value;
+        // Para los campos booleanos, convertir "true" y "false" a valores booleanos
+        if (key === "stock" || key === "visible" || key === "featured") {
+          updatedData[key] = value === "true"; // Convertir a booleano
+        } 
+        // Para los campos numéricos, convertir a número
+        else if (key === "price" || key === "discount") {
+          updatedData[key] = parseFloat(value); // Convertir a número flotante
+        } 
+        // Para todos los demás, asignar directamente
+        else {
+          updatedData[key] = value;
+        }
       }
     });
+    
+
 
     const productsRef = collection(db, "products");
     const q = query(productsRef, where("slug", "==", productSlug));

@@ -101,6 +101,14 @@ export const GET = async (request) => {
         { status: 401 }
       );
     }
+
+            // Verifica si el usuario tiene privilegios de admin
+            if (!decodedToken.admin) {
+                return NextResponse.json(
+                  { message: 'Unauthorized: Admin privileges required' },
+                  { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+                );
+              }
         // Obtiene todos los tickets de la colección
         const ticketsRef = collection(db, "tickets");
         const ticketsSnapshot = await getDocs(ticketsRef);

@@ -32,18 +32,23 @@ export const ProductsProvider = ({ children }) => {
     try {
       const formData = new FormData();
   
-      // Agregar los campos al FormData
-      for (const key in newProduct) {
-        if (key === "subcategories" && Array.isArray(newProduct[key])) {
-          newProduct[key].forEach((subcategory) => {
-            formData.append("subcategory", subcategory);
-          });
-        } else if (key === "img" && newProduct.img) {
-          formData.append(key, newProduct.img);
-        } else {
-          formData.append(key, newProduct[key]);
-        }
-      }
+// Agregar los campos al FormData
+for (const key in newProduct) {
+  if (key === "category" && newProduct[key] === "") {
+    // Si la categoría es una cadena vacía, asignar "otros" en lugar de undefined
+    formData.append(key, "otros");
+  } else if (key === "subcategories" && Array.isArray(newProduct[key])) {
+    newProduct[key].forEach((subcategory) => {
+      formData.append("subcategory", subcategory);
+    });
+  } else if (key === "img" && newProduct.img) {
+    formData.append(key, newProduct.img); // Agregar archivo
+  } else {
+    formData.append(key, newProduct[key]);
+  }
+}
+
+
   
       // Realizar la petición al backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
@@ -73,18 +78,26 @@ export const ProductsProvider = ({ children }) => {
     try {
       const formData = new FormData();
   
-      // Agregar los campos al FormData
-      for (const key in updatedProduct) {
-        if (key === "subcategories" && Array.isArray(updatedProduct[key])) {
-          updatedProduct[key].forEach((subcategory) => {
-            formData.append("subcategory", subcategory);
-          });
-        } else if (key === "img" && updatedProduct.img) {
-          formData.append(key, updatedProduct.img); // Agregar archivo
-        } else {
-          formData.append(key, updatedProduct[key]);
-        }
-      }
+// Agregar los campos al FormData
+for (const key in updatedProduct) {
+  if (key === "category" && updatedProduct[key] === "") {
+    // Si la categoría es una cadena vacía, asignar "otros" en lugar de undefined
+    formData.append(key, "otros");
+  } else if (key === "subcategory" && Array.isArray(updatedProduct[key])) {
+    updatedProduct[key].forEach((subcategory) => {
+      formData.append("subcategory", subcategory);
+    });
+  } else if (key === "img" && updatedProduct.img) {
+    formData.append(key, updatedProduct.img); // Agregar archivo
+  } else if (key === "stock" || key === "visible" || key === "featured") {
+    // Convertir los valores booleanos a "true" o "false" en formato cadena
+    formData.append(key, updatedProduct[key] ? "true" : "false");
+  } else {
+    formData.append(key, updatedProduct[key]);
+  }
+}
+
+
   
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/products/${updatedProduct.slug}`,

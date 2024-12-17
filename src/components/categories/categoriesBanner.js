@@ -3,7 +3,7 @@
 import { useCategories } from "@/context/CategoriesContext";
 import Image from "next/image";
 
-export default function CategoriesBanner({ selectedCategory, selectedSubcategory }) {
+export default function CategoriesBanner({ selectedCategory, selectedSubCategory }) {
   const { categories } = useCategories();
 
   // Filtrar la categoría seleccionada
@@ -13,19 +13,25 @@ export default function CategoriesBanner({ selectedCategory, selectedSubcategory
 
   // Lógica para determinar la imagen a mostrar
   let bannerImage;
+  let bannerTittle;
 
-  if (selectedSubcategory) {
-    const subcategory = category.subcategories.find(sub => sub.title === selectedSubcategory);
+  const subcategory = category?.subcategories?.find(sub => sub.slug === selectedSubCategory);
+
+  if (subcategory) {
     bannerImage = subcategory?.img || category.img; // Usa la imagen de la subcategoría o de la categoría
+    bannerTittle = subcategory?.title || category.title;
+    console.log(subcategory)
+
   } else {
-    bannerImage = category.img; // Solo hay categoría, usar la imagen de la categoría
+    bannerImage = category.img;
+    bannerTittle = category.title // Solo hay categoría, usar la imagen de la categoría
   }
 
   return (
     <div className="relative w-full h-[200px] mb-3">
       <Image
         src={bannerImage} // URL de la imagen determinada
-        alt={category.title} // Texto alternativo
+        alt={bannerTittle} // Texto alternativo
         fill // Hace que la imagen llene el contenedor
         className="object-cover w-full h-full transition-transform duration-300" // Ajustes para cubrir el área
       />
@@ -33,7 +39,7 @@ export default function CategoriesBanner({ selectedCategory, selectedSubcategory
       </div>
       <div className="absolute inset-0 flex items-center justify-center"> {/* Texto centrado */}
         <div className="text-white text-4xl font-bold uppercase text-center">
-          <h1>{category.title}</h1>
+          <h1>{bannerTittle}</h1>
         </div>
       </div>
     </div>

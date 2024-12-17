@@ -32,6 +32,14 @@ export const GET = async () => {
             );
         }
 
+                // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+        return NextResponse.json(
+          { message: 'Unauthorized: Admin privileges required' },
+          { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+        );
+      }
+
         const productosRef = collection(db, "users");
         const querySnapshot = await getDocs(productosRef);
         const docs = querySnapshot.docs.map(doc => doc.data());

@@ -9,9 +9,13 @@ export default function ActionButtons({ sku, stock }) {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value > 0 && value <= stock) {
-      setQuantity(value);
+    const value = e.target.value;
+    if (value === '' || parseInt(value) <= 0) {
+      // Si el valor está vacío o es menor o igual a 0, establece la cantidad en 0
+      setQuantity(0);
+    } else if (parseInt(value)) {
+      // Si el valor es válido y menor o igual al stock, actualiza la cantidad
+      setQuantity(parseInt(value));
     }
   };
 

@@ -23,6 +23,7 @@ const productDetails = [
   { label: "Sku", value: product.sku },
 ];
 
+
 // Solo agregar "Subcategorías" si existen
 if (product.subcategories && product.subcategory.length > 0) {
   productDetails.push({
@@ -81,7 +82,7 @@ if (product.subcategories && product.subcategory.length > 0) {
                 </p>
                 <p className="text-2xl font-semibold text-red-500">
                   {formatPriceToUSD(
-                    product.price - (product.price * product.discount) / 100
+                    product.discount
                   )}
                 </p>
               </>

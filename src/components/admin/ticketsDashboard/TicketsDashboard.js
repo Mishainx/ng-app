@@ -16,8 +16,8 @@ const TicketDashboard = () => {
   if (loading) return <div>Cargando tickets...</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Panel de Administración de Tickets</h1>
+    <div className="container mx-auto p-4 text-xs">
+      <h1 className="text-1xl font-bold mb-2">Panel de Administración de Tickets</h1>
 
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">Buscar Tickets:</label>

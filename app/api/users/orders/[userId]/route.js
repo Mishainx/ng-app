@@ -1,6 +1,8 @@
 import { doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { authAdmin } from "@/firebase/authManager";
 
 
 export const GET = async (request, { params }) => {
@@ -30,8 +32,33 @@ export const GET = async (request, { params }) => {
 
 export const POST = async (request, { params }) => {
   try {
+
+     // Obtener las cookies y el token
+          const cookieStore = cookies();
+          const cookie = cookieStore.get("ng-ct");
+      
+          if (!cookie || !cookie.value) {
+            return NextResponse.json(
+              { message: "Unauthorized: No token provided" },
+              { status: 401 }
+            );
+          }
+      
+          const token = cookie.value;
+      
+          // Verificar el token con Firebase Admin SDK
+          let decodedToken;
+          try {
+            decodedToken = await authAdmin.verifyIdToken(token);
+          } catch (error) {
+            return NextResponse.json(
+              { message: "Unauthorized: Invalid token" },
+              { status: 401 }
+            );
+          }
+
     const { userId } = params;
-    const { sku, quantity } = await request.json();
+    const { sku, quantity} = await request.json();
 
     // Validar formato del SKU (ejemplo: PRO-XXXXX donde XXXXX son números)
     const skuRegex = /^PRO-\d{5}$/;
@@ -103,6 +130,31 @@ export const POST = async (request, { params }) => {
 
 export const PATCH = async (request, { params }) => {
     try {
+
+       // Obtener las cookies y el token
+            const cookieStore = cookies();
+            const cookie = cookieStore.get("ng-ct");
+        
+            if (!cookie || !cookie.value) {
+              return NextResponse.json(
+                { message: "Unauthorized: No token provided" },
+                { status: 401 }
+              );
+            }
+        
+            const token = cookie.value;
+        
+            // Verificar el token con Firebase Admin SDK
+            let decodedToken;
+            try {
+              decodedToken = await authAdmin.verifyIdToken(token);
+            } catch (error) {
+              return NextResponse.json(
+                { message: "Unauthorized: Invalid token" },
+                { status: 401 }
+              );
+            }
+
       const { userId } = params;
       const { sku, quantity } = await request.json();
   
@@ -160,6 +212,30 @@ export const PATCH = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
     try {
+
+       // Obtener las cookies y el token
+            const cookieStore = cookies();
+            const cookie = cookieStore.get("ng-ct");
+        
+            if (!cookie || !cookie.value) {
+              return NextResponse.json(
+                { message: "Unauthorized: No token provided" },
+                { status: 401 }
+              );
+            }
+        
+            const token = cookie.value;
+        
+            // Verificar el token con Firebase Admin SDK
+            let decodedToken;
+            try {
+              decodedToken = await authAdmin.verifyIdToken(token);
+            } catch (error) {
+              return NextResponse.json(
+                { message: "Unauthorized: Invalid token" },
+                { status: 401 }
+              );
+            }
       const { userId } = params;
       const { sku } = await request.json();
   

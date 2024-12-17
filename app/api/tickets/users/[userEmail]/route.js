@@ -53,6 +53,7 @@ export const GET = async (request, { params }) => {
 
     return NextResponse.json(tickets, { status: 200 });
   } catch (error) {
+    console.log(error);
     console.error("Error fetching tickets:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },

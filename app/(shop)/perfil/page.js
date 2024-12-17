@@ -1,22 +1,42 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { useTickets } from "@/context/TicketsContext";
 import EditIcon from "@/icons/EditIcon";
 import { useEffect, useState } from "react";
 import React from "react";
 
 export default function Perfil() {
   const { userData, loading: authLoading, error: authError } = useAuth();
-  const { tickets, loading: ticketsLoading, error: ticketsError, getUserTickets } = useTickets();
+  const [tickets, setTickets] = useState([]); // Estado para almacenar los tickets
   const [expandedTicket, setExpandedTicket] = useState(null); // Estado para gestionar la expansión de los tickets
+  const [ticketsLoading, setTicketsLoading] = useState(true); // Estado de carga de tickets
+  const [ticketsError, setTicketsError] = useState(null); // Estado de error de tickets
 
   // Obtener los tickets del usuario cuando se cargue la página
   useEffect(() => {
+    const fetchUserTickets = async () => {
+      // Asegurarse de que el usuario esté autenticado antes de hacer el fetch
+      if (userData?.email) {
+        try {
+          setTicketsLoading(true); // Iniciamos la carga
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/users/${userData.email}`);
+          if (!response.ok) {
+            throw new Error("No se pudieron obtener los tickets");
+          }
+          const data = await response.json();
+          setTickets(data); // Establecemos los tickets obtenidos
+        } catch (error) {
+          setTicketsError(error.message); // Establecemos el error
+        } finally {
+          setTicketsLoading(false); // Finalizamos la carga
+        }
+      }
+    };
+
     if (userData?.email) {
-      getUserTickets(userData.email);
+      fetchUserTickets(); // Solo ejecutamos si userData tiene un email
     }
-  }, [userData]);
+  }, [userData?.email]); // Se asegura de que solo se ejecute cuando el email cambie
 
   if (authLoading || ticketsLoading) return <p>Cargando...</p>;
   if (authError) return <p>Error: {authError}</p>;
@@ -30,7 +50,7 @@ export default function Perfil() {
 
   // Función para alternar la expansión de productos
   const toggleProducts = (ticketId) => {
-    setExpandedTicket(prevTicket => (prevTicket === ticketId ? null : ticketId)); // Alterna entre expandir y contraer
+    setExpandedTicket((prevTicket) => (prevTicket === ticketId ? null : ticketId)); // Alterna entre expandir y contraer
   };
 
   return (

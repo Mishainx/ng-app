@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { useCategories } from '@/context/CategoriesContext';  // Asegúrate de importar el hook del contexto
+import { useCategories } from '@/context/CategoriesContext';
+import SpinnerIcon from '@/icons/SpinnerIcon';
+import { toast } from 'react-toastify';
 
-const AddCategoryForm = () => {
+const AddCategoryForm = ({resetView, onCategoryCreated}) => {
   const [title, setTitle] = useState('');
   const [imgFile, setImgFile] = useState(null);
   const [iconFile, setIconFile] = useState(null);
   const [showInMenu, setShowInMenu] = useState('false');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Aquí traemos la función addCategory del contexto
+  // Traemos la función addCategory del contexto
   const { addCategory } = useCategories();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     const formData = new FormData();
     formData.append('title', title);
@@ -24,85 +24,96 @@ const AddCategoryForm = () => {
     formData.append('showInMenu', showInMenu);
 
     try {
-      // Aquí enviamos los datos a la función addCategory
-      await addCategory(formData);  // Suponiendo que addCategory gestiona el fetch hacia el backend
+      // Llamamos a la función addCategory del contexto
+      await addCategory(formData);
 
-      // Si todo sale bien, mostramos un mensaje de éxito
-      alert('Categoría creada exitosamente');
+      // Mostrar mensaje de éxito
+      toast.success('Categoría creada exitosamente');
+      
+
+            // Notificamos que la categoría ha sido creada
+            if (onCategoryCreated) {
+              onCategoryCreated(); // Cambia la vista a la tabla
+            }
+
+      // Resetear el formulario
+      setTitle('');
+      setImgFile(null);
+      setIconFile(null);
+      setShowInMenu('false');
     } catch (error) {
-      setError('Error al conectar con el servidor');
+      // Mostrar mensaje de error
+      toast.error('Error al crear la categoría. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold mb-6">Agregar Nueva Categoría</h2>
-      
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700">Título de la Categoría</label>
+    <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg">
+      <h2 className="text-lg font-semibold mb-4">Agregar Nueva Categoría</h2>
+
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Título</label>
           <input
             type="text"
             id="title"
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-            placeholder="Escribe el título de la categoría"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
+            placeholder="Escribe el título"
             required
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="img" className="block text-gray-700">Imagen Principal</label>
+        <div>
+          <label htmlFor="img" className="block text-sm font-medium text-gray-700">Imagen</label>
           <input
             type="file"
             id="img"
             name="img"
             accept="image/jpeg, image/png"
             onChange={(e) => setImgFile(e.target.files[0])}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
             required
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="icon" className="block text-gray-700">Ícono</label>
+        <div>
+          <label htmlFor="icon" className="block text-sm font-medium text-gray-700">Ícono</label>
           <input
             type="file"
             id="icon"
             name="icon"
             accept="image/jpeg, image/png"
             onChange={(e) => setIconFile(e.target.files[0])}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
             required
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Mostrar en Menú</label>
+        <div>
+          <label htmlFor="showInMenu" className="block text-sm font-medium text-gray-700">Mostrar en Menú</label>
           <select
             id="showInMenu"
             name="showInMenu"
             value={showInMenu}
             onChange={(e) => setShowInMenu(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
           >
             <option value="true">Sí</option>
             <option value="false">No</option>
           </select>
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
         <button
           type="submit"
-          className={`w-full p-3 bg-red-500 text-white rounded-md ${loading ? 'opacity-50' : ''} hover:bg-red-700`}
+          className={`w-full px-3 py-1 bg-red-500 text-white text-sm rounded flex items-center justify-center ${loading ? 'opacity-50' : ''} hover:bg-red-600`}
           disabled={loading}
         >
-          {loading ? 'Cargando...' : 'Crear Categoría'}
+          {loading ? <SpinnerIcon className="w-5 h-5 animate-spin" /> : 'Crear Categoría'}
         </button>
       </form>
     </div>

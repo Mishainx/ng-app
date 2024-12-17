@@ -1,16 +1,20 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ClientTable from "./ClientTable";
 import ClientForm from "./ClientForm";
 import { useClients } from "@/context/ClientsContext";
 
 
-const CustomerDashboard = () => {
+const CustomerDashboard = ({resetView}) => {
   const [view, setView] = useState("list");
   const [editingClient, setEditingClient] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { clients, loading, error } = useClients(); // Obtener clientes del contexto
+
+  useEffect(() => {
+    setView("list");
+  }, [resetView]);
 
   const handleViewChange = (newView, client = null) => {
     setEditingClient(client);
@@ -28,7 +32,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Panel de Administración de Clientes</h1>
+      <h1 className="text-1xl font-bold mb-2">Panel de Administración de Clientes</h1>
 
       {view === "list" ? (
         <>

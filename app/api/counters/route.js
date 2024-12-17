@@ -32,6 +32,14 @@ export const GET = async (req) => {
       );
     }
 
+                // Verifica si el usuario tiene privilegios de admin
+                if (!decodedToken.admin) {
+                  return NextResponse.json(
+                    { message: 'Unauthorized: Admin privileges required' },
+                    { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+                  );
+                }
+
     // Obtener los valores actuales de los contadores
     const categoriesCount = await getCounterValue('categories');
     const productsCount = await getCounterValue('products');

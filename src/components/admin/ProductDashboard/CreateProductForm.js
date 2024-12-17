@@ -19,7 +19,7 @@ const CreateProductForm = ({ setView }) => {
     shortDescription: "",
     img: null, // Cambiar para manejar el archivo directamente
     relatedProds: [],
-    brand: null,
+    brand: "",
     visible: true,
     featured: false,
     gallery: [],
@@ -92,17 +92,17 @@ const getSubcategories = (categorySlug) => {
 
   return (
     
-    <form onSubmit={handleSubmit} className="bg-white shadow-md p-4 rounded-lg">
+    <form onSubmit={handleSubmit} className="bg-white shadow-md p-4 rounded-lg text-xs">
 
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">Crear Producto</h2>
+      <h2 className="text-xl font-semibold mb-2 text-gray-800">Crear Producto</h2>
 
       {/* Nombre */}
-      <div className="mb-3">
-        <label className="text-sm text-gray-700">Nombre</label>
+      <div className="mb-2">
+        <label className=" text-gray-700">Nombre:</label>
         <input
           type="text"
           required
-          className="border rounded w-full py-1 px-2"
+          className="border rounded w-full py-1 px-2 placeholder:text-xs"
           value={productData.name}
           onChange={(e) => setProductData({ ...productData, name: e.target.value })}
           placeholder="Ej. Auricular P105"
@@ -111,11 +111,11 @@ const getSubcategories = (categorySlug) => {
 
       {/* Precio */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Precio</label>
+        <label className="text-xs text-gray-700">Precio:</label>
         <input
           required
           type="text" // Cambiar a tipo "text" para evitar los botones
-          className="border rounded w-full py-1 px-2"
+          className="border rounded w-full py-1 px-2 text-xs"
           value={productData.price}
           onChange={(e) => {
             const value = e.target.value;
@@ -129,7 +129,7 @@ const getSubcategories = (categorySlug) => {
 
       {/* Descuento */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Descuento</label>
+        <label className="text-xs text-gray-700">Descuento:</label>
         <input
           type="text"
           className="border rounded w-full py-1 px-2"
@@ -146,8 +146,8 @@ const getSubcategories = (categorySlug) => {
 
       {/* Stock (Disponible) */}
       <div className="mb-3 flex flex-col">
-        <label className="text-sm text-gray-700">Opciones</label>
-        <label className="flex items-center text-sm text-gray-700">
+        <label className="text-xs text-gray-700">Opciones:</label>
+        <label className="flex items-center text-xs text-gray-700">
           <input
             type="checkbox"
             checked={productData.stock} // Cambiar 'available' a 'stock'
@@ -156,7 +156,7 @@ const getSubcategories = (categorySlug) => {
           />
           Stock Disponible
         </label>
-        <label className="flex items-center text-sm text-gray-700">
+        <label className="flex items-center text-xs text-gray-700">
           <input
             type="checkbox"
             checked={productData.visible}
@@ -165,7 +165,7 @@ const getSubcategories = (categorySlug) => {
           />
           Visible
         </label>
-        <label className="flex items-center text-sm text-gray-700">
+        <label className="flex items-center text-xs text-gray-700">
           <input
             type="checkbox"
             checked={productData.featured}
@@ -178,7 +178,7 @@ const getSubcategories = (categorySlug) => {
 
       {/* Descripción Larga */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Descripción Larga</label>
+        <label className="text-xs text-gray-700">Descripción Larga</label>
         <textarea
           className="border rounded w-full py-1 px-2"
           value={productData.longDescription}
@@ -190,7 +190,7 @@ const getSubcategories = (categorySlug) => {
 
       {/* Descripción Corta */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Descripción Corta</label>
+        <label className="text-xs text-gray-700">Descripción Corta:</label>
         <textarea
           className="border rounded w-full py-1 px-2"
           value={productData.shortDescription}
@@ -207,7 +207,7 @@ const getSubcategories = (categorySlug) => {
 
       {/* Imagen */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Selecciona una Imagen</label>
+        <label className="text-xs text-gray-700">Selecciona una Imagen:</label>
         <input
           required
           type="file"
@@ -232,7 +232,7 @@ const getSubcategories = (categorySlug) => {
 
       {/* Marca */}
       <div className="mb-3">
-        <label className="text-sm text-gray-700">Marca</label>
+        <label className="text-xs text-gray-700">Marca:</label>
         <input
           type="text"
           className="border rounded w-full py-1 px-2"
@@ -240,7 +240,7 @@ const getSubcategories = (categorySlug) => {
           onChange={(e) => {
             const value = e.target.value;
             if (value.length <= 30) { // Limita a 30 caracteres
-              setProductData({ ...productData, brand: value || null });
+              setProductData({ ...productData, brand: value || "" });
             }
           }}
           placeholder="Ej. Marca del producto"
@@ -249,7 +249,7 @@ const getSubcategories = (categorySlug) => {
 
 {/* Categoría */}
 <div className="mb-3">
-  <label className="text-sm text-gray-700">Categoría</label>
+  <label className="text-xs text-gray-700">Categoría:</label>
   <select
     className="border rounded w-full py-1 px-2"
     required
@@ -275,7 +275,7 @@ const getSubcategories = (categorySlug) => {
 {/* Subcategorías */}
 {productData.category && (
   <div className="mb-3">
-    <label className="text-sm text-gray-700">Subcategorías</label>
+    <label className="text-xs text-gray-700">Subcategorías:</label>
     <div className="flex gap-2">
       <select
         value={selectedSubcategory}
@@ -332,14 +332,15 @@ const getSubcategories = (categorySlug) => {
     label="Crear Producto"
     loadingText="Creando producto..."
     onClick={handleSubmit}
-    className=" sm:w-[300px]"
+    className="sm:w-[300px]"
     padding="py-2 px-5"
+    fontSize="text-xs"
   />
     {/* Botón de volver al menú */}
     <button
     type="button"
     onClick={() => setView("list")} // Cambiar la vista a la lista de productos
-    className="bg-gray-500 text-white py-2 px-5 rounded hover:bg-gray-700  md:w-[150px]"
+    className="bg-gray-500 text-white py-2 px-5 rounded hover:bg-gray-700  md:w-[150px] "
   >
     Volver al menú
   </button>

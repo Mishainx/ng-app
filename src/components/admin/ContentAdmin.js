@@ -3,18 +3,18 @@ import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
 import TicketDashboard from "./ticketsDashboard/TicketsDashboard";
 import CategoriesDashboard from "./CategoriesDashboard/CategoriesDashboard";
 
-export default function ContentAdmin({ selectedContent }) {
+export default function ContentAdmin({ selectedContent,resetView }) {
     const renderContent = () => {
         switch (selectedContent) {
             case 'products':
-                return <ProductDashboard/>
+                return <ProductDashboard resetView={resetView}/>
                 case 'customers':
-                    return <CustomerDashboard/>
+                    return <CustomerDashboard resetView={resetView}/>
             case 'tickets':
                 return <TicketDashboard/>;
 
             case 'categories':
-                return <CategoriesDashboard/>
+                return <CategoriesDashboard resetView={resetView}/>
             default:
                 return <p className="text-base text-muted-foreground">Welcome to the dashboard.</p>;
         }

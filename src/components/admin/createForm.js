@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateProductForm = ({setView}) => {
-  const router = useRouter();
   const [errors, setErrors] = useState({});
   const [productData, setProductData] = useState({
     name: "",

@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import ProductCard from "./productCard";
-import ProductCategoryNav from "./productCategoryNav";
 
-export default function ProductsByCategory({ products, selectedCategory, subcategory }) {
+export default function ProductsByCategory({ products }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("default");
 

@@ -5,7 +5,7 @@ export default async function ProductPage({ params }) {
   let product = null;
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/slug/${slug}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/slug/${slug}`,{cache:"no-cache"});
     if (!response.ok) {
       throw new Error('Error fetching product');
     }

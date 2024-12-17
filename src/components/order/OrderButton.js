@@ -1,7 +1,8 @@
+import { useState } from "react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
-import WhatsappIcon from "@/icons/WhatsappIcon";
+import SpinnerIcon from "@/icons/SpinnerIcon";
 
 const buildOrderDetails = (userData, cartProducts, total) => {
   return {
@@ -29,6 +30,7 @@ const buildOrderDetails = (userData, cartProducts, total) => {
 };
 
 export default function OrderButton({ userData, cartProducts, isOrderSent, setIsOrderSent, setCartProducts }) {
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga
   const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const handlePlaceOrder = async () => {
@@ -37,9 +39,10 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
       return;
     }
 
+    setIsLoading(true); // Activar el spinner
+
     try {
       const orderDetails = buildOrderDetails(userData, cartProducts, total);
-      console.log(cartProducts);
 
       // Primero, creamos el ticket en la API
       const ticketResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets`, {
@@ -51,8 +54,10 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
           email: userData.email,
           products: cartProducts.map(item => ({
             sku: item.sku,
+            name: item.name,
             quantity: item.quantity,
             price: item.price,
+            discount: item.discount,
           })),
         }),
       });
@@ -129,7 +134,7 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         },
         didClose: () => {
           // Esto solo se ejecutará si el usuario hace clic en "Enviar WhatsApp"
-          const whatsappLink = `https://wa.me/+5491154041650?text=${encodeURIComponent(whatsappMessage)}`;
+          const whatsappLink = `https://wa.me/+5491164316975?text=${encodeURIComponent(whatsappMessage)}`;
           window.open(whatsappLink, "_blank");
         },
       });
@@ -143,16 +148,27 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#d33",
       });
+    } finally {
+      setIsLoading(false); // Desactivar el spinner
     }
   };
 
   return (
     <button
       onClick={handlePlaceOrder}
-      disabled={isOrderSent}
-      className={`px-6 py-3 rounded font-bold text-white ${isOrderSent ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+      disabled={isOrderSent || isLoading} // Deshabilitar el botón mientras se procesa la orden
+      className={`px-4 py-2 rounded font-bold text-white ${isOrderSent || isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}`}
     >
-      {isOrderSent ? "Pedido Enviado" : "Realizar Pedido"}
+      {isLoading ? (
+        <div className="flex justify-center items-center">
+          <SpinnerIcon className="animate-spin h-5 w-5 mr-2" /> {/* Spinner con animación */}
+          Enviando...
+        </div>
+      ) : isOrderSent ? (
+        "Pedido Enviado"
+      ) : (
+        "Realizar Pedido"
+      )}
     </button>
   );
 }

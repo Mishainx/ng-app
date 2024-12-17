@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import TrashIcon from "@/icons/TrashIcon";
-import Link from "next/link";
 import Loader from "@/components/loader/Loader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -74,6 +73,7 @@ export default function Order() {
               ...cartItem,
               name: productInfo?.name || "Producto no encontrado",
               price: productInfo?.price || 0,
+              discount: productInfo?.discount || 0,
             };
           });
 
@@ -115,7 +115,10 @@ export default function Order() {
     }
   };
 
-  const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const total = cartProducts.reduce(
+    (acc, item) => acc + (item.discount || item.price) * item.quantity,
+    0
+  );
 
   const updateQuantity = (sku, newQuantity) => {
     setCartProducts(prevCart =>
@@ -135,103 +138,182 @@ export default function Order() {
 
   return (
     <main className="max-w-4xl mx-auto p-4">
-      <section className="bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-bold mb-4">Mi Pedido</h1>
+      <section className="bg-white shadow-md rounded-lg p-4">
+        <h1 className="text-xl font-bold mb-4">Mi Pedido</h1>
 
-        <div className="mb-2">
-          <h2 className="text-xl font-semibold mb-2">Información del Usuario</h2>
-          <p className="text-sm md:text-base">
-            <strong>Nombre:</strong> {capitalizeFirstLetter(userData?.name)}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>Apellido:</strong> {capitalizeFirstLetter(userData?.surname)}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>Email:</strong> {userData?.email}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>Teléfono:</strong> {userData?.whatsapp}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>Dirección:</strong>{" "}
-            {capitalizeFirstLetter(userData?.address)}, {capitalizeFirstLetter(userData?.city)}, {capitalizeFirstLetter(userData?.province)}, {capitalizeFirstLetter(userData?.country)}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>CUIT:</strong> {userData?.cuit}
-          </p>
-          <p className="text-sm md:text-base">
-            <strong>Razón Social:</strong> {capitalizeFirstLetter(userData?.businessName)}
-          </p>
+        {/* Información del usuario */}
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-2">Información del Usuario</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm">
+            <p>
+              <strong>Nombre:</strong> {capitalizeFirstLetter(userData?.name)}
+            </p>
+            <p>
+              <strong>Apellido:</strong> {capitalizeFirstLetter(userData?.surname)}
+            </p>
+            <p>
+              <strong>Email:</strong> {userData?.email}
+            </p>
+            <p>
+              <strong>Teléfono:</strong> {userData?.whatsapp}
+            </p>
+            <p>
+              <strong>Dirección:</strong>{" "}
+              {capitalizeFirstLetter(userData?.address)}, {capitalizeFirstLetter(userData?.city)},{" "}
+              {capitalizeFirstLetter(userData?.province)}, {capitalizeFirstLetter(userData?.country)}
+            </p>
+            <p>
+              <strong>CUIT:</strong> {userData?.cuit}
+            </p>
+            <p>
+              <strong>Razón Social:</strong> {capitalizeFirstLetter(userData?.businessName)}
+            </p>
+          </div>
         </div>
 
+        {/* Detalle de la orden */}
         {cartProducts.length > 0 ? (
-          <div>
-            <h2 className="text-xl font-semibold">Orden</h2>
-            <div className="flex flex-col divide-y divide-gray-200">
+          <>
+            <h2 className="text-lg font-semibold mb-2">Orden</h2>
+
+            {/* Modo móvil: tarjetas */}
+            <div className="block md:hidden">
               {cartProducts.map(item => {
-                const subtotal = item.price * item.quantity;
+                const effectivePrice = item.discount || item.price;
+                const subtotal = effectivePrice * item.quantity;
+
                 return (
-                  <div
-                    key={item.sku}
-                    className="flex flex-col items-center xxs:flex-row justify-between xxs:items-start py-4"
-                  >
-                    <div className="flex-1 flex flex-col text-center xxs:text-start">
-                      <div className="font-medium text-sm md:text-base mb-1">
-                        {capitalizeFirstLetter(item.name)}
-                      </div>
-                      <div className="text-xs md:text-sm text-gray-500 xxs:text-start">
-                        {capitalizeFirstLetter(item.sku)}
-                      </div>
-                      <div className="text-xs md:text-sm text-gray-500">
-                        Precio unitario: ${item.price.toFixed(2)}
-                      </div>
-                      <div className="flex items-center justify-center xxs:justify-start mt-1">
+                  <div key={item.sku} className="bg-gray-100 p-4 mb-4 rounded-lg shadow">
+                    <div className="flex justify-between">
+                      <h3 className="font-semibold">{capitalizeFirstLetter(item.name)}</h3>
+                      <button
+                        onClick={() => removeProduct(item.sku)}
+                        className="text-red-500 flex items-center gap-1"
+                      >
+                        <TrashIcon /> Eliminar
+                      </button>
+                    </div>
+                    <p><strong>SKU:</strong> {capitalizeFirstLetter(item.sku)}</p>
+                    <p>
+                      <strong>Precio:</strong> {item.discount ? (
+                        <>
+                          <span className="line-through text-gray-400 text-xs">${item.price.toFixed(2)}</span>
+                          <span className="text-green-600 font-semibold ml-2">${item.discount.toFixed(2)}</span>
+                        </>
+                      ) : (
+                        `$${item.price.toFixed(2)}`
+                      )}
+                    </p>
+                    <div className="flex justify-between">
+                      <div className="flex items-center">
                         <button
-                          className="text-red-500 mx-2"
+                          className="text-red-500 mx-1"
                           onClick={() => updateQuantity(item.sku, Math.max(item.quantity - 1, 1))}
                         >
                           -
                         </button>
-                        <span className="mx-2">{item.quantity}</span>
+                        <span>{item.quantity}</span>
                         <button
-                          className="text-green-500 mx-2"
+                          className="text-green-500 mx-1"
                           onClick={() => updateQuantity(item.sku, item.quantity + 1)}
                         >
                           +
                         </button>
                       </div>
-                    </div>
-                    <div className="flex flex-col xxs:flex-row items-center mt-2 md:mt-0">
-                      <div className="text-sm md:text-base font-semibold text-green-600">
-                        ${subtotal.toFixed(2)}
-                      </div>
-                      <button
-                        onClick={() => removeProduct(item.sku)}
-                        className="mt-2 text-red-500 hover:underline ml-4 flex items-center gap-1"
-                      >
-                        <TrashIcon /> Eliminar
-                      </button>
+                      <p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex justify-between mt-4">
-              <div className="font-semibold text-xl">Total: ${total.toFixed(2)}</div>
-              {cartProducts.length > 0 && (
-                <OrderButton
-                  whatsappNumber="+5491154041650"
-                  userData={userData}
-                  cartProducts={cartProducts}
-                  isOrderSent={isOrderSent}
-                  setIsOrderSent={setIsOrderSent}
-                />
-              )}
+            {/* Modo desktop: tabla */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-4 py-2 text-left text-sm">Producto</th>
+                      <th className="px-4 py-2 text-left text-sm">SKU</th>
+                      <th className="px-4 py-2 text-center text-sm">Precio</th>
+                      <th className="px-4 py-2 text-center text-sm">Cantidad</th>
+                      <th className="px-4 py-2 text-center text-sm">Subtotal</th>
+                      <th className="px-4 py-2 text-center text-sm">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cartProducts.map(item => {
+                      const effectivePrice = item.discount || item.price;
+                      const subtotal = effectivePrice * item.quantity;
+
+                      return (
+                        <tr key={item.sku} className="border-t">
+                          <td className="px-4 py-2 text-sm">{capitalizeFirstLetter(item.name)}</td>
+                          <td className="px-4 py-2 text-sm">{capitalizeFirstLetter(item.sku)}</td>
+                          <td className="px-4 py-2 text-center text-sm">
+                          {item.discount ? (
+  <div className="flex flex-col items-center">
+    <span className="line-through text-gray-400 text-xs">
+      {`U$D ${item.price.toFixed(2)}`}
+    </span>
+    <span className="text-green-600 font-semibold">
+      {`U$D ${item.discount.toFixed(2)}`}
+    </span>
+  </div>
+) : (
+  `U$D ${item.price.toFixed(2)}`
+)}
+
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <div className="flex items-center justify-center">
+                              <button
+                                className="text-red-500 mx-1"
+                                onClick={() => updateQuantity(item.sku, Math.max(item.quantity - 1, 1))}
+                              >
+                                -
+                              </button>
+                              <span>{item.quantity}</span>
+                              <button
+                                className="text-green-500 mx-1"
+                                onClick={() => updateQuantity(item.sku, item.quantity + 1)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2 text-center text-sm font-semibold text-green-600">
+                            U$D {subtotal.toFixed(2)}
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <button
+                              onClick={() => removeProduct(item.sku)}
+                              className="text-red-500 hover:underline flex items-center gap-1"
+                            >
+                              <TrashIcon /> Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+
+            <div className="flex justify-between mt-4">
+              <div className="font-semibold text-lg">Total: U$D {total.toFixed(2)}</div>
+              <OrderButton
+                whatsappNumber="+5491164316975"
+                userData={userData}
+                cartProducts={cartProducts}
+                isOrderSent={isOrderSent}
+                setIsOrderSent={setIsOrderSent}
+              />
+            </div>
+          </>
         ) : (
-          <p className="text-center text-lg text-gray-500">Tu carrito está vacío</p>
+          <p className="text-center text-sm text-gray-500">Tu carrito está vacío</p>
         )}
       </section>
     </main>

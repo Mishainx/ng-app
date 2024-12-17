@@ -125,8 +125,10 @@ export const POST = async (req, { params }) => {
     const duplicateSubcategory = existingSubcategories.find(subcat => subcat.slug === subcategorySlug);
 
     if (duplicateSubcategory) {
-      // Si el slug ya existe, añadir un timestamp para que sea único
-      subcategorySlug = `${subcategorySlug}-${Date.now()}`;
+      return NextResponse.json(
+        { message: 'Ya existe una subcategoria con el slug' },
+        { status: 400 }
+      );
     }
 
     // Subir la imagen principal a Firebase Storage si está presente
@@ -145,20 +147,24 @@ export const POST = async (req, { params }) => {
       iconUrl = await getDownloadURL(iconStorageRef);
     }
 
+    // Crear la subcategoría en Firestore
+    const newSubcategory = {
+      title,
+      slug: subcategorySlug, // Guardar el slug
+      img: imgUrl || null, // Solo se añade si img existe
+      icon: iconUrl || null, // Solo se añade si icon existe
+      createdAt,
+      showInMenu: showInMenu
+    };
+
     // Actualizar el documento para añadir la nueva subcategoría
     await updateDoc(categoryRef, {
-      subcategories: arrayUnion({
-        title,
-        slug: subcategorySlug, // Guardar el slug
-        img: imgUrl, // Solo se añade si img existe
-        icon: iconUrl, // Solo se añade si icon existe
-        createdAt,
-        showInMenu: showInMenu
-      }),
+      subcategories: arrayUnion(newSubcategory),
     });
 
+    // Devolver la subcategoría creada en la respuesta
     return NextResponse.json(
-      { message: 'Subcategory created successfully' },
+      { message: 'Subcategory created successfully', subcategory: newSubcategory },
       { status: 201 }
     );
   } catch (error) {

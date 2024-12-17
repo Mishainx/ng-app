@@ -1,9 +1,36 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { authAdmin } from "@/firebase/authManager";
 
 export const DELETE = async (request, { params }) => {
   try {
+
+     // Obtener las cookies y el token
+          const cookieStore = cookies();
+          const cookie = cookieStore.get("ng-ct");
+      
+          if (!cookie || !cookie.value) {
+            return NextResponse.json(
+              { message: "Unauthorized: No token provided" },
+              { status: 401 }
+            );
+          }
+      
+          const token = cookie.value;
+      
+          // Verificar el token con Firebase Admin SDK
+          let decodedToken;
+          try {
+            decodedToken = await authAdmin.verifyIdToken(token);
+          } catch (error) {
+            return NextResponse.json(
+              { message: "Unauthorized: Invalid token" },
+              { status: 401 }
+            );
+          }
+
     const { userId } = params;
     
     // Obtener referencia al documento del usuario

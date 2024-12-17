@@ -5,7 +5,6 @@ export const POST = async (req) => {
   try {
     // Parsear el cuerpo de la solicitud
     let { destinatary, order } = await req.json();
-    console.log(destinatary,order)
     // Validar que se haya recibido el correo y el pedido
     if (!destinatary || !order) {
       return NextResponse.json(

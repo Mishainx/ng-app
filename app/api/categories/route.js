@@ -28,6 +28,7 @@ export const GET = async () => {
 };
 
 // `POST` para crear una nueva categoría
+// `POST` para crear una nueva categoría
 export const POST = async (req) => {
   try {
     // Obtener las cookies y el token
@@ -48,21 +49,29 @@ export const POST = async (req) => {
     try {
       decodedToken = await authAdmin.verifyIdToken(token);
     } catch (error) {
+      console.log(error);
       return NextResponse.json(
         { message: 'Unauthorized: Invalid token' },
         { status: 401 }
       );
     }
 
+    // Verifica si el usuario tiene privilegios de admin
+    if (!decodedToken.admin) {
+      return NextResponse.json(
+        { message: 'Unauthorized: Admin privileges required' },
+        { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+      );
+    }
+
     // Obtener el FormData de la solicitud
     const formData = await req.formData();
-
     // Extraer datos de la categoría desde FormData
     const title = formData.get('title');
     const imgFile = formData.get('img'); // Archivo de imagen principal
     const iconFile = formData.get('icon'); // Archivo del ícono
     let createdAt = formData.get('createdAt');
-    const showInMenu = formData.get('showInMenu') // La fecha como string
+    const showInMenu = formData.get('showInMenu') === 'true';
 
     // Validar los datos
     if (!title || typeof title !== 'string' || title.length > 40) {
@@ -72,16 +81,16 @@ export const POST = async (req) => {
       );
     }
 
-      // Validar el campo showInMenu: debe ser "true" o "false"
-  if (showInMenu !== 'true' && showInMenu !== 'false') {
-    return NextResponse.json(
-      { message: 'Validation error: showInMenu must be either "true" or "false"' },
-      { status: 400 }
-    );
-  }
+    // Validar el campo showInMenu: debe ser "true" o "false"
+    if (showInMenu !== true && showInMenu !== false) {
+      return NextResponse.json(
+        { message: 'Validation error: showInMenu must be either "true" or "false"' },
+        { status: 400 }
+      );
+    }
 
-  // Convertir showInMenu a booleano
-  const showInMenuBool = showInMenu === 'true';
+    // Convertir showInMenu a booleano
+    const showInMenuBool = showInMenu === 'true';
 
     if (!imgFile || !(imgFile instanceof Blob)) {
       return NextResponse.json(
@@ -118,8 +127,17 @@ export const POST = async (req) => {
       createdAt = new Date().toISOString(); // Formato ISO
     }
 
-    // Generar el slug a partir del título
+    // Generar el slug a partir del título y verificar si ya existe
+    const slugExists = async (slug) => {
+      const categoryQuerySnapshot = await getDocs(collection(db, 'categories'));
+      const categoryDocs = categoryQuerySnapshot.docs;
+      return categoryDocs.some(doc => doc.data().slug === slug);
+    };
+
     const uniqueSlug = await createSlug(title, slugExists);
+    if (!uniqueSlug) {
+      return NextResponse.json({ message: 'Slug already exists, please choose a different title' }, { status: 400 });
+    }
 
     // Subir la imagen principal a Firebase Storage
     const imgStorageRef = ref(storage, `categories/${imgFile.name}`);
@@ -142,8 +160,20 @@ export const POST = async (req) => {
       showInMenu: showInMenuBool,
     });
 
+    // Obtener los datos del documento creado
+    const newCategory = {
+      id: docRef.id,
+      title: title,
+      img: imgUrl,
+      icon: iconUrl,
+      slug: uniqueSlug,
+      subcategories: [],
+      createdAt: createdAt,
+      showInMenu: showInMenuBool,
+    };
+
     return NextResponse.json(
-      { message: 'Category created successfully', id: docRef.id },
+      { message: 'Category created successfully', category: newCategory },
       { status: 201 }
     );
   } catch (error) {

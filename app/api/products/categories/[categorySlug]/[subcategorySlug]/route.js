@@ -4,16 +4,24 @@ import { db } from '@/firebase/config';
 
 // `GET` para obtener productos por categoría y subcategoría
 export const GET = async (req, { params }) => {
-  const { categorySlug, subcategory } = params;
-
- 
+  const { categorySlug, subcategorySlug } = params;
 
   try {
+    // Asegúrate de que categorySlug y subcategorySlug no estén vacíos
+    if (!categorySlug || !subcategorySlug) {
+      return NextResponse.json(
+        { message: 'Category and subcategory slugs are required.' },
+        { status: 400 }
+      );
+    }
+
+    console.log(`${categorySlug}-${subcategorySlug}`)
+
     // Consulta Firestore para filtrar productos por categoría y subcategoría
     const productsQuery = query(
       collection(db, 'products'),
       where('category', '==', categorySlug), // Filtro por categoría
-      where('subcategory', 'array-contains',  `${categorySlug}-${subcategory}`) // Filtro por subcategoría dentro del array
+      where('subcategory', 'array-contains', `${subcategorySlug}`) // Filtro por subcategoría dentro del array
     );
 
     const productsSnapshot = await getDocs(productsQuery);
@@ -34,6 +42,7 @@ export const GET = async (req, { params }) => {
       );
     }
   } catch (error) {
+    console.error('Error fetching products:', error); // Imprime el error para depuración
     return NextResponse.json(
       { message: 'Error fetching products', error: error.message },
       { status: 500 }

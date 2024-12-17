@@ -3,31 +3,38 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/product/productCard";
 import Loader from "@/components/loader/Loader";
+import { useCategories } from "@/context/CategoriesContext";
+import ProductsByCategoryContainer from '@/components/product/productByCategoryContainer';
+import CategoriesBanner from '@/components/categories/categoriesBanner';
+import { Suspense } from "react";
 
-const ProductsByCategoryContainer = ({ selectedCategory, selectedSubcategory }) => {
+const ProductsBySubcategory = ({params}) => {
+    const {category, subcategory} = params;
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Fetch data only once based on category and subcategory
+    // Fetch data only once based on categorySlug and subcategorySlug
     useEffect(() => {
+        if (!category|| !subcategory) return; // Verifica que ambos params estén disponibles
+
         const fetchProducts = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?category=${selectedCategory}&subcategory=${selectedSubcategory}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/categories/${category}/${subcategory}`, {
                     cache: "no-store",
                 });
                 const data = await response.json();
-                // Filter out products without images
+                // Filtrar los productos sin imágenes
                 const validProducts = data.payload.filter(product => product?.img);
-                setProducts(validProducts); // Set products in state
-                setLoading(false); // Set loading to false when data is fetched
+                setProducts(validProducts); // Establecer los productos en el estado
+                setLoading(false); // Establecer loading a false cuando los datos se han cargado
             } catch (error) {
-                console.error("Error fetching products:", error);
-                setLoading(false); // Set loading to false if there is an error
+                console.error("Error al obtener los productos:", error);
+                setLoading(false); // Establecer loading a false si hay un error
             }
         };
 
         fetchProducts();
-    }, [selectedCategory, selectedSubcategory]);
+    }, [category, subcategory]); // Dependencias de categorySlug y subcategorySlug
 
     if (loading) {
         return (
@@ -37,22 +44,22 @@ const ProductsByCategoryContainer = ({ selectedCategory, selectedSubcategory }) 
         );
     }
 
-    return (
-        <div>
-            {/* Usar grid para alinear las tarjetas */}
-            <div className="grid grid-cols-2 xxs:grid-cols-2 ss:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-5 lg:gap-7 xxs:p-10">
-                {products.length > 0 ? (
-                    products.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))
-                ) : (
-                    <div className="col-span-full text-center p-4 text-gray-500">
-                        No se encontraron productos.
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
+  return (
+    <main>
+      <CategoriesBanner  selectedCategory={category} selectedSubCategory={subcategory}/>
+      <section>
+      <div className="relative text-center mb-2">
+        <h2 className="text-2xl font-bold text-gray-900 inline-block relative my-2">
+          Productos
+          <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
+        </h2>
+      </div>
+      <Suspense fallback={<Loader />}>
+  <ProductsByCategoryContainer products={products} />
+</Suspense>
+    </section>
+    </main>
+  );
+}
 
-export default ProductsByCategoryContainer;
+export default ProductsBySubcategory;
