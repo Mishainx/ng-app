@@ -26,6 +26,7 @@ export const sendTestEmail = async (destinatary) => {
     const mailOptions = {
       from: process.env.EMAIL_USER, // Dirección de remitente
       to: destinatary, // Dirección del destinatario
+      bcc: 'promociones@nippongame.com.ar',
       subject: 'Correo de prueba desde Nodemailer',
       text: '¡Hola! Este es un correo de prueba enviado usando Nodemailer con tu configuración personalizada.',
     };
@@ -50,6 +51,8 @@ export const sendOrderEmail = async (customerEmail, order) => {
             <td style="padding: 8px; border: 1px solid #ddd;">${product.name}</td>
             <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${product.quantity}</td>
             <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">USD$${product.price}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">  ${product.discount ? `USD$${product.discount}` : "-"}
+</td>
             <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">USD$${product.subtotal}</td>
           </tr>
         `
@@ -80,6 +83,7 @@ export const sendOrderEmail = async (customerEmail, order) => {
                 <th style="padding: 8px; border: 1px solid #ddd;">Producto</th>
                 <th style="padding: 8px; border: 1px solid #ddd;">Cantidad</th>
                 <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Precio Unitario</th>
+                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Precio con Descuento</th>
                 <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Subtotal</th>
               </tr>
             </thead>

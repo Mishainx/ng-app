@@ -4,17 +4,27 @@ import { toast } from "react-toastify";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import SpinnerIcon from "@/icons/SpinnerIcon";
 
+// Construcción de los detalles de la orden
 const buildOrderDetails = (userData, cartProducts, total) => {
   return {
     destinatary: userData.email,
     order: {
       userName: `${capitalizeFirstLetter(userData.name)} ${capitalizeFirstLetter(userData.surname)}`,
-      products: cartProducts.map(item => ({
-        name: capitalizeFirstLetter(item.name),
-        quantity: item.quantity,
-        price: item.price.toFixed(2),
-        subtotal: (item.price * item.quantity).toFixed(2),
-      })),
+      products: cartProducts.map(item => {
+        const price = Number(item.price) || 0;
+        const discount = item.discount ? Number(item.discount) : null;
+        const subtotal = discount
+          ? (discount * item.quantity).toFixed(2)
+          : (price * item.quantity).toFixed(2);
+
+        return {
+          name: capitalizeFirstLetter(item.name),
+          quantity: item.quantity,
+          price: price.toFixed(2),
+          discount: discount ? discount.toFixed(2) : null,
+          subtotal,
+        };
+      }),
       total: total.toFixed(2),
       userInfo: {
         name: capitalizeFirstLetter(userData.name),
@@ -30,8 +40,13 @@ const buildOrderDetails = (userData, cartProducts, total) => {
 };
 
 export default function OrderButton({ userData, cartProducts, isOrderSent, setIsOrderSent, setCartProducts }) {
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
-  const total = cartProducts.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Calcular el total considerando descuentos
+  const total = cartProducts.reduce((acc, item) => {
+    const priceToUse = item.discount > 0 ? Number(item.discount) : Number(item.price);
+    return acc + priceToUse * item.quantity;
+  }, 0);
 
   const handlePlaceOrder = async () => {
     if (isOrderSent || !userData || cartProducts.length === 0) {
@@ -39,17 +54,15 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
       return;
     }
 
-    setIsLoading(true); // Activar el spinner
+    setIsLoading(true);
 
     try {
       const orderDetails = buildOrderDetails(userData, cartProducts, total);
 
-      // Primero, creamos el ticket en la API
+      // Crear ticket en la API
       const ticketResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userData.email,
           products: cartProducts.map(item => ({
@@ -62,30 +75,20 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         }),
       });
 
-      if (!ticketResponse.ok) {
-        throw new Error("Error al crear el ticket. Por favor, intenta nuevamente.");
-      }
-
+      if (!ticketResponse.ok) throw new Error("Error al crear el ticket. Por favor, intenta nuevamente.");
       const ticketData = await ticketResponse.json();
-      const ticketId = ticketData.id;  // Obtenemos el ID del ticket
+      const ticketId = ticketData.id;
 
-      // Ahora, enviamos el correo con los detalles del pedido, incluyendo el ticket ID
+      // Enviar correo con los detalles del pedido
       const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/send-order`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...orderDetails,
-          ticketId,  // Añadimos el ticket ID al correo
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...orderDetails, ticketId }),
       });
 
-      if (!emailResponse.ok) {
-        throw new Error("Error al enviar el correo. Por favor, intenta nuevamente.");
-      }
+      if (!emailResponse.ok) throw new Error("Error al enviar el correo. Por favor, intenta nuevamente.");
 
-      setIsOrderSent(true); // Marca el pedido como enviado
+      setIsOrderSent(true);
 
       // Crear el mensaje de WhatsApp
       const whatsappMessage = `
@@ -96,44 +99,47 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
       *Dirección:* ${orderDetails.order.userInfo.address}
       
       *Productos:*
-      ${orderDetails.order.products.map(item => `${item.name} x${item.quantity} - $${item.subtotal}`).join('\n')}
+      ${orderDetails.order.products
+        .map(item => {
+          if (item.discount && Number(item.discount) > 0) {
+            return `🔹 *${item.name}*  
+         Cantidad: ${item.quantity}  
+         Precio Original: ~USD$${item.price}~  
+         Precio con Descuento: *USD$${item.discount}*  
+         Subtotal: *USD$${item.subtotal}*`;
+          }
+          return `🔹 *${item.name}*  
+         Cantidad: ${item.quantity}  
+         Precio: USD$${item.price}  
+         Subtotal: *USD$${item.subtotal}*`;
+        })
+        .join('\n\n')}
       
-      *Total:* $${orderDetails.order.total}
+      *Total:* *USD$${orderDetails.order.total}*
       
       Si necesitas más información o tienes alguna consulta, ¡envíanos un mensaje!
       `;
-
-      // Hacer un fetch a la API para eliminar el carrito del usuario
-      const deleteCartResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.id}/delete`, {
+      
+      // Eliminar el carrito del usuario
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/orders/${userData.id}/delete`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
-      if (!deleteCartResponse.ok) {
-        throw new Error("Error al eliminar el carrito. Por favor, intenta nuevamente.");
-      }
-
-
-      // Mostrar el modal de éxito con el botón para WhatsApp
+      // Modal de éxito con opción de WhatsApp
       Swal.fire({
         icon: "success",
         title: "Pedido Realizado",
         html: `
-          <p>Tu pedido se ha generado exitosamente. A la brevedad uno de nuestros representantes se estará comunicando o si lo deseas puedes enviarnos un whatsapp a ventas.</p>
+          <p>Tu pedido se ha generado exitosamente. A la brevedad uno de nuestros representantes se estará comunicando o si lo deseas puedes enviarnos un WhatsApp a ventas.</p>
         `,
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Enviar WhatsApp",
-        cancelButtonColor: "#25D366", // Color verde típico de WhatsApp
-        preConfirm: () => {
-          // Esto solo se ejecutará si el usuario hace clic en "Aceptar"
-          window.location.href = "/"; // Redirige al home
-        },
+        cancelButtonColor: "#25D366",
+        preConfirm: () => window.location.href = "/",
         didClose: () => {
-          // Esto solo se ejecutará si el usuario hace clic en "Enviar WhatsApp"
           const whatsappLink = `https://wa.me/+5491164316975?text=${encodeURIComponent(whatsappMessage)}`;
           window.open(whatsappLink, "_blank");
         },
@@ -149,19 +155,19 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         confirmButtonColor: "#d33",
       });
     } finally {
-      setIsLoading(false); // Desactivar el spinner
+      setIsLoading(false);
     }
   };
 
   return (
     <button
       onClick={handlePlaceOrder}
-      disabled={isOrderSent || isLoading} // Deshabilitar el botón mientras se procesa la orden
+      disabled={isOrderSent || isLoading}
       className={`px-4 py-2 rounded font-bold text-white ${isOrderSent || isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}`}
     >
       {isLoading ? (
         <div className="flex justify-center items-center">
-          <SpinnerIcon className="animate-spin h-5 w-5 mr-2" /> {/* Spinner con animación */}
+          <SpinnerIcon className="animate-spin h-5 w-5 mr-2" />
           Enviando...
         </div>
       ) : isOrderSent ? (
