@@ -20,7 +20,7 @@ const EditCategoryForm = ({ category, onClose }) => {
       title,
       img: imgFile,
       icon: iconFile,
-      showInMenu: showInMenu === "true",
+      showInMenu: showInMenu,
     };
 
     try {

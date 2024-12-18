@@ -79,14 +79,16 @@ export default function CatalogueList({ products, loading }) {
             : "opacity-100 transition-opacity duration-1000 ease-in-out" // Transición suave
         }`}
       >
-        {visibleProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            user={userData}
-            loading={loading}
-          />
-        ))}
+{visibleProducts
+  .filter((product) => product.visible) // Filtrar solo los productos con `visible` igual a true
+  .map((product) => (
+    <ProductCard
+      key={product.id}
+      product={product}
+      user={userData}
+      loading={loading}
+    />
+  ))}
       </div>
 
       <div className="mt-6 flex flex-col items-center justify-center gap-4">

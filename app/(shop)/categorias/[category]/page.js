@@ -19,7 +19,7 @@ export default async function Categories({ params }) {
     // Construir la URL según la disponibilidad de selectedCategory y selectedSubcategory
     let url = `${process.env.NEXT_PUBLIC_API_URL}/api/products/categories/${selectedCategory}`;
   
-    const response = await fetch(url, { next: { revalidate: 3600 } }); // Ajusta la URL según sea necesario
+    const response = await fetch(url, { cache:"no-cache" }); // Ajusta la URL según sea necesario
     const data = await response.json();
     const products = data.payload;
 

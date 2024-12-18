@@ -9,8 +9,8 @@ import CategoriesBanner from '@/components/categories/categoriesBanner';
 import { Suspense } from "react";
 
 const ProductsBySubcategory = ({params}) => {
-    const {category, subcategory} = params;
-    const [products, setProducts] = useState([]);
+  const {category, subcategory} = params;
+  { /*const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Fetch data only once based on categorySlug and subcategorySlug
@@ -42,7 +42,7 @@ const ProductsBySubcategory = ({params}) => {
                 <Loader />
             </div>
         );
-    }
+    }*/}
 
   return (
     <main>
@@ -54,9 +54,9 @@ const ProductsBySubcategory = ({params}) => {
           <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
         </h2>
       </div>
-      <Suspense fallback={<Loader />}>
+{/*      <Suspense fallback={<Loader />}>
   <ProductsByCategoryContainer products={products} />
-</Suspense>
+</Suspense>*/}
     </section>
     </main>
   );

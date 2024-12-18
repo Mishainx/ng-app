@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { db } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import { collection, getDocs, query, where, deleteDoc,doc, updateDoc, getDoc } from 'firebase/firestore';
 import { cookies } from "next/headers";
 import { authAdmin } from "@/firebase/authManager";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Función para validar que el slug es una cadena válida
 const isValidSlug = (categorySlug) => typeof categorySlug === 'string' && categorySlug.length > 0;
@@ -122,7 +123,7 @@ export const DELETE = async (req, { params }) => {
 
 
 export const PUT = async (req, { params }) => {
-  const { categorySlug } = params;  // Obtén el slug del objeto params
+  const { categorySlug } = params; // Obtén el slug del objeto params
 
   // Verifica si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
@@ -169,13 +170,16 @@ export const PUT = async (req, { params }) => {
     // Obtener el FormData de la solicitud
     const formData = await req.formData();
     const title = formData.get('title');
-    const imgFile = formData.get('img'); // Archivo de imagen principal
-    const iconFile = formData.get('icon'); // Archivo del ícono Opcional, solo si deseas actualizar la descripción
+    const img = formData.get('img'); // Archivo de imagen principal
+    const icon = formData.get('icon'); // Archivo del ícono
     const showInMenu = formData.get('showInMenu') === 'true';
 
     // Validar los datos
     if (!title || typeof title !== 'string' || title.length > 100) {
-      return NextResponse.json({ message: 'Validation errors: Title is required, must be a string, and cannot exceed 100 characters' }, { status: 400 });
+      return NextResponse.json(
+        { message: 'Validation errors: Title is required, must be a string, and cannot exceed 100 characters' },
+        { status: 400 }
+      );
     }
 
     // Crear una consulta para buscar la categoría por slug
@@ -189,34 +193,39 @@ export const PUT = async (req, { params }) => {
       );
     }
 
-    const categoryId = categorySnapshot.docs[0].id;  // Guardamos el ID del documento
-
-    // Referencia al documento de la categoría
+    const categoryId = categorySnapshot.docs[0].id; // Guardamos el ID del documento
     const categoryRef = doc(db, 'categories', categoryId);
-    const categoryDoc = await getDoc(categoryRef);
 
-    if (!categoryDoc.exists()) {
-      return NextResponse.json({ message: 'Categoría no encontrada' }, { status: 404 });
-    }
-
-    // Construir el objeto de actualización
+    // Construir el objeto de actualización solo con campos proporcionados
     const updatedCategory = {
-      title,
+      ...(title && { title }),
+      ...(showInMenu !== undefined && { showInMenu }),
       updatedAt: new Date().toISOString(),
-      showInMenu,
     };
 
-    // Solo actualizamos el imgFile si se proporcionó
-    if (imgFile) {
-      updatedCategory.imgFile = imgFile;
+    if(img != "null"){
+      console.log(img)
+      console.log("hoola")
+    }
+    else{
+      "chau"
     }
 
-    // Solo actualizamos el iconFile si se proporcionó
-    if (iconFile) {
-      updatedCategory.iconFile = iconFile;
+    // Subir las imágenes a Firebase Storage si están presentes
+    if (img && img instanceof Blob && img.size > 0) {
+      const imgStorageRef = ref(storage, `categories/${img.name}`);
+      await uploadBytes(imgStorageRef, img);
+      const imgUrl = await getDownloadURL(imgStorageRef);
+      updatedCategory.img = imgUrl; // Guardar la URL en el documento
     }
 
-    // Actualizar el documento en Firestore
+    if (icon && icon instanceof Blob && icon.size > 0) {
+      const iconStorageRef = ref(storage, `categories/icons/${icon.name}`);
+      await uploadBytes(iconStorageRef, icon);
+      const iconUrl = await getDownloadURL(iconStorageRef);
+      updatedCategory.icon = iconUrl; // Guardar la URL en el documento
+    }
+    // Actualizar el documento en Firestore con los campos que realmente han cambiado
     await updateDoc(categoryRef, updatedCategory);
 
     return NextResponse.json(

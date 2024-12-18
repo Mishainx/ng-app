@@ -70,9 +70,9 @@ export default function ProductsByCategory({ products }) {
                         No hay productos para esta categoría.
                     </div>
                 ) : (
-                    sortedProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))
+                    sortedProducts.map((product) =>
+                        product?.visible ? <ProductCard key={product.id} product={product} /> : null
+                      )
                 )}
             </div>
         </div>
