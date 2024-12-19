@@ -67,16 +67,16 @@ const EditProductForm = ({ editingProduct, setView }) => {
   };
 
   const handleSubcategoryAdd = () => {
-    if (selectedSubcategory && !productData.subcategory?.includes(selectedSubcategory)) {
+    if (selectedSubcategory.length > 0) {
       setProductData((prevData) => ({
         ...prevData,
-        subcategory: [...prevData?.subcategory, selectedSubcategory]
+        subcategory: [...prevData?.subcategory, ...selectedSubcategory]
       }));
-
-
       setSelectedSubcategory([]); // Limpiar la selección
     }
   };
+  
+  
   const handleSubcategoryRemove = (subcategorySlug) => {
     setProductData((prevData) => ({
       ...prevData,
@@ -265,18 +265,20 @@ const EditProductForm = ({ editingProduct, setView }) => {
         <div className="mb-3">
           <label className="text-sm text-gray-700">Subcategoría</label>
           <div className="flex items-center">
-            <select
-              className="border rounded w-full py-1 px-2"
-              value={selectedSubcategory}
-              onChange={(e) => setSelectedSubcategory(e.target.value)}
-            >
-              <option value="">Selecciona una subcategoría</option>
-              {getSubcategories(productData.category).map((subcategory) => (
-                <option key={subcategory.id} value={subcategory.slug}>
-                  {capitalizeFirstLetter(subcategory.title)}
-                </option>
-              ))}
-            </select>
+          <select
+  className="border rounded w-full py-1 px-2"
+  value={selectedSubcategory}
+  onChange={(e) => setSelectedSubcategory([e.target.value])} // Solo selecciona una subcategoría
+>
+  <option value="">Selecciona una subcategoría</option>
+  {getSubcategories(productData.category).map((subcategory) => {
+    return (
+      <option key={subcategory.slug} value={subcategory.slug}>
+        {capitalizeFirstLetter(subcategory.title)}
+      </option>
+    );
+  })}
+</select>
             <button
               type="button"
               className="ml-2 p-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -286,11 +288,11 @@ const EditProductForm = ({ editingProduct, setView }) => {
             </button>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
-      {productData.subcategory?.map((subcategorySlug) => {
+      {productData?.subcategory?.map((subcategorySlug) => {
         const subcategory = getSubcategories(productData.category).find(sub => sub.slug === subcategorySlug);
         return (
           <span
-            key={subcategorySlug}
+            key={subcategory?.slug}
             className="flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full"
           >
             {capitalizeFirstLetter(subcategory?.title || subcategorySlug)}

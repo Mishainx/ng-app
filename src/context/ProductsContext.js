@@ -77,6 +77,7 @@ for (const key in newProduct) {
   const updateProduct = async (updatedProduct) => {
     try {
       const formData = new FormData();
+
   
 // Agregar los campos al FormData
 for (const key in updatedProduct) {
@@ -84,6 +85,7 @@ for (const key in updatedProduct) {
     // Si la categoría es una cadena vacía, asignar "otros" en lugar de undefined
     formData.append(key, "otros");
   } else if (key === "subcategory" && Array.isArray(updatedProduct[key])) {
+    console.log(updatedProduct[key]);
     updatedProduct[key].forEach((subcategory) => {
       formData.append("subcategory", subcategory);
     });
@@ -96,7 +98,6 @@ for (const key in updatedProduct) {
     formData.append(key, updatedProduct[key]);
   }
 }
-
 
   
       const response = await fetch(
@@ -114,7 +115,7 @@ for (const key in updatedProduct) {
       const updatedData = await response.json();
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
-          product.slug === updatedData.payload.slug ? updatedData.payload : product
+          product.id === updatedData.payload.id ? updatedData.payload : product
         )
       );
     } catch (error) {

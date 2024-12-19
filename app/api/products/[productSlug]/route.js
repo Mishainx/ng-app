@@ -174,6 +174,8 @@ export const PUT = async (req, { params }) => {
     const q = query(productsRef, where("slug", "==", productSlug));
     const querySnapshot = await getDocs(q);
 
+
+
     if (!querySnapshot.empty) {
       const productDoc = querySnapshot.docs[0];
       const productDocRef = doc(db, "products", productDoc.id);
@@ -184,17 +186,20 @@ export const PUT = async (req, { params }) => {
         updatedData.slug = uniqueSlug;
       }
 
-      // Subir el archivo si existe
-      if (file && file.size > 0) {
-        const storageRef = ref(storage, `ProductImg/${file.name}`);
-        await uploadBytes(storageRef, file);
-        updatedData.img = await getDownloadURL(storageRef);
-      }
-
-      // Actualizar documento
-      if (!file || file.size === 0) {
-        delete updatedData.img; // Asegurarse de no actualizar la imagen si no se proporciona
-      }
+// Subir el archivo si existe
+if (file && file.size > 0) {
+  const storageRef = ref(storage, `ProductImg/${file.name}`);
+  await uploadBytes(storageRef, file);
+  updatedData.img = await getDownloadURL(storageRef);
+  console.log("Imagen subida:", updatedData.img);
+} else {
+  // Verificar si no se proporciona un archivo, entonces mantener la imagen actual
+  const productImg = productDoc.data().img;
+  if (!updatedData.img && productImg) {
+    updatedData.img = productImg; // Mantener la imagen anterior si no se sube nueva
+  }
+  console.log("Imagen no subida, manteniendo la imagen anterior:", updatedData.img);
+}
 
       await updateDoc(productDocRef, updatedData);
 
