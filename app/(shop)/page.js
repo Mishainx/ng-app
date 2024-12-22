@@ -22,7 +22,6 @@ export const metadata = {
 };
 
 export default async function Home() {
-  console.log("Fetching featured products..."); // Log para comprobar cuántas veces se ejecuta el fetch
 
   let featuredProducts = [];
 

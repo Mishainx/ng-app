@@ -11,6 +11,7 @@ import { PageProvider } from "@/context/PageContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { TicketsProvider } from "@/context/TicketsContext";
 
+// Cargar la fuente Inter
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,38 +23,54 @@ export const metadata = {
     url: 'https://www.nippongame.com.ar',
     images: [
       {
-        url: 'https://www.nippongame.com.ar/proximamente/nippon-game-logo.png',  // Ruta de la imagen
-        width: 1200,  // Ancho de la imagen
-        height: 630,  // Alto de la imagen
-        alt: 'Nippongame logo',  // Descripción alternativa de la imagen
+        url: 'https://www.nippongame.com.ar/proximamente/nippon-game-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Nippongame logo',
       },
     ],
   }
 };
 
-export default function RootLayout({ children }) {
+// Función para obtener categorías en SSR utilizando Server Component
+async function fetchCategories() {
+  let categories = [];
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`,{next:{revalidate:1800}});
+    const data = await response.json();
+    categories = data.payload;
+    console.log("Fetching categories successful");
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+
+  return categories;
+}
+
+export default async function RootLayout({ children }) {
+  const categories = await fetchCategories();
+  console.log(categories) // Fetch categories before rendering
 
   return (
     <html lang="en">
-      <body className= {`${inter.className}  bg-slate-100`}>
-
+      <body className={`${inter.className} bg-slate-100`}>
         <AuthProvider>
-        <CategoriesProvider>
-          <ProductsProvider>
-          <PageProvider>
-            <TicketsProvider>
-              <Header/>
-              <ToastContainer/>
-              {children}
-              <Footer/>
-              <TopButton/>
-              <WhatsappButton/>
-              </TicketsProvider>
+          <CategoriesProvider initialCategories={categories}>
+            <ProductsProvider>
+              <PageProvider>
+                <TicketsProvider>
+                  <Header />
+                  <ToastContainer />
+                  {children}
+                  <Footer />
+                  <TopButton />
+                  <WhatsappButton />
+                </TicketsProvider>
               </PageProvider>
-              </ProductsProvider>
+            </ProductsProvider>
           </CategoriesProvider>
         </AuthProvider>
-
       </body>
     </html>
   );

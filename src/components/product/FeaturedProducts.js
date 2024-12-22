@@ -67,7 +67,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
           {featuredProducts?.length > 0 ? (
             featuredProducts.map((product, index) => (
               <div
-                className="flex-shrink-0 rounded-lg p-4 whitespace-normal transform transition-transform duration-300 hover:scale-105 overflow-visible"
+                className="flex-shrink-0 rounded-lg p-4 whitespace-normal transform transition-transform duration-300 overflow-visible"
                 key={`${product.id}-${index}`}
               >
                 <ProductCard product={product} />
