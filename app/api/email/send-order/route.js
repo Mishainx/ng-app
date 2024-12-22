@@ -13,11 +13,6 @@ export const POST = async (req) => {
       );
     }
 
-    
-    if(destinatary == "fer.r@live.com.ar") {
-        destinatary = "xiaomishain@gmail.com"
-    }
-
     // Llamar a la función para enviar el correo con los datos del pedido
     await sendOrderEmail(destinatary, order);
 

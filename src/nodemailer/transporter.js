@@ -38,6 +38,54 @@ export const sendTestEmail = async (destinatary) => {
   }
 };
 
+export const sendRepentanceEmail = async (destinatary, { name, orderNumber, orderDate, comment }) => {
+  try {
+    // Configuración del correo
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Dirección de correo desde la que se enviará
+      to: destinatary, // Dirección del destinatario principal
+      bcc: destinatary, // Copia oculta al mismo destinatario
+      subject: `Solicitud de Arrepentimiento - Pedido ${orderNumber}`, // Asunto del correo
+      text: `Detalles de la solicitud de arrepentimiento:\n\nNombre: ${name}\nNúmero de pedido: ${orderNumber}\nFecha de pedido: ${orderDate}\nComentario: ${comment || 'No se ha proporcionado ningún comentario.'}\n\nAtención: Nos comunicaremos con usted a la brevedad para resolver su solicitud.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+          <p style="text-align: center; font-size: 26px; color: #EB3324; font-weight: bold;">Nippongame</p>
+          <h2 style="text-align: center; font-weight: bold;">Detalles de la solicitud de arrepentimiento</h2>
+          <p>Hola <strong>${name}</strong>,</p>
+          <p>Gracias por contactarnos. Hemos recibido tu solicitud de arrepentimiento, y a continuación te proporcionamos los detalles:</p>
+
+          <h3>Detalles del Pedido:</h3>
+          <ul>
+            <li><strong>Nombre:</strong> ${name}</li>
+            <li><strong>Número de pedido:</strong> ${orderNumber}</li>
+            <li><strong>Fecha de pedido:</strong> ${orderDate}</li>
+            <li><strong>Comentario:</strong> ${comment || 'No se ha proporcionado ningún comentario.'}</li>
+          </ul>
+
+          <p>Atención: Nos comunicaremos con usted a la brevedad para resolver su solicitud.</p>
+
+          <div style="text-align: center; font-size: 14px; color: #6B7280; margin-top: 30px;">
+            <p>Gracias por elegir <strong>NipponGame</strong></p>
+            <p>Si tienes alguna consulta, no dudes en ponerte en contacto con nosotros.</p>
+            <p>Dirección: Av. Corrientes 2416, C1046AAP, Ciudad de Buenos Aires, Argentina</p>
+            <p>Teléfono: +54 11 1234-5678 | Email: <a href="mailto:soporte@nippongame.com" style="color: #EB3324; text-decoration: none;">soporte@nippongame.com</a></p>
+          </div>
+        </div>
+      `, // Cuerpo del correo en formato HTML
+    };
+
+    // Enviar el correo
+    await transporter.sendMail(mailOptions);
+
+    console.log('Correo de arrepentimiento enviado exitosamente.');
+  } catch (error) {
+    console.error('Error al enviar el correo de arrepentimiento:', error);
+    throw new Error('No se pudo enviar el correo de arrepentimiento.');
+  }
+};
+
+
+
 // Función para enviar un correo con detalles de pedido
 export const sendOrderEmail = async (customerEmail, order) => {
     try {

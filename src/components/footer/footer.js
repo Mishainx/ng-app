@@ -6,11 +6,12 @@ import WhatsappIcon from "@/icons/WhatsappIcon";
 import YoutubeIcon from "@/icons/YoutubeIcon";
 import Image from "next/image";
 import Link from "next/link";
+import ArcaButton from "./ArcaButton";
+import RepetanceButton from "./RepetanceButton";
 
 const Footer = () => {
   return (
     <footer className="w-full  bg-black text-gray-400 flex flex-col items-center justify-center">
-      {/* Red Gradient Div */}
 
       <div className="w-full flex items-center justify-around">
         <div className="w-full flex flex-col md:flex-row  items-center justify-around">
@@ -38,7 +39,7 @@ const Footer = () => {
               <li >
                 <Link href="mailto:nippongame@gmail.com" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
                   <MailIcon />
-                  <p>nippongame@gmail.com</p>
+                  <p>info@nippongame.com.ar</p>
                 </Link>
 
               </li>
@@ -51,31 +52,12 @@ const Footer = () => {
             </ul>
           </div>
 
-             <div className="w-full lg:w-1/4 text-xs flex my-7">
-            <ul className="w-full items-center flex flex-col  m-auto leading-relaxed">
-              <h3 className="text-slate-50 text-xl font-bold ">Info</h3>
-              <li className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
-              <Link href="https://maps.app.goo.gl/cCr4VrpNMuDqTppJA" className="flex justify-center items-center gap-3  cursor-pointer hover:text-white transition-colors duration-300">
-                <MapsIcon />
-                <p>Av. Corrientes 2416, CABA</p>
-              </Link>
-              </li>
-              <li >
-                <Link href="mailto:nippongame@gmail.com" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
-                  <MailIcon />
-                  <p>nippongame@gmail.com</p>
-                </Link>
-
-              </li>
-              <li >
-                <Link href="https://wa.me/5491164316975?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
-                  <WhatsappIcon />
-                  <p>+5491164316975</p>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
+        {/* Data fiscal y arrepentimiento*/}
+      {/* Red Gradient Div */}
+      <div className="flex flex-col text-gray-400 w-full lg:w-1/4  justify-start items-center my-7">
+        <ArcaButton/>
+        <RepetanceButton/>
+      </div>
         </div>
       </div>
     
@@ -86,11 +68,13 @@ const Footer = () => {
           height={50}
           className="cursor-pointer p-1 text-white rounded-full bg-red-500/90 hover:bg-red-800"
         />
+      <Link href="https://www.instagram.com/nippongameoficial/" target="blank">
         <InstagramIcon
-          width={50}
-          height={50}
-          className="cursor-pointer p-1 text-white rounded-full bg-red-500/90 hover:bg-red-800"
-        />
+            width={50}
+            height={50}
+            className="cursor-pointer p-1 text-white rounded-full bg-red-500/90 hover:bg-red-800"
+          />
+      </Link>
         <YoutubeIcon
           width={50}
           height={50}
