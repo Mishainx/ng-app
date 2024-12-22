@@ -24,13 +24,19 @@ export const metadata = {
 export default async function Home() {
   console.log("Fetching featured products..."); // Log para comprobar cuántas veces se ejecuta el fetch
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`,{cache:"no-cache"} // Configuración de revalidación de caché
-  );
+  let featuredProducts = [];
 
-  const products = await response.json();
-  const featuredProducts = products.payload
-  console.log("fetching products")
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, { cache: "no-cache" }
+    );
+
+    const products = await response.json();
+    featuredProducts = products.payload;
+    console.log("Fetching products successful");
+  } catch (error) {
+    console.error("Error fetching featured products:", error);
+  }
 
   return (
     <>
