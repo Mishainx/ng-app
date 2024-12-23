@@ -12,6 +12,7 @@ export const GET = async (req) => {
     if (!querySnapshot.empty) {
       // Mapeamos los datos de todos los productos con discount mayor a 0
       const discountedProducts = querySnapshot.docs.map(doc => doc.data());
+      console.log("", discountedProducts);
       return NextResponse.json(
         { payload: discountedProducts }, // Devuelve todos los productos en un array
         { status: 200 }

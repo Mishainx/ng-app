@@ -131,19 +131,27 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         icon: "success",
         title: "Pedido Realizado",
         html: `
-          <p>Tu pedido se ha generado exitosamente. A la brevedad uno de nuestros representantes se estará comunicando o si lo deseas puedes enviarnos un WhatsApp a ventas.</p>
+          <p style="font-size: 14px; line-height: 1.5; margin: 0;">
+            Tu pedido se ha generado exitosamente. A la brevedad uno de nuestros representantes se estará comunicando contigo para finalizar el mismo o, si lo deseas, puedes enviarnos un WhatsApp a ventas.
+          </p>
         `,
         confirmButtonText: "Aceptar",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#d9534f", // Rojo
         showCancelButton: true,
         cancelButtonText: "Enviar WhatsApp",
         cancelButtonColor: "#25D366",
-        preConfirm: () => window.location.href = "/",
+        preConfirm: () => (window.location.href = "/"),
         didClose: () => {
+          const whatsappMessage = "Hola, estoy interesado en continuar con mi pedido.";
           const whatsappLink = `https://wa.me/+5491164316975?text=${encodeURIComponent(whatsappMessage)}`;
           window.open(whatsappLink, "_blank");
         },
+        customClass: {
+          confirmButton: 'swal2-confirm swal2-styled', // Cambia la clase de confirmButton si quieres aplicar más estilos
+        },
       });
+      
+      
 
     } catch (error) {
       console.error("Error al realizar el pedido:", error);

@@ -37,7 +37,7 @@ const Footer = () => {
               </Link>
               </li>
               <li >
-                <Link href="mailto:nippongame@gmail.com" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
+                <Link href="mailto:info@nippongame.com.ar" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
                   <MailIcon />
                   <p>info@nippongame.com.ar</p>
                 </Link>
@@ -46,7 +46,7 @@ const Footer = () => {
               <li >
                 <Link href="https://wa.me/54911643169750?text=Hola%20Nippon%20Game.%20Quiero%20realizar%20una%20consulta!" className="flex justify-center items-center gap-2 cursor-pointer hover:text-white transition-colors duration-300">
                   <WhatsappIcon />
-                  <p>+5491164316975</p>
+                  <p>+54 9 11 6431-6975</p>
                 </Link>
               </li>
             </ul>

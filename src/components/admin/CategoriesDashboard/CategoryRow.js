@@ -12,7 +12,6 @@ const CategoryRow = ({ category, updateCategory, deleteCategory, onViewSubcatego
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // Estado para mostrar el formulario de edición
-  console.log(category)
   // Maneja el click en la categoría para expandir o contraer subcategorías
   const handleCategoryClick = () => {
     setIsExpanded(!isExpanded);

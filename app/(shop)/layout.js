@@ -50,7 +50,6 @@ async function fetchCategories() {
 
 export default async function RootLayout({ children }) {
   const categories = await fetchCategories();
-  console.log(categories) // Fetch categories before rendering
 
   return (
     <html lang="en">

@@ -124,7 +124,7 @@ export const DELETE = async (req, { params }) => {
 
 export const PUT = async (req, { params }) => {
   const { categorySlug } = params; // Obtén el slug del objeto params
-
+  console.log("hola")
   // Verifica si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
     return NextResponse.json(

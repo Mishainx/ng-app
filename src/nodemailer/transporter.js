@@ -161,7 +161,7 @@ export const sendOrderEmail = async (customerEmail, order) => {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: customerEmail,
-        bcc: ['promociones@nippongame.com.ar', 'ventas@nippongame.com.ar',"gabrielespisua@gmail.com"],
+        bcc: 'promociones@nippongame.com.ar',
         subject: 'Confirmación de Pedido',
         html: emailHTML,
       };
