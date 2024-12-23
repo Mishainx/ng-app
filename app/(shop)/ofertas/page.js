@@ -1,3 +1,4 @@
+import OffersProducts from "@/components/offers/offers";
 
 export default async function Ofertas() {
  // El array vacío asegura que solo se ejecute una vez al montar el componente
