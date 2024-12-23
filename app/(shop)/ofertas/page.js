@@ -9,7 +9,7 @@ export default async function Ofertas() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{next:{revalidate:300}}
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{next:{revalidate:1}}
     );
     const products = await response.json();
     offersProducts = products.payload;
