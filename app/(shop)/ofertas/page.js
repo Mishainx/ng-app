@@ -1,27 +1,11 @@
-"use client";
 
-import { useState, useEffect } from "react";
-import OfferProducts from "@/components/offers/offers";
-
-export default function Ofertas() {
-  const [offersProducts, setOffersProducts] = useState([]);
+export default async function Ofertas() {
+ // El array vacío asegura que solo se ejecute una vez al montar el componente
+ let url = `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`;
   
-  useEffect(() => {
-    const fetchOffers = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,
-          { cache: "no-cache" }
-        );
-        const products = await response.json();
-        setOffersProducts(products.payload || []); // Actualiza el estado con los productos
-      } catch (error) {
-        console.error("Error fetching featured products:", error);
-      }
-    };
-
-    fetchOffers();
-  }, []); // El array vacío asegura que solo se ejecute una vez al montar el componente
+ const response = await fetch(url, { cache:"no-cache" }); // Ajusta la URL según sea necesario
+ const data = await response.json();
+ const offersProducts = data.payload;
 
   return (
     <main>
