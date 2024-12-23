@@ -19,8 +19,8 @@ export const GET = async (req) => {
       );
     } else {
       return NextResponse.json(
-        { message: 'No se encontraron productos con descuento' },
-        { status: 404 }
+        { message: 'No se encontraron productos con descuento', payload:[] },
+        { status: 200 }
       );
     }
   } catch (error) {

@@ -1,18 +1,18 @@
 // Ofertas.js
 import OfferProducts from "@/components/offers/offers";
 
+
 export default async function Ofertas() {
+  
 
   let offersProducts = [];
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`, {next:{revalidate:60}}
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{next:{revalidate:300}}
     );
     const products = await response.json();
     offersProducts = products.payload;
-    console.log(offersProducts);
-    console.log("lala")
   } catch (error) {
     console.error("Error fetching featured products:", error);
   }
