@@ -3,9 +3,31 @@
 import { useState, useEffect, useRef } from "react";
 import ProductCard from "./productCard";
 
-const FeaturedProducts = ({ featuredProducts }) => {
+const FeaturedProducts = () => {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`
+        );
+        const data = await response.json();
+        
+        if (response.ok && data?.payload) {
+          setFeaturedProducts(data.payload); // Actualiza el estado con los productos
+        } else {
+          console.error("No se pudieron obtener los productos destacados.");
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;

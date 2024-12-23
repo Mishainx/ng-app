@@ -23,19 +23,6 @@ export const metadata = {
 
 export default async function Home() {
 
-  let featuredProducts = [];
-
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`
-    );
-    const responseText = await response.text();
-    const products = await response.json();
-    featuredProducts = products.payload;
-  } catch (error) {
-    console.error("Error fetching featured products:", error);
-  }
-
   return (
     <>
       <HeroCarousel />
@@ -59,8 +46,8 @@ export default async function Home() {
             href="/ofertas"
           />
         </div>
-        {/* Pasar los productos destacados al componente */}
-        <FeaturedProducts featuredProducts={featuredProducts} />
+
+        <FeaturedProducts  />
       </main>
     </>
   );
