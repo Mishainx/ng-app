@@ -37,7 +37,7 @@ async function fetchCategories() {
   let categories = [];
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`,{next:{revalidate:0}});
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`,{cache: "no-cache"});
     const data = await response.json();
     categories = data.payload;
   } catch (error) {

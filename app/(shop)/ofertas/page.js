@@ -1,5 +1,6 @@
 // Ofertas.js
 import OfferProducts from "@/components/offers/offers";
+import { cache } from "react";
 
 
 export default async function Ofertas() {
@@ -9,7 +10,7 @@ export default async function Ofertas() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{next:{revalidate:0}}
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{cache:"no-cache"}
     );
     const products = await response.json();
     offersProducts = products.payload;
