@@ -14,6 +14,7 @@ export default async function Ofertas() {
     const products = await response.json();
     offersProducts = products.payload;
   } catch (error) {
+    console.log(error);
     console.error("Error fetching featured products:", error);
   }
 
