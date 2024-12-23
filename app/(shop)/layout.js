@@ -32,29 +32,14 @@ export const metadata = {
   }
 };
 
-// Función para obtener categorías en SSR utilizando Server Component
-async function fetchCategories() {
-  let categories = [];
-
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-    const data = await response.json();
-    categories = data.payload;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-
-  return categories;
-}
-
 export default async function RootLayout({ children }) {
-  const categories = await fetchCategories();
+
 
   return (
     <html lang="en">
       <body className={`${inter.className} bg-slate-100`}>
         <AuthProvider>
-          <CategoriesProvider initialCategories={categories}>
+          <CategoriesProvider>
             <ProductsProvider>
               <PageProvider>
                 <TicketsProvider>

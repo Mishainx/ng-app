@@ -1,23 +1,20 @@
+"use client"
+
 import OffersProducts from "@/components/offers/offers";
+import { useProducts } from "@/context/ProductsContext";
 
-export default async function Ofertas() {
-  let offersProducts = [];
+export default function Ofertas() {
+  const { products, loading, error } = useProducts(); // Obtener los productos desde el contexto
 
-  try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`;
-    const response = await fetch(url, { cache: "no-cache" }); // Ajusta la URL según sea necesario
+  // Filtrar productos que están en oferta (discount > 0)
+  const offersProducts = products.filter((product) => product.discount > 0); 
 
-    if (!response.ok) {
-      throw new Error("Error al obtener los productos de oferta");
-    }
+  if (loading) {
+    return <p>Loading...</p>; // Mostrar un mensaje de carga mientras se obtienen los productos
+  }
 
-    const data = await response.json();
-    offersProducts = data.payload || []; // Asignamos un array vacío si no hay productos
-
-  } catch (error) {
-    console.error("Error fetching featured products:", error);
-    // Puedes manejar el error de alguna manera, como mostrando un mensaje al usuario
-    offersProducts = []; // O asignar un valor predeterminado en caso de error
+  if (error) {
+    return <p>Error: {error}</p>; // Mostrar un mensaje de error en caso de que haya un fallo
   }
 
   return (
