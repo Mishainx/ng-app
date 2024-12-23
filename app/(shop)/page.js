@@ -29,7 +29,7 @@ export default async function Home() {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`
     );
-
+    const responseText = await response.text();
     const products = await response.json();
     featuredProducts = products.payload;
   } catch (error) {
