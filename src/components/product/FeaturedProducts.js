@@ -2,38 +2,24 @@
 
 import { useState, useEffect, useRef } from "react";
 import ProductCard from "./productCard";
+import { useProducts } from "@/context/ProductsContext";
+import SpinnerIcon from "@/icons/SpinnerIcon";
+import DotLoaders from "../loader/DotLoaders"; // Asegúrate de que el componente DotLoaders esté importado
 
 const FeaturedProducts = () => {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    const fetchFeaturedProducts = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`
-        );
-        const data = await response.json();
-        
-        if (response.ok && data?.payload) {
-          setFeaturedProducts(data.payload); // Actualiza el estado con los productos
-        } else {
-          console.error("No se pudieron obtener los productos destacados.");
-        }
-      } catch (error) {
-        console.error("Error fetching featured products:", error);
-      }
-    };
+  const { products, loading, error } = useProducts(); // Obtener los productos desde el contexto
 
-    fetchFeaturedProducts();
-  }, []);
+  // Filtrar productos que están en oferta (featured)
+  const featuredProducts = products.filter((product) => product.featured);
 
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
       const updateOverflow = () => {
-        setIsOverflowing(container.scrollWidth > container.clientWidth);
+        setIsOverflowing(container.scrollWidth >= container.clientWidth);
       };
 
       // Initial check
@@ -68,15 +54,28 @@ const FeaturedProducts = () => {
         <div className="inline-block w-24 h-1 bg-red-500 mt-2"></div>
       </div>
 
-      <div className="relative w-full flex items-center">
-        {/* Flecha izquierda */}
-        {isOverflowing && (
-          <button
-            onClick={handleScrollLeft}
-            className="absolute -left-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-10"
-          >
-            &#10094;
-          </button>
+      <div className="relative w-full flex justify-center items-center">
+        {/* Mostrar controles solo si no está cargando */}
+        {!loading && isOverflowing && (
+          <>
+            {/* Flecha izquierda */}
+            <button
+              onClick={handleScrollLeft}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 p-4 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-20"
+              style={{ left: "-32px" }} // Ajusta la distancia de la flecha izquierda
+            >
+              &#10094;
+            </button>
+
+            {/* Flecha derecha */}
+            <button
+              onClick={handleScrollRight}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 p-4 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-20"
+              style={{ right: "-32px" }} // Ajusta la distancia de la flecha derecha
+            >
+              &#10095;
+            </button>
+          </>
         )}
 
         {/* Contenedor de productos */}
@@ -86,7 +85,12 @@ const FeaturedProducts = () => {
           className="flex items-center h-80 overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar relative"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {featuredProducts?.length > 0 ? (
+          {/* Mostrar el loader mientras está cargando */}
+          {loading ? (
+            <div className="w-full  flex justify-center items-center">
+              <DotLoaders /> {/* Usamos DotLoaders en lugar del Spinner */}
+            </div>
+          ) : featuredProducts?.length > 0 ? (
             featuredProducts.map((product, index) => (
               <div
                 className="flex-shrink-0 rounded-lg p-4 whitespace-normal transform transition-transform duration-300 overflow-visible"
@@ -99,16 +103,6 @@ const FeaturedProducts = () => {
             <p>No hay productos destacados disponibles.</p>
           )}
         </div>
-
-        {/* Flecha derecha */}
-        {isOverflowing && (
-          <button
-            onClick={handleScrollRight}
-            className="absolute -right-7 top-1/2 transform -translate-y-1/2 p-2 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-10"
-          >
-            &#10095;
-          </button>
-        )}
       </div>
     </section>
   );
