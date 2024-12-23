@@ -27,7 +27,7 @@ export default async function Home() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, { next:{revalidate:3600} }
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, { next:{revalidate:0} }
     );
 
     const products = await response.json();
