@@ -19,7 +19,7 @@ export default async function Ofertas() {
         </div>
 
         {/* Componente de productos en oferta */}
-        <OfferProducts offersProducts={offersProducts} />
+    <OffersProducts offersProducts={offersProducts} /> 
       </div>
     </main>
   );
