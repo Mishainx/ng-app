@@ -1,6 +1,5 @@
 // Ofertas.js
 import OfferProducts from "@/components/offers/offers";
-import { cache } from "react";
 
 
 export default async function Ofertas() {
@@ -10,12 +9,11 @@ export default async function Ofertas() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`,{cache:"no-cache"}
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`
     );
     const products = await response.json();
     offersProducts = products.payload;
   } catch (error) {
-    console.log(error);
     console.error("Error fetching featured products:", error);
   }
 

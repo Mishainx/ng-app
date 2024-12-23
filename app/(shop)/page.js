@@ -27,12 +27,11 @@ export default async function Home() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`, {cache:"no-cache"} 
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`
     );
 
     const products = await response.json();
     featuredProducts = products.payload;
-    console.log("Fetching products successful");
   } catch (error) {
     console.error("Error fetching featured products:", error);
   }
