@@ -12,7 +12,7 @@ const FeaturedProducts = () => {
     const fetchFeaturedProducts = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/offers`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/products/featured`
         );
         const data = await response.json();
         
