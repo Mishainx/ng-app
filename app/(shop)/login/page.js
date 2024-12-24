@@ -26,7 +26,6 @@ const LoginForm = () => {
   
     try {
       const response = await login(values); 
-      console.log(response)// Llama a la función login
       if (response) {
         router.push("/"); // Redirigir al inicio solo si se loguea correctamente
       }

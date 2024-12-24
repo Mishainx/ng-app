@@ -3,6 +3,7 @@
 import Link from "next/link";
 import LoginButton from "../loginButton";
 import { useAuth } from "@/context/AuthContext";
+import ProfileIcon from "@/icons/ProfileIcon";
 
 export default function DesktopMenu({ pages }) {
   const { userData, loading } = useAuth();
@@ -43,9 +44,15 @@ export default function DesktopMenu({ pages }) {
       {/* Si hay usuario, mostrar su nombre y el botón de logout; de lo contrario, mostrar el botón de login */}
       {userData ? (
         <li className="flex items-center gap-4 text-xs font-semibold text-gray-700">
-          <span>{`Hola, ${userData.name || userData.email}`}</span>
+          {userData.name || userData.email ? (
+            <Link href="/perfil" className="flex items-center justify-center gap-2">
+              <ProfileIcon/><span> {`Hola, ${userData.name || userData.email}`}</span>
+            </Link>
+          ) :            <Link href="/perfil" className="flex items-center justify-center gap-2">
+          <ProfileIcon/> <span>Mi perfil</span>
+        </Link>}
           {/* Botón para cerrar sesión */}
-          <LoginButton /> {/* Asumimos que este botón maneja tanto login como logout */}
+          <LoginButton />
         </li>
       ) : (
         <LoginButton />

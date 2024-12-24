@@ -19,13 +19,12 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(credentials),
       });
-  
+
       if (!response.ok) {
-        // Lanza un error con el mensaje que viene del backend (si es posible) o usa un mensaje genérico
         const errorMessage = await response.text();
         throw new Error(errorMessage || "Error en el inicio de sesión");
       }
-  
+
       const data = await response.json();
       setUserData(data); // Almacena los datos del usuario
       setLoading(false); // Detiene el estado de carga
@@ -60,28 +59,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Optional: This useEffect can be removed if you handle the data entirely in login
+  // Optional: Fetch profile when the component mounts
   useEffect(() => {
-    // Only fetch profile if no userData exists (e.g., user refreshes the page)
     const fetchUserProfile = async () => {
-      if (!userData) {
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
-          if (!response.ok) {
-            throw new Error("Error al obtener los datos del perfil");
-          }
-          const data = await response.json();
-          setUserData(data); // Set profile data
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`);
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del perfil");
         }
+        const data = await response.json();
+        setUserData(data); // Set profile data
+      } catch (err) {
+        setError(err.message);
+        setUserData(null); // Clear user data if there's an error
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchUserProfile();
-  }, [userData]); // This effect runs only if userData is null
+    if (!userData) {
+      fetchUserProfile();
+    }
+  }, []); // Runs once when the component mounts
+
+  // Effect to react to userData changes
+  useEffect(() => {
+    if (userData) {
+
+    }
+  }, [userData]); // Monitorea los cambios en userData
 
   return (
     <AuthContext.Provider value={{ userData, loading, error, login, resetPassword }}>

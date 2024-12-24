@@ -5,7 +5,7 @@ import CartIcon from "@/icons/CartIcon";
 
 const pages=[
   {title:"Catalogo", href:"/catalogo",src:<ProductsIcon width="20" height="20" />},
-  {title:"Mi pedido", href:"/order",src:<CartIcon width="20" height="20"/>},
+  {title:"Pedido", href:"/order",src:<CartIcon width="20" height="20"/>},
 ]
 
 

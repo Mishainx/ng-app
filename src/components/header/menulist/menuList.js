@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -6,11 +8,13 @@ import HomeIcon from "@/icons/HomeIcon"; // Asegúrate de tener este ícono
 import { useCategories } from "@/context/CategoriesContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import LoginButton from "../loginButton";
+import { useAuth } from "@/context/AuthContext"; // Importa el contexto de autenticación
 
 const MenuList = ({ open, handleClose, pages }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(open);
   const { categories } = useCategories();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false); // Estado para manejar las categorías
+  const { userData } = useAuth(); // Obtener los datos del usuario desde el contexto
 
   useEffect(() => {
     if (open) {
@@ -62,16 +66,23 @@ const MenuList = ({ open, handleClose, pages }) => {
               </li>
 
               {/* Additional Pages */}
-              {pages.map((page) => (
-                <li key={page.title} className="relative">
-                  <Link href={page.href} onClick={handleLinkClick} className="w-full">
-                    <button className="flex items-center space-x-2 text-left w-full p-3 rounded-lg transition-all duration-300 ease-in-out text-gray-800 hover:bg-gray-200 hover:text-gray-600">
-                      {page.src}
-                      <span className="font-medium">{capitalizeFirstLetter(page.title)}</span>
-                    </button>
-                  </Link>
-                </li>
-              ))}
+              {pages.map((page) => {
+                // Condición para no mostrar "Order" si no hay usuario autenticado
+                if (page.title === "Mi pedido" && !userData) {
+                  return null; // No renderiza este elemento si no hay usuario
+                }
+
+                return (
+                  <li key={page.title} className="relative">
+                    <Link href={page.href} onClick={handleLinkClick} className="w-full">
+                      <button className="flex items-center space-x-2 text-left w-full p-3 rounded-lg transition-all duration-300 ease-in-out text-gray-800 hover:bg-gray-200 hover:text-gray-600">
+                        {page.src}
+                        <span className="font-medium">{capitalizeFirstLetter(page.title)}</span>
+                      </button>
+                    </Link>
+                  </li>
+                );
+              })}
 
               {/* Opción Categorías */}
               <li className="relative">
