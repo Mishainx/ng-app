@@ -75,7 +75,7 @@ const LoginForm = () => {
           <Link href="/signup" className="text-red-500 text-center hover:underline">
             Registrarse
           </Link>
-          <Link href="/users/forgot-password" className="text-red-500 text-center hover:underline">
+          <Link href="/forgot-password" className="text-red-500 text-center hover:underline">
             ¿Olvidaste tu contraseña?
           </Link>
         </div>
