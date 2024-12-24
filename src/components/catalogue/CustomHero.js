@@ -14,8 +14,8 @@ export default function CustomHero({ title, description, img }) {
           className="object-contain scale-90 transition-transform duration-300 brightness-100 hover:brightness-110 shadow-lg drop-shadow-lg"
         />
         {/* Efecto de luces */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent  to-black/20"></div>
       </div>
 
       {/* Texto */}

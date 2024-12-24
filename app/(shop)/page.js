@@ -31,7 +31,7 @@ export default async function Home() {
         <CategoriesList />
         <div className="w-full flex flex-row flex-wrap items-center justify-center gap-5">
           <NavCard
-            imgSrc="/navCard/catalogo-nav-card.png"
+            imgSrc="/navCard/catalogo-nav-card.jpg"
             title="Catálogo"
             href="/catalogo"
           />
@@ -41,7 +41,7 @@ export default async function Home() {
             href="/local"
           />
           <NavCard
-            imgSrc="/navCard/catalogo-nav-card.png"
+            imgSrc="/navCard/ofertas-nippongame.jpg"
             title="Ofertas"
             href="/ofertas"
           />
