@@ -36,7 +36,29 @@ export const AuthProvider = ({ children }) => {
       throw error; // Propaga el error hacia los componentes que llamen a esta función
     }
   };
-  
+
+  // Function to handle password reset
+  const resetPassword = async (email) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "Error al enviar el enlace de restablecimiento");
+      }
+
+      return await response.json(); // Retorna los datos de la respuesta del backend si es exitoso
+    } catch (error) {
+      setError(error.message);
+      throw error; // Propaga el error hacia los componentes que llamen a esta función
+    }
+  };
 
   // Optional: This useEffect can be removed if you handle the data entirely in login
   useEffect(() => {
@@ -62,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   }, [userData]); // This effect runs only if userData is null
 
   return (
-    <AuthContext.Provider value={{ userData, loading, error, login }}>
+    <AuthContext.Provider value={{ userData, loading, error, login, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

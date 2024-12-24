@@ -26,6 +26,7 @@ export async function middleware(request) {
     return NextResponse.redirect(new URL('/proximamente', request.url));
   }
 
+
   try {
     // Verifica el token en la API
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
@@ -42,6 +43,8 @@ export async function middleware(request) {
       }
       return NextResponse.redirect(new URL('/proximamente', request.url));
     }
+
+  
 
     // Decodifica la respuesta
     const { user } = await response.json();
@@ -67,6 +70,6 @@ export async function middleware(request) {
 // Configura las rutas que requieren autenticación
 export const config = {
   matcher: [
-    '/((?!api|public|signup|proximamente|_next/static|_next/image|static|favicon.ico).*)',
+    '/((?!api|forgot-password|public|signup|proximamente|_next/static|_next/image|static|favicon.ico).*)',
   ],
 };
