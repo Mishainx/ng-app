@@ -11,14 +11,20 @@ import React from "react";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
 import SpinnerIcon from "@/icons/SpinnerIcon";
 import WhatsappIcon from "@/icons/WhatsappIcon";
+import CancelIcon from "@/icons/CancelIcon";
+import CancelTicketModal from "./CancelTicketModal";
 
 const TicketTable = ({ handleViewChange, searchTerm }) => {
-  const { tickets, deleteTicket, archiveTicket,updatePaymentStatus } = useTickets();
+  const { tickets, deleteTicket, archiveTicket,updatePaymentStatus,cancelTicket } = useTickets();
   const { clients } = useClients();
   const [activeTab, setActiveTab] = useState("pending"); // Tab activo: 'pending' o 'processed'
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedTicket, setExpandedTicket] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentTicketId, setCurrentTicketId] = useState(null); // Ticket actual que se está cancelando
+  const [isCanceled, setIsCanceled] = useState(null); // Ticket actual que se está cancelando
+
 
   const getClientInfo = (ticket) => {
     return clients.find((client) => client.email === ticket.email);
@@ -34,8 +40,10 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
 
   const filteredTickets = tickets.filter((ticket) =>
     // Filtrar según la pestaña activa
-    (activeTab === "pending" ? ticket.processed === false : ticket.processed === true) &&
-  
+    (activeTab === "pending" ? ticket.processed === false && !ticket.canceled : 
+     activeTab === "processed" ? ticket.processed === true && !ticket.canceled : 
+     activeTab === "canceled" ? ticket.canceled === true : false) &&
+    
     // Filtrado por el término de búsqueda
     (searchTerm.length >= 3
       ? Object.values(ticket).some((value) => {
@@ -53,6 +61,7 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
         })
       : true)
   );
+  
 
   const totalPages = Math.ceil(filteredTickets.length / itemsPerPage);
   const paginatedTickets = filteredTickets.slice(
@@ -62,18 +71,6 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
 
   const toggleExpandTicket = (ticketId) => {
     setExpandedTicket((prev) => (prev === ticketId ? null : ticketId));
-  };
-
-  const handleDeleteTicket = async (ticketId) => {
-    if (confirm("¿Estás seguro de que quieres eliminar este ticket?")) {
-      try {
-        await deleteTicket(ticketId);
-        toast.success("Ticket eliminado con éxito.");
-      } catch (error) {
-        console.error("Error al eliminar el ticket:", error);
-        toast.error("Error al eliminar el ticket. Intenta nuevamente.");
-      }
-    }
   };
 
   const changeTab = (tab) => {
@@ -99,6 +96,19 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
     }
   };
 
+  const handleOpenCancelModal = (ticketId, isCanceled) => {
+    setCurrentTicketId(ticketId);
+    setIsCanceled(isCanceled);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseCancelModal = () => {
+    setIsModalOpen(false);
+    setCurrentTicketId(null);
+  };
+
+
+
   const handlePaymentStatusChange = async (ticketId) => {
     const ticket = tickets.find((t) => t.id === ticketId);
     const newStatus = ticket.paymentStatus ? false : true; // Cambiar el estado entre true y false
@@ -115,24 +125,33 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
   return (
     <div>
       {/* Tabs */}
-      <div className="flex space-x-4 mb-4">
-        <button
-          className={`px-4 py-2 rounded-md ${
-            activeTab === "pending" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
-          }`}
-          onClick={() => changeTab("pending")}
-        >
-          Tickets Pendientes
-        </button>
-        <button
-          className={`px-4 py-2 rounded-md ${
-            activeTab === "processed" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
-          }`}
-          onClick={() => changeTab("processed")}
-        >
-          Tickets Finalizados
-        </button>
-      </div>
+{/* Tabs */}
+<div className="flex space-x-4 mb-4">
+  <button
+    className={`px-4 py-2 rounded-md ${
+      activeTab === "pending" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
+    }`}
+    onClick={() => changeTab("pending")}
+  >
+    Tickets Pendientes
+  </button>
+  <button
+    className={`px-4 py-2 rounded-md ${
+      activeTab === "processed" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
+    }`}
+    onClick={() => changeTab("processed")}
+  >
+    Tickets Finalizados
+  </button>
+  <button
+    className={`px-4 py-2 rounded-md ${
+      activeTab === "canceled" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
+    }`}
+    onClick={() => changeTab("canceled")}
+  >
+    Tickets Cancelados
+  </button>
+</div>
 {/* Tabla de tickets en desktop */}
 <div className="hidden sm:block overflow-x-auto text-xs">
   <table className="min-w-full bg-white border border-gray-300 text-sm rounded-md shadow-lg">
@@ -206,15 +225,12 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
                   <ArchiveIcon width="20" height="20" />
                 </button>
 
-                {/* Botón de Eliminar */}
+                {/* Botón de Cancelar */}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteTicket(ticket.id);
-                  }}
+                onClick={(e) => handleOpenCancelModal(ticket.id, ticket.canceled)}
                   className="text-red-500 hover:text-red-700 transition"
                 >
-                  <TrashIcon className="w-5 h-5" />
+                  <CancelIcon className="w-5 h-5 text-red-500 hover:text-red-700 transition" />
                 </button>
               </td>
             </tr>
@@ -269,6 +285,12 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
                     <div className="flex justify-end mt-4 font-bold text-xl">
                       Total: U$D {ticket?.totalAmount?.toFixed(2)}
                     </div>
+                            {/* Mostrar el motivo de cancelación si está presente */}
+                {!isCanceled && ticket.cancelReason && (
+                  <div className="mt-4">
+                    <p><strong>Motivo de Cancelación:</strong> {ticket.cancelReason}</p>
+                  </div>
+                )}
                   </div>
                 </td>
               </tr>
@@ -353,14 +375,12 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
             <ArchiveIcon width="20" height="20" />
           </button>
 
+{/* Botón de Cancelar */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteTicket(ticket.id);
-            }}
-            className="text-red-500 hover:text-red-700 transition"
-          >
-            <TrashIcon className="w-5 h-5" />
+                onClick={(e) => handleOpenCancelModal(ticket.id, ticket.canceled)}
+                className="text-red-500 hover:text-red-700 transition"
+              >
+            <CancelIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -410,33 +430,14 @@ const TicketTable = ({ handleViewChange, searchTerm }) => {
 </div>
 
 
-
-
-      {/* Paginación */}
-      {filteredTickets.length > itemsPerPage && (
-        <div className="mt-4 flex justify-between items-center">
-          <p className="text-sm text-gray-700">
-            Página {currentPage} de {totalPages || 1}
-          </p>
-          <div className="flex space-x-2 text-xs">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className="bg-gray-200 text-gray-700 rounded-md px-4 py-2 hover:bg-gray-300 transition"
-              disabled={currentPage === 1}
-            >
-              Anterior
-            </button>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              className="bg-gray-200 text-gray-700 rounded-md px-4 py-2 hover:bg-gray-300 transition"
-              disabled={currentPage === totalPages}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      )}
+    <CancelTicketModal
+        isOpen={isModalOpen}
+        onClose={handleCloseCancelModal}
+        ticketId={currentTicketId}
+        isCanceled={isCanceled}
+      />
     </div>
+    
   );
 };
 

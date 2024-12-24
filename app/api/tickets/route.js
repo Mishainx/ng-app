@@ -34,7 +34,6 @@ export const POST = async (request) => {
             );
         }
 
-
         // Verificar que los productos estén presentes y no sean vacíos
         if (!products || products.length === 0) {
             return NextResponse.json(
@@ -52,13 +51,15 @@ export const POST = async (request) => {
                 );
             }
         }
+
         // Calcular el monto total
         const totalAmount = products.reduce((acc, product) => {
             const amount = product.discount > 0
-              ? product.discount * product.quantity // Si tiene descuento, usamos el descuento por cantidad
-              : product.price * product.quantity; // Si no, usamos el precio por cantidad
+                ? product.discount * product.quantity // Si tiene descuento, usamos el descuento por cantidad
+                : product.price * product.quantity; // Si no, usamos el precio por cantidad
             return acc + amount;
-          }, 0);        
+        }, 0);
+
         // Crear los datos del ticket
         const ticket = {
             date: serverTimestamp(), // Fecha de creación del ticket
@@ -67,6 +68,8 @@ export const POST = async (request) => {
             processed: false, // Estatus de procesamiento
             paymentStatus: false, // Estatus de pago
             totalAmount, // Monto total
+            canceled: false, // Por defecto, el ticket no está cancelado
+            cancelReason: null, // Por defecto, no hay motivo de cancelación
         };
 
         // Agregar el ticket a Firestore (crea un ID automático)

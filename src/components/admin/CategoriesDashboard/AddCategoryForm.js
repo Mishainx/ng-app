@@ -3,8 +3,9 @@ import { useCategories } from '@/context/CategoriesContext';
 import SpinnerIcon from '@/icons/SpinnerIcon';
 import { toast } from 'react-toastify';
 
-const AddCategoryForm = ({resetView, onCategoryCreated}) => {
+const AddCategoryForm = ({ resetView, onCategoryCreated }) => {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState(''); // Nuevo estado para la descripción
   const [imgFile, setImgFile] = useState(null);
   const [iconFile, setIconFile] = useState(null);
   const [showInMenu, setShowInMenu] = useState('false');
@@ -19,6 +20,7 @@ const AddCategoryForm = ({resetView, onCategoryCreated}) => {
 
     const formData = new FormData();
     formData.append('title', title);
+    formData.append('description', description); // Agregar descripción al formData
     formData.append('img', imgFile);
     formData.append('icon', iconFile);
     formData.append('showInMenu', showInMenu);
@@ -29,15 +31,15 @@ const AddCategoryForm = ({resetView, onCategoryCreated}) => {
 
       // Mostrar mensaje de éxito
       toast.success('Categoría creada exitosamente');
-      
 
-            // Notificamos que la categoría ha sido creada
-            if (onCategoryCreated) {
-              onCategoryCreated(); // Cambia la vista a la tabla
-            }
+      // Notificamos que la categoría ha sido creada
+      if (onCategoryCreated) {
+        onCategoryCreated(); // Cambia la vista a la tabla
+      }
 
       // Resetear el formulario
       setTitle('');
+      setDescription('');
       setImgFile(null);
       setIconFile(null);
       setShowInMenu('false');
@@ -65,6 +67,19 @@ const AddCategoryForm = ({resetView, onCategoryCreated}) => {
             className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
             placeholder="Escribe el título"
             required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descripción</label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
+            placeholder="Máximo 100 caracteres"
+            maxLength="100"
           />
         </div>
 

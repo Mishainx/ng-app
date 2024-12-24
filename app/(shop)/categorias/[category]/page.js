@@ -33,7 +33,7 @@ export default async function Categories({ params }) {
           <div className="absolute inset-x-0 -bottom-2 mx-auto w-full h-1 bg-red-500"></div>
         </h2>
       </div>
-      <ProductsByCategoryContainer  selectedCategory={selectedCategory} products={products}/>
+      <ProductsByCategoryContainer products={products}/>
     </section>
     </main>
   );

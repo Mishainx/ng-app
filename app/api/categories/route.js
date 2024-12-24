@@ -28,7 +28,6 @@ export const GET = async () => {
 };
 
 // `POST` para crear una nueva categoría
-// `POST` para crear una nueva categoría
 export const POST = async (req) => {
   try {
     // Obtener las cookies y el token
@@ -60,16 +59,18 @@ export const POST = async (req) => {
     if (!decodedToken.admin) {
       return NextResponse.json(
         { message: 'Unauthorized: Admin privileges required' },
-        { status: 403 } // 403 Forbidden es adecuado para una solicitud que no tiene permiso
+        { status: 403 }
       );
     }
 
     // Obtener el FormData de la solicitud
     const formData = await req.formData();
+
     // Extraer datos de la categoría desde FormData
     const title = formData.get('title');
-    const imgFile = formData.get('img'); // Archivo de imagen principal
-    const iconFile = formData.get('icon'); // Archivo del ícono
+    const description = formData.get('description'); // Nuevo campo
+    const imgFile = formData.get('img');
+    const iconFile = formData.get('icon');
     let createdAt = formData.get('createdAt');
     const showInMenu = formData.get('showInMenu') === 'true';
 
@@ -81,16 +82,19 @@ export const POST = async (req) => {
       );
     }
 
-    // Validar el campo showInMenu: debe ser "true" o "false"
-    if (showInMenu !== true && showInMenu !== false) {
+    if (description && typeof description !== 'string') {
       return NextResponse.json(
-        { message: 'Validation error: showInMenu must be either "true" or "false"' },
+        { message: 'Validation error: Description must be a string' },
         { status: 400 }
       );
     }
 
-    // Convertir showInMenu a booleano
-    const showInMenuBool = showInMenu === 'true';
+    if (description && description.length > 100) {
+      return NextResponse.json(
+        { message: 'Validation error: Description cannot exceed 100 characters' },
+        { status: 400 }
+      );
+    }
 
     if (!imgFile || !(imgFile instanceof Blob)) {
       return NextResponse.json(
@@ -124,7 +128,7 @@ export const POST = async (req) => {
 
     // Si no se proporciona la fecha, usar la fecha actual
     if (!createdAt) {
-      createdAt = new Date().toISOString(); // Formato ISO
+      createdAt = new Date().toISOString();
     }
 
     // Generar el slug a partir del título y verificar si ya existe
@@ -151,25 +155,27 @@ export const POST = async (req) => {
 
     // Añadir el nuevo documento a la colección
     const docRef = await addDoc(collection(db, 'categories'), {
-      title: title,
+      title,
+      description: description || '', // Guardar descripción o valor por defecto
       img: imgUrl,
       icon: iconUrl,
-      slug: uniqueSlug, // Añadir el slug al documento
+      slug: uniqueSlug,
       subcategories: [],
-      createdAt: createdAt,
-      showInMenu: showInMenuBool,
+      createdAt,
+      showInMenu,
     });
 
     // Obtener los datos del documento creado
     const newCategory = {
       id: docRef.id,
-      title: title,
+      title,
+      description: description || '',
       img: imgUrl,
       icon: iconUrl,
       slug: uniqueSlug,
       subcategories: [],
-      createdAt: createdAt,
-      showInMenu: showInMenuBool,
+      createdAt,
+      showInMenu,
     };
 
     return NextResponse.json(

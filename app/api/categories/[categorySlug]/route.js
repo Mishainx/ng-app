@@ -124,7 +124,6 @@ export const DELETE = async (req, { params }) => {
 
 export const PUT = async (req, { params }) => {
   const { categorySlug } = params; // Obtén el slug del objeto params
-  console.log("hola")
   // Verifica si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
     return NextResponse.json(
@@ -170,6 +169,7 @@ export const PUT = async (req, { params }) => {
     // Obtener el FormData de la solicitud
     const formData = await req.formData();
     const title = formData.get('title');
+    const description = formData.get('description'); // Nuevo campo de descripción
     const img = formData.get('img'); // Archivo de imagen principal
     const icon = formData.get('icon'); // Archivo del ícono
     const showInMenu = formData.get('showInMenu') === 'true';
@@ -178,6 +178,20 @@ export const PUT = async (req, { params }) => {
     if (!title || typeof title !== 'string' || title.length > 100) {
       return NextResponse.json(
         { message: 'Validation errors: Title is required, must be a string, and cannot exceed 100 characters' },
+        { status: 400 }
+      );
+    }
+
+    if (description && typeof description !== 'string') {
+      return NextResponse.json(
+        { message: 'Validation errors: Description must be a string' },
+        { status: 400 }
+      );
+    }
+
+    if (description && description.length > 100) {
+      return NextResponse.json(
+        { message: 'Validation errors: Description cannot exceed 100 characters' },
         { status: 400 }
       );
     }
@@ -199,17 +213,10 @@ export const PUT = async (req, { params }) => {
     // Construir el objeto de actualización solo con campos proporcionados
     const updatedCategory = {
       ...(title && { title }),
+      ...(description && { description }), // Incluir descripción si está presente
       ...(showInMenu !== undefined && { showInMenu }),
       updatedAt: new Date().toISOString(),
     };
-
-    if(img != "null"){
-      console.log(img)
-      console.log("hoola")
-    }
-    else{
-      "chau"
-    }
 
     // Subir las imágenes a Firebase Storage si están presentes
     if (img && img instanceof Blob && img.size > 0) {
@@ -225,6 +232,7 @@ export const PUT = async (req, { params }) => {
       const iconUrl = await getDownloadURL(iconStorageRef);
       updatedCategory.icon = iconUrl; // Guardar la URL en el documento
     }
+
     // Actualizar el documento en Firestore con los campos que realmente han cambiado
     await updateDoc(categoryRef, updatedCategory);
 

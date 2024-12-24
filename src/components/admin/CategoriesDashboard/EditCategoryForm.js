@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { toast } from "react-toastify";
 import { useCategories } from "@/context/CategoriesContext";
 import SpinnerIcon from "@/icons/SpinnerIcon";
 
 const EditCategoryForm = ({ category, onClose }) => {
   const [title, setTitle] = useState(category?.title || "");
+  const [description, setDescription] = useState(category?.description || ""); // Nuevo campo
   const [imgFile, setImgFile] = useState(null);
   const [iconFile, setIconFile] = useState(null);
   const [showInMenu, setShowInMenu] = useState(category?.showInMenu || "false");
@@ -18,6 +19,7 @@ const EditCategoryForm = ({ category, onClose }) => {
 
     const updatedData = {
       title,
+      description,
       img: imgFile,
       icon: iconFile,
       showInMenu: showInMenu,
@@ -48,6 +50,20 @@ const EditCategoryForm = ({ category, onClose }) => {
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
             />
+          </div>
+
+          {/* Campo para descripción */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descripción</label>
+            <textarea
+              id="description"
+              value={description}
+              maxLength={100} // Restricción de longitud
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-red-500"
+              rows="3"
+            />
+            <p className="text-sm text-gray-500 mt-1">{100 - description.length} caracteres restantes</p>
           </div>
 
           <div>

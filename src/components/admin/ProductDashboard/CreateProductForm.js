@@ -109,40 +109,62 @@ const getSubcategories = (categorySlug) => {
         />
       </div>
 
-      {/* Precio */}
-      <div className="mb-3">
-        <label className="text-xs text-gray-700">Precio:</label>
-        <input
-          required
-          type="text" // Cambiar a tipo "text" para evitar los botones
-          className="border rounded w-full py-1 px-2 text-xs"
-          value={productData.price}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d*\.?\d{0,2}$/.test(value) && parseFloat(value) >= 0) {
-              setProductData({ ...productData, price: value });
-            }
-          }}
-          placeholder="Ej. 2.00"
-        />
-      </div>
+{/* Precio */}
+<div className="mb-3">
+  <label className="text-sm text-gray-700">Precio</label>
+  <input
+    type="text"
+    className="border rounded w-full py-1 px-2"
+    value={productData.price}
+    onChange={(e) => {
+      let value = e.target.value;
 
-      {/* Descuento */}
-      <div className="mb-3">
-        <label className="text-xs text-gray-700">Descuento:</label>
-        <input
-          type="text"
-          className="border rounded w-full py-1 px-2"
-          value={productData.discount}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d*\.?\d{0,2}$/.test(value) && parseFloat(value) >= 0) {
-              setProductData({ ...productData, discount: value });
-            }
-          }}
-          placeholder="Ej. 1.00"
-        />
-      </div>
+      // Si el campo está vacío, asignar "0"
+      if (value === "") {
+        setProductData({ ...productData, price: "0" });
+        return;
+      }
+
+      // Validar formato con hasta dos decimales
+      if (/^\d*\.?\d{0,2}$/.test(value)) {
+        // Eliminar ceros iniciales excepto "0."
+        if (value.startsWith("0") && !value.startsWith("0.")) {
+          value = value.slice(1);
+        }
+        setProductData({ ...productData, price: value });
+      }
+    }}
+  />
+</div>
+
+{/* Descuento */}
+<div className="mb-3">
+  <label className="text-sm text-gray-700">Descuento</label>
+  <input
+    type="text"
+    className="border rounded w-full py-1 px-2"
+    value={productData.discount}
+    onChange={(e) => {
+      let value = e.target.value;
+
+      // Si el campo está vacío, asignar "0"
+      if (value === "") {
+        setProductData({ ...productData, discount: "0" });
+        return;
+      }
+
+      // Validar formato con hasta dos decimales
+      if (/^\d*\.?\d{0,2}$/.test(value)) {
+        // Eliminar ceros iniciales excepto "0."
+        if (value.startsWith("0") && !value.startsWith("0.")) {
+          value = value.slice(1);
+        }
+        setProductData({ ...productData, discount: value });
+      }
+    }}
+    placeholder="Ej. 1.00"
+  />
+</div>
 
       {/* Stock (Disponible) */}
       <div className="mb-3 flex flex-col">

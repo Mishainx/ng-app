@@ -156,29 +156,38 @@ export const TicketsProvider = ({ children }) => {
     }
   };
 
-  // Función para manejar la acción de archivar o desarchivar
-  const handleArchiveTicket = async (ticketId, e) => {
-    e.stopPropagation(); // Evitar que se propague el evento
-
-    const ticket = tickets.find((t) => t.id === ticketId); // Encuentra el ticket actual
-
-    const action = ticket.processed ? "desarchivar" : "archivar"; // Determina si estamos archivando o desarchivando
-    const actionMessage = action === "archivar" ? "archivado" : "desarchivado"; // Mensaje que se mostrará en el toast
-
-    if (confirm(`¿Estás seguro de que quieres ${action} este ticket?`)) {
-      try {
-        await archiveTicket(ticketId); // Llamar a la función para archivar o desarchivar
-        toast.success(`Ticket ${actionMessage} con éxito.`); // Mensaje de éxito dinámico
-      } catch (error) {
-        console.error("Error al archivar o desarchivar el ticket:", error);
-        toast.error(`Error al ${action} el ticket. Intenta nuevamente.`); // Mensaje de error dinámico
-      }
+  const cancelTicket = async (ticketId, reason, isCanceled) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tickets/${ticketId}/canceled`, {
+        method: 'PATCH', // Usamos PATCH para actualizar el ticket
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason, isCanceled }), // Enviamos el motivo y el estado invertido de 'canceled'
+      });
+  
+      if (!response.ok) throw new Error("Error al cancelar el ticket");
+  
+      // Actualizar el estado del ticket localmente
+      setTickets((prevTickets) =>
+        prevTickets.map((ticket) =>
+          ticket.id === ticketId
+            ? { ...ticket, canceled: !isCanceled, reason } // Invertir 'canceled' y actualizar el motivo
+            : ticket
+        )
+      );
+  
+    } catch (err) {
+      console.log(err)
+      setError(err.message);
     }
   };
+  
+  
 
   return (
     <TicketsContext.Provider value={{
-      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket, updatePaymentStatus, getUserTickets
+      tickets, loading, error, deleteTicket, updateTicket, createTicket, reloadTickets, archiveTicket, updatePaymentStatus, getUserTickets, cancelTicket
     }}>
       {children}
     </TicketsContext.Provider>
