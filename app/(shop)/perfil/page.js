@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Loader from "@/components/loader/Loader";
 import { useAuth } from "@/context/AuthContext";
-import Tabs from "@/components/profile/tabs";
+import Tabs from "@/components/profile/Tabs";
 import UserTab from "@/components/profile/UserTab";
 import OrdersTab from "@/components/profile/OrderTab";
 
