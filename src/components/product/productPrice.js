@@ -3,13 +3,18 @@ import EyeIcon from "@/icons/EyeIcon";
 import { useAuth } from "@/context/AuthContext";
 import { formatPriceToUSD } from "@/utils/stringsManager";
 import Link from "next/link";
+import SpinnerIcon from "@/icons/SpinnerIcon";
 
 export default function ProductPrice({ price, discount }) {
-  const { userData, loading } = useAuth();
+  const { userData, loading} = useAuth();
 
   // Mostrar un mensaje de carga mientras el estado de autenticación se resuelve
   if (loading) {
-    return <p>Cargando precios...</p>;
+    
+    return(
+    <div className="flex items-center justify-center">
+          <SpinnerIcon className="text-center w-3 h-3"/>
+    </div>)
   }
 
   return (
