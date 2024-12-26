@@ -48,7 +48,6 @@ export const POST = async (req) => {
     try {
       decodedToken = await authAdmin.verifyIdToken(token);
     } catch (error) {
-      console.log(error);
       return NextResponse.json(
         { message: 'Unauthorized: Invalid token' },
         { status: 401 }
