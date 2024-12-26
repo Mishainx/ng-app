@@ -1,6 +1,6 @@
 const DotLoaders = () => {
     return (
-      <div className="flex items-center justify-center space-x-2">
+      <div className="w-full flex items-center justify-center space-x-2">
         <div className="h-3 w-3 rounded-full bg-[#EA3324] animate-pulse1"></div>
         <div className="h-3 w-3 rounded-full bg-[#EA3324] animate-pulse2"></div>
         <div className="h-3 w-3 rounded-full bg-[#EA3324] animate-pulse3"></div>

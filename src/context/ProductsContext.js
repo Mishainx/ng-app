@@ -49,7 +49,6 @@ for (const key in newProduct) {
 }
 
 
-  
       // Realizar la petición al backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
         method: "POST",
@@ -77,15 +76,12 @@ for (const key in newProduct) {
   const updateProduct = async (updatedProduct) => {
     try {
       const formData = new FormData();
-
-  
-// Agregar los campos al FormData
+  // Agregar los campos al FormData
 for (const key in updatedProduct) {
   if (key === "category" && updatedProduct[key] === "") {
     // Si la categoría es una cadena vacía, asignar "otros" en lugar de undefined
     formData.append(key, "otros");
   } else if (key === "subcategory" && Array.isArray(updatedProduct[key])) {
-    console.log(updatedProduct[key]);
     updatedProduct[key].forEach((subcategory) => {
       formData.append("subcategory", subcategory);
     });
@@ -94,10 +90,29 @@ for (const key in updatedProduct) {
   } else if (key === "stock" || key === "visible" || key === "featured") {
     // Convertir los valores booleanos a "true" o "false" en formato cadena
     formData.append(key, updatedProduct[key] ? "true" : "false");
-  } else {
+  } else if (key === "relatedProducts") {
+    // Asegurarnos de que relatedProducts sea un array de cadenas
+    const relatedProducts = updatedProduct[key];
+    if (!Array.isArray(relatedProducts)) {
+      // Si no es un array, convertirlo a un array de una sola cadena
+      formData.append(key, relatedProducts);
+    } else {
+      // Verificamos que todos los elementos sean cadenas
+      relatedProducts.forEach((sku) => {
+        if (typeof sku === 'string') {
+          formData.append(key, sku); // Agregar cada SKU por separado
+        } else {
+          console.error("relatedProducts contiene un valor que no es una cadena de texto:", sku);
+        }
+      });
+    }
+  }
+   else {
     formData.append(key, updatedProduct[key]);
   }
 }
+
+// Enviar la solicitud PUT
 
   
       const response = await fetch(
@@ -118,6 +133,8 @@ for (const key in updatedProduct) {
           product.id === updatedData.payload.id ? updatedData.payload : product
         )
       );
+
+      return response
     } catch (error) {
       setError(error.message);
     }

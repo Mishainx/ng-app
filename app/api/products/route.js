@@ -185,7 +185,7 @@ export const POST = async (req) => {
       brand,
       slug: uniqueSlug,
       sku: await generateSequentialSku("products"),
-      relatedProds: validRelatedSkus.length > 0 ? validRelatedSkus : [],
+      relatedProducts: validRelatedSkus.length > 0 ? validRelatedSkus : [],
       gallery: []
     };
 

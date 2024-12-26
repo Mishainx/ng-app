@@ -2,24 +2,17 @@
 
 import { useState, useEffect, useRef } from "react";
 import ProductCard from "./productCard";
-import { useProducts } from "@/context/ProductsContext";
-import SpinnerIcon from "@/icons/SpinnerIcon";
 import DotLoaders from "../loader/DotLoaders"; // Asegúrate de que el componente DotLoaders esté importado
 
-const FeaturedProducts = () => {
+const ProductsSlider = ({ products = [], title = "Productos" }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const containerRef = useRef(null);
-
-  const { products, loading } = useProducts(); // Obtener los productos desde el contexto
-
-  // Filtrar productos que están en oferta (featured)
-  const featuredProducts = products.filter((product) => product.featured);
 
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
       const updateOverflow = () => {
-        setIsOverflowing(container.scrollWidth >= container.clientWidth);
+        setIsOverflowing(container.scrollWidth > container.clientWidth);
       };
 
       // Initial check
@@ -50,19 +43,19 @@ const FeaturedProducts = () => {
   return (
     <section className="w-11/12 py-10 px-4 mx-auto max-w-6xl">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold">Destacados</h2>
+        <h2 className="text-xl font-bold">{title}</h2>
         <div className="inline-block w-24 h-1 bg-red-500 mt-2"></div>
       </div>
 
       <div className="relative w-full flex justify-center items-center">
-        {/* Mostrar controles solo si no está cargando */}
-        {!loading && isOverflowing && (
+        {/* Mostrar controles solo si hay overflow */}
+        {isOverflowing && (
           <>
             {/* Flecha izquierda */}
             <button
               onClick={handleScrollLeft}
               className="absolute left-0 top-1/2 transform -translate-y-1/2 p-4 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-20"
-              style={{ left: "-32px" }} // Ajusta la distancia de la flecha izquierda
+              style={{ left: "-32px" }}
             >
               &#10094;
             </button>
@@ -71,7 +64,7 @@ const FeaturedProducts = () => {
             <button
               onClick={handleScrollRight}
               className="absolute right-0 top-1/2 transform -translate-y-1/2 p-4 rounded-full shadow-md bg-white hover:bg-gray-300 focus:outline-none z-20"
-              style={{ right: "-32px" }} // Ajusta la distancia de la flecha derecha
+              style={{ right: "-32px" }}
             >
               &#10095;
             </button>
@@ -81,17 +74,11 @@ const FeaturedProducts = () => {
         {/* Contenedor de productos */}
         <div
           ref={containerRef}
-          id="featured-slider"
-          className="flex items-center h-80 overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar relative"
+          className="w-full flex items-start h-fit overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar relative"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {/* Mostrar el loader mientras está cargando */}
-          {loading ? (
-            <div className="w-full  flex justify-center items-center">
-              <DotLoaders /> {/* Usamos DotLoaders en lugar del Spinner */}
-            </div>
-          ) : featuredProducts?.length > 0 ? (
-            featuredProducts.map((product, index) => (
+          {Array.isArray(products) && products.length > 0 ? (
+            products.map((product, index) => (
               <div
                 className="flex-shrink-0 rounded-lg p-4 whitespace-normal transform transition-transform duration-300 overflow-visible"
                 key={`${product.id}-${index}`}
@@ -100,7 +87,13 @@ const FeaturedProducts = () => {
               </div>
             ))
           ) : (
-            <p>No hay productos destacados disponibles.</p>
+            <div className="w-full flex justify-center items-center">
+              {products && products.length === 0 ? (
+                <p className="text-lg text-gray-600">No hay productos seleccionados</p>
+              ) : (
+                <DotLoaders />
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -108,4 +101,4 @@ const FeaturedProducts = () => {
   );
 };
 
-export default FeaturedProducts;
+export default ProductsSlider;

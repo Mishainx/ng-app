@@ -6,7 +6,6 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/firebase/config';
 import { cookies } from 'next/headers';
 import { authAdmin } from '@/firebase/authManager';
-import RelatedProducts from '@/components/product/RelatedProducts';
 
 export const GET = async (req, { params }) => {
   const { productSlug } = params;
@@ -141,49 +140,50 @@ export const PUT = async (req, { params }) => {
         }
 
 
-        const formData = await req.formData();
-
-        const updatedData = {};
-        let file = null;
-        
-        formData.forEach((value, key) => {
-          if (key === "img") {
-            file = value; // Asumimos que es un archivo
-          } else if (key === "subcategory") {
-            if (!updatedData[key]) {
-              updatedData[key] = [];
-            }
-            updatedData[key].push(value); // Manejar múltiples subcategorías
-          } else {
-            // Para los campos booleanos, convertir "true" y "false" a valores booleanos
-            if (key === "stock" || key === "visible" || key === "featured") {
-              updatedData[key] = value === "true"; // Convertir a booleano
-            } 
-            // Para los campos numéricos, convertir a número
-            else if (key === "price" || key === "discount") {
-              updatedData[key] = parseFloat(value); // Convertir a número flotante
-            } 
-            // Para relatedProducts, asegurarse de que sea un array vacío si está vacío o es ""
-            else if (key === "relatedProducts") {
-              // Asegurarse de que relatedProducts sea un array, incluso si solo tiene un valor
-              if (!updatedData[key]) {
-                updatedData[key] = [];
-              }
-              // Si relatedProducts ya es un array, agregar el valor; si es único, convertirlo en un array
-              if (Array.isArray(value)) {
-                updatedData[key] = [...updatedData[key], ...value]; // Combina el nuevo valor con los existentes
-              } else {
-                updatedData[key].push(value); // Agregar el único valor
-              }
-            }
-            // Para todos los demás, asignar directamente
-            else {
-              updatedData[key] = value;
+    const formData = await req.formData();
+    console.log(formData.get("relatedProducts"));
+    const updatedData = {};
+    let file = null;
+    formData.forEach((value, key) => {
+      if (key === "img") {
+        file = value; // Asumimos que es un archivo
+      } else if (key === "subcategory") {
+        if (!updatedData[key]) {
+          updatedData[key] = [];
+        }
+        updatedData[key].push(value); // Manejar múltiples subcategorías
+      } else {
+        // Para los campos booleanos, convertir "true" y "false" a valores booleanos
+        if (key === "stock" || key === "visible" || key === "featured") {
+          updatedData[key] = value === "true"; // Convertir a booleano
+        } 
+        // Para los campos numéricos, convertir a número
+        else if (key === "price" || key === "discount") {
+          updatedData[key] = parseFloat(value); // Convertir a número flotante
+        } 
+        else if (key === "relatedProducts") {
+            // Asegurarnos de que relatedProducts sea un array de cadenas
+            const relatedProducts = updatedProduct[key];
+            if (!Array.isArray(relatedProducts)) {
+              // Si no es un array, convertirlo a un array de una sola cadena
+              formData.append(key, relatedProducts);
+            } else {
+              // Verificamos que todos los elementos sean cadenas
+              relatedProducts.forEach((sku) => {
+                if (typeof sku === 'string') {
+                  formData.append(key, sku); // Agregar cada SKU por separado
+                } else {
+                  console.error("relatedProducts contiene un valor que no es una cadena de texto:", sku);
+                }
+              });
             }
           }
-        });
-        
-        
+        // Para todos los demás, asignar directamente
+        else {
+          updatedData[key] = value;
+        }
+      }
+    });
     
 
 
@@ -216,7 +216,7 @@ if (file && file.size > 0) {
     updatedData.img = productImg; // Mantener la imagen anterior si no se sube nueva
   }
   console.log("Imagen no subida, manteniendo la imagen anterior:", updatedData.img);
-}
+}   
 
       await updateDoc(productDocRef, updatedData);
 

@@ -8,10 +8,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import ButtonWithSpinner from "@/components/loader/ButtonWithSpinner";
+import ProductSkuSelector from "./ProductSkuSelector";
 
 const EditProductForm = ({ editingProduct, setView }) => {
   const { updateProduct } = useProducts();
   const { categories } = useCategories();
+  const [relatedSkus, setRelatedSkus] = useState(editingProduct.relatedProducts || []);
   const [productData, setProductData] = useState({
     ...editingProduct, // Inicializa los valores con el producto recibido
     img: null, // Para manejar una nueva imagen cargada, si aplica
@@ -24,21 +26,27 @@ const EditProductForm = ({ editingProduct, setView }) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const updatedProduct = await updateProduct(productData); // Asume que `updateProduct` es la función para actualizar productos
-      
-    if (!updateProduct) {
+      // Aquí asignamos 'relatedSkus' a 'relatedProducts'
+      const updatedProduct = {
+        ...productData,
+        relatedProducts: relatedSkus, // Renombramos 'relatedSkus' a 'relatedProducts'
+      };
+      const response = await updateProduct(updatedProduct); // Asume que `updateProduct` es la función para actualizar productos
+      if (!response) {
         throw new Error("No se pudo actualizar el producto.");
-      }  
+      }
+  
       toast.success("Producto actualizado exitosamente");
       setTimeout(() => {
         setView("list"); // Cambiar a la vista "list" después de un breve retraso
-      }, 2000); 
+      }, 2000);
     } catch (error) {
       toast.error(error.message);
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   const getSubcategories = (categorySlug) => {
     const selectedCategory = categories.find(cat => cat.slug === categorySlug);
@@ -334,6 +342,11 @@ const EditProductForm = ({ editingProduct, setView }) => {
     </div>
         </div>
       )}
+
+<ProductSkuSelector
+        selectedSkus={relatedSkus}
+        setSelectedSkus={setRelatedSkus}
+    />
 {/* Botones: Volver y Crear Producto */}
 <div className="flex flex-col gap-4 w-full flex-wrap md:flex-row md:flex-nowrap">
 
