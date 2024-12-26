@@ -50,7 +50,7 @@ export default function TicketRow({ ticket }) {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {ticket.products.map((product, index) => {
-                    const priceWithDiscount = product.discount;
+                    const priceWithDiscount = product.discount > 0 ? product.discount : product.price;
                     const subtotal = priceWithDiscount * product.quantity;
                     return (
                       <tr key={index}>
