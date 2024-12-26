@@ -21,10 +21,19 @@ export async function GET(req) {
     try {
       decodedToken = await authAdmin.verifyIdToken(token);
     } catch (error) {
-      return NextResponse.json(
-        { message: 'Unauthorized: Invalid token' },
+      // El token es inválido, eliminar la cookie
+      const response = NextResponse.json(
+        { message: 'Invalid token' },
         { status: 401 }
       );
+
+      response.cookies.set('ng-ct', '', {
+        httpOnly: true,
+        path: '/',
+        expires: new Date(0), // Expira en el pasado
+      });
+
+      return response;
     }
 
     // Devolver la información del usuario con solo email y uid
