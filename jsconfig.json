@@ -7,6 +7,7 @@
       "@/components/*": ["./src/components/*"],
       "@/firebase/*": ["./src/firebase/*"],
       "@/utils/*": ["./src/utils/*"],
+      "@/logger/*":["./src/logger/*"]
     }
   }
 }

@@ -4,10 +4,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { cookies } from "next/headers";
 import { db } from "../../../src/firebase/config"; // Asegúrate de tener Firestore configurado
 import { doc, getDoc } from "firebase/firestore";
+import { logSuccessfulLogin, logFailedLogin, logFailedlLogin} from "@/logger/transporter";
 
 export const POST = async (req) => {
+  const body = await req.json();
+
   try {
-    const body = await req.json();
     const userCredential = await signInWithEmailAndPassword(auth, body.email, body.password);
     const user = userCredential.user;
 
@@ -29,8 +31,8 @@ export const POST = async (req) => {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const userProfile = docSnap.data(); // Obtener datos adicionales del perfil del usuario
-
+        const userProfile = docSnap.data();
+        logSuccessfulLogin(user.uid, req.ip )
         return NextResponse.json({
           message: "Usuario logueado",
           user: {
@@ -50,6 +52,7 @@ export const POST = async (req) => {
       return NextResponse.json({ message: "Usuario no logueado" });
     }
   } catch (error) {
+    logFailedlLogin(body.email,req.ip)
     return NextResponse.json({ message: "Error al loguear", error: error.message }, { status: 401 });
   }
 };

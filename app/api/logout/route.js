@@ -13,7 +13,7 @@ export const POST = async (req) => {
       path: '/',
       sameSite: 'strict',
     });
-
+    
     return NextResponse.json({ message: "Usuario desconectado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error al desconectar" }, { status: 500 });
