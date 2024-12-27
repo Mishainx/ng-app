@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useProducts } from "@/context/ProductsContext";
 import { useCategories } from "@/context/CategoriesContext";
 import { capitalizeFirstLetter } from "@/utils/stringsManager";
@@ -21,6 +21,13 @@ const EditProductForm = ({ editingProduct, setView }) => {
 
   const [selectedSubcategory, setSelectedSubcategory] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (productData.discount === "") {
+      setProductData({ ...productData, discount: "0" });
+    }
+  }, [productData.discount]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,6 +169,7 @@ const EditProductForm = ({ editingProduct, setView }) => {
     placeholder="Ej. 1.00"
   />
 </div>
+
 
 
 

@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { cookies } from "next/headers";
 import { db } from "../../../src/firebase/config"; // Asegúrate de tener Firestore configurado
 import { doc, getDoc } from "firebase/firestore";
-import { logSuccessfulLogin, logFailedLogin, logFailedlLogin} from "@/logger/transporter";
+import { logSuccessfulLogin,logFailedLogin } from "@/logger/transporter";
 
 export const POST = async (req) => {
   const body = await req.json();
@@ -52,7 +52,7 @@ export const POST = async (req) => {
       return NextResponse.json({ message: "Usuario no logueado" });
     }
   } catch (error) {
-    logFailedlLogin(body.email,req.ip)
+    logFailedLogin(body.email,req.ip)
     return NextResponse.json({ message: "Error al loguear", error: error.message }, { status: 401 });
   }
 };

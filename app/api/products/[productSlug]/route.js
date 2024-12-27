@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/firebase/config';
 import { cookies } from 'next/headers';
 import { authAdmin } from '@/firebase/authManager';
-import RelatedProducts from '@/components/product/RelatedProducts';
+import { logProductAction } from '@/logger/transporter';
 
 export const GET = async (req, { params }) => {
   const { productSlug } = params;
@@ -217,9 +217,8 @@ if (file && file.size > 0) {
   }
   console.log("Imagen no subida, manteniendo la imagen anterior:", updatedData.img);
 }
-
       await updateDoc(productDocRef, updatedData);
-
+      logProductAction("Producto actualizado",decodedToken.uid,productSlug,updatedData)
       return NextResponse.json(
         { message: "Producto actualizado correctamente", payload: updatedData },
         { status: 200 }
