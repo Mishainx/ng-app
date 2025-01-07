@@ -142,7 +142,6 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
         cancelButtonColor: "#25D366",
         preConfirm: () => (window.location.href = "/"),
         didClose: () => {
-          const whatsappMessage = "Hola, estoy interesado en continuar con mi pedido.";
           const whatsappLink = `https://wa.me/+5491164316975?text=${encodeURIComponent(whatsappMessage)}`;
           window.open(whatsappLink, "_blank");
         },
