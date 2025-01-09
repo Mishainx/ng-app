@@ -1,3 +1,4 @@
+import VacationPopup from "@/components/vacaciones/VacationPopUp";
 import CategoriesList from "../../src/components/home/categoriesList/categoriesList";
 import HeroCarousel from "../../src/components/home/hero/hero";
 import FeaturedProducts from "../../src/components/product/FeaturedProducts";
@@ -47,7 +48,8 @@ export default async function Home() {
           />
         </div>
 
-        <FeaturedProducts  />
+        <FeaturedProducts/>
+        <VacationPopup/>
       </main>
     </>
   );
