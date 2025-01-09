@@ -55,7 +55,7 @@ export default function OffersProducts({ offersProducts = [] }) {
   if (offersProducts.length === 0) {
     return (
       <div className="text-center py-10">
-        <h2 className="text-xl font-semibold text-gray-900">No hay productos disponibles en oferta </h2>
+        <h2 className="text-xl font-semibold text-gray-900">Pronto encontrarás aquí las mejores ofertas! </h2>
       </div>
     );
   }
