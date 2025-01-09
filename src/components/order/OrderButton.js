@@ -129,11 +129,14 @@ export default function OrderButton({ userData, cartProducts, isOrderSent, setIs
       // Modal de éxito con opción de WhatsApp
       Swal.fire({
         icon: "success",
-        title: "Pedido Realizado",
+        title: "¡Pedido Realizado!",
         html: `
-<p style="font-size: 14px; line-height: 1.5; margin: 0;">
-  Tu pedido se ha generado exitosamente. Actualmente nos encontramos de vacaciones y los pedidos serán procesados a partir del <strong>03 de febrero de 2025</strong>. Un operador se estará comunicando contigo en cuanto sea posible.
-</p>
+          <h3 style="font-size: 18px; margin: 20px 0 10px; color: #e74c3c;">Atención: Nos encontramos de vacaciones</h3>
+          <p style="font-size: 14px; line-height: 1.5; margin: 0;">
+            Los pedidos serán procesados a partir del 
+            <span style="font-size: 16px; font-weight: bold;">03 de febrero de 2025</span>.
+            Un operador se estará comunicando contigo en cuanto sea posible.
+          </p>
         `,
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#d9534f", // Rojo
