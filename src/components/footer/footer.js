@@ -63,11 +63,13 @@ const Footer = () => {
     
       {/* RRSS */}
       <div className="p-6 flex justify-center items-center gap-3">
-        <FacebookIcon
-          width={50}
-          height={50}
-          className="cursor-pointer p-1 text-white rounded-full bg-red-500/90 hover:bg-red-800"
-        />
+      <Link href="https://maps.app.goo.gl/cCr4VrpNMuDqTppJA">
+            <MapsIcon
+                        width={50}
+                        height={50}
+            className="cursor-pointer p-2 text-white rounded-full bg-red-500/90 hover:bg-red-800 transition duration-200 ease-in-out"
+            />
+          </Link>
       <Link href="https://www.instagram.com/nippongameoficial/" target="blank">
         <InstagramIcon
             width={50}

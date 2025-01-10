@@ -4,28 +4,21 @@ import { cookies } from 'next/headers';
 export async function middleware(request) {
   const { pathname } = new URL(request.url);
 
-  // Permitir el acceso a recursos estáticos y rutas públicas
-  if (
-    pathname.startsWith('/_next/') ||
-    pathname.startsWith('/static/') ||
-    pathname.startsWith('/api/') ||
-    pathname === '/favicon.ico' ||
-    pathname === '/proximamente'
-  ) {
+  // Definir las rutas protegidas
+  const protectedRoutes = ['/admin', '/order', '/perfil'];
+
+  // Verificar si la ruta no está en las protegidas
+  if (!protectedRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
   const cookieStore = cookies();
   const cookie = cookieStore.get('ng-ct');
 
-  // Redirigir si no hay cookie
+  // Si no hay cookie, redirigir a /login
   if (!cookie) {
-    if (pathname === '/login') {
-      return NextResponse.next(); // Permitir acceso a /login si no está autenticado
-    }
-    return NextResponse.redirect(new URL('/proximamente', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-
 
   try {
     // Verifica el token en la API
@@ -38,38 +31,31 @@ export async function middleware(request) {
     });
 
     if (!response.ok) {
-      if (pathname === '/login') {
-        return NextResponse.next(); // Permitir acceso a /login si el token es inválido
-      }
-      return NextResponse.redirect(new URL('/proximamente', request.url));
+      // Redirigir a /login si el token es inválido
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
-  
-
-    // Decodifica la respuesta
     const { user } = await response.json();
+
+    // Verificar si el usuario tiene acceso a la ruta /admin
+    if (pathname === '/admin' && !user.admin) {
+      return NextResponse.redirect(new URL('/', request.url)); // Redirige al home si no es admin
+    }
 
     // Redirigir usuarios autenticados fuera de /login
     if (pathname === '/login' && user) {
       return NextResponse.redirect(new URL('/', request.url)); // Redirige al home si está autenticado
     }
 
-    // Verifica si el usuario es admin para rutas protegidas
-    if (pathname.startsWith('/admin') && !user.admin) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
-
     // Permitir acceso si cumple los criterios
     return NextResponse.next();
   } catch (error) {
     console.error('Error al verificar el token:', error);
-    return NextResponse.redirect(new URL('/proximamente', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 }
 
 // Configura las rutas que requieren autenticación
 export const config = {
-  matcher: [
-    '/((?!api|forgot-password|public|signup|proximamente|_next/static|_next/image|static|favicon.ico).*)',
-  ],
+  matcher: ['/admin', '/order', '/perfil'], // Solo aplica a estas rutas
 };
