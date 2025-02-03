@@ -49,7 +49,6 @@ export default async function Home() {
         </div>
 
         <FeaturedProducts/>
-        <VacationPopup/>
       </main>
     </>
   );
