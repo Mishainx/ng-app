@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import { PageProvider } from "@/context/PageContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { TicketsProvider } from "@/context/TicketsContext";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 // Cargar la fuente Inter
 const inter = Inter({ subsets: ["latin"] });
@@ -46,6 +47,7 @@ export default async function RootLayout({ children }) {
                   <Header />
                   <ToastContainer />
                   {children}
+                  <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_MEASUREMENT_ID} />
                   <Footer />
                   <TopButton />
                   <WhatsappButton />
