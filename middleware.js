@@ -5,59 +5,57 @@ export async function middleware(request) {
   const { pathname } = new URL(request.url);
   console.log("Middleware - Ruta solicitada:", pathname);
 
-
-  // Definir las rutas protegidas
   const protectedRoutes = ['/admin', '/order', '/perfil'];
-
-  // Verificar si la ruta no está en las protegidas
   if (!protectedRoutes.includes(pathname)) {
+    console.log("Middleware - Ruta no protegida, permitiendo acceso.");
     return NextResponse.next();
   }
 
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const cookie = cookieStore.get('ng-ct');
 
-  // Si no hay cookie, redirigir a /login
+  console.log("Middleware - Cookie encontrada:", cookie ? "Sí" : "No");
+
   if (!cookie) {
+    console.log("Middleware - No hay cookie, redirigiendo a /login");
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   try {
-    // Verifica el token en la API
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: cookie.value }),
     });
 
+    console.log("Middleware - Estado de respuesta de la API:", response.status);
+
     if (!response.ok) {
-      // Redirigir a /login si el token es inválido
+      console.log("Middleware - Token inválido, redirigiendo a /login");
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
     const { user } = await response.json();
+    console.log("Middleware - Usuario autenticado:", user ? "Sí" : "No");
 
-    // Verificar si el usuario tiene acceso a la ruta /admin
     if (pathname === '/admin' && !user.admin) {
-      return NextResponse.redirect(new URL('/', request.url)); // Redirige al home si no es admin
+      console.log("Middleware - Usuario no es admin, redirigiendo a /");
+      return NextResponse.redirect(new URL('/', request.url));
     }
 
-    // Redirigir usuarios autenticados fuera de /login
     if (pathname === '/login' && user) {
-      return NextResponse.redirect(new URL('/', request.url)); // Redirige al home si está autenticado
+      console.log("Middleware - Usuario ya autenticado, redirigiendo a /");
+      return NextResponse.redirect(new URL('/', request.url));
     }
 
-    // Permitir acceso si cumple los criterios
+    console.log("Middleware - Permitiendo acceso.");
     return NextResponse.next();
   } catch (error) {
-    console.error('Error al verificar el token:', error);
+    console.error("Middleware - Error verificando el token:", error);
     return NextResponse.redirect(new URL('/login', request.url));
   }
 }
 
-// Configura las rutas que requieren autenticación
 export const config = {
-  matcher: ['/admin', '/order', '/perfil'], // Solo aplica a estas rutas
+  matcher: ['/admin', '/order', '/perfil'],
 };
