@@ -18,6 +18,7 @@ export async function POST(req) {
     try {
       decodedToken = await authAdmin.verifyIdToken(token);
     } catch (error) {
+      console.log(error);
       // El token es inválido, eliminar la cookie
       const response = NextResponse.json(
         { message: 'Invalid token' },
