@@ -7,7 +7,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 export const PATCH = async (request, { params }) => {
     try {
         // Obtener las cookies y el token
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const cookie = cookieStore.get('ng-ct');
 
         // Verificar si la cookie existe
@@ -48,7 +48,7 @@ export const PATCH = async (request, { params }) => {
         }
 
         // Si la autenticación y autorización son válidas, continúa con la lógica del endpoint
-        const { ticketId } = params;
+        const { ticketId } = await params;
 
         // Verificar que el ID del ticket se proporcione
         if (!ticketId) {

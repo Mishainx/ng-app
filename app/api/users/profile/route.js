@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 
 export const GET = async () => {
         // Obtener las cookies y el token
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const cookie = cookieStore.get('ng-ct');
 
         if (!cookie || !cookie.value) {

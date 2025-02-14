@@ -9,7 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const isValidSlug = (slug) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
 
 export const POST = async (req, { params }) => {
-  const { categorySlug } = params;
+  const { categorySlug } = await params;
 
   // Verificar si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
@@ -20,7 +20,7 @@ export const POST = async (req, { params }) => {
   }
 
   // Obtener las cookies y el token
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookie = cookieStore.get('ng-ct');
 
   if (!cookie || !cookie.value) {

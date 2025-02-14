@@ -4,7 +4,7 @@ import { db } from '@/firebase/config';
 
 // `GET` para obtener productos por categoría
 export const GET = async (req, { params }) => {
-  const { categorySlug } = params;
+  const { categorySlug } = await  params;
 
   try {
     // Consulta Firestore para filtrar productos por categoría

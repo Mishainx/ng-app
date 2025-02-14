@@ -4,11 +4,11 @@ import { NextResponse } from "next/server";
 
 // Obtener información de un usuario y verificar sus claims
 export const GET = async (request, { params }) => {
-    const { userId } = params; // Obtener el userId de los parámetros de la URL
+    const { userId } = await params; // Obtener el userId de los parámetros de la URL
   
     try {
       // Obtener las cookies y el token
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const cookie = cookieStore.get("ng-ct");
   
       if (!cookie || !cookie.value) {
@@ -63,11 +63,11 @@ export const GET = async (request, { params }) => {
 
 // Asignar el claim de admin a un usuario
 export const PUT = async (request, { params }) => {
-  const { userId } = params; // Obtener el userId de los parámetros de la URL
+  const { userId } = await params; // Obtener el userId de los parámetros de la URL
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get("ng-ct");
 
     if (!cookie || !cookie.value) {
@@ -116,11 +116,11 @@ export const PUT = async (request, { params }) => {
 
 // Eliminar el claim de admin de un usuario
 export const DELETE = async (request, { params }) => {
-  const { userId } = params;
+  const { userId } = await params;
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get("ng-ct");
 
     if (!cookie || !cookie.value) {

@@ -5,11 +5,11 @@ import { cookies } from "next/headers";
 import { authAdmin } from "@/firebase/authManager"; // Verificación del token
 
 export const GET = async (request, { params }) => {
-  const { userEmail } = params; // Ahora buscamos por `email`
+  const { userEmail } = await params; // Ahora buscamos por `email`
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get("ng-ct");
 
     if (!cookie || !cookie.value) {

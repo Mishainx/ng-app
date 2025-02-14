@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 export const POST = async (req) => {
   try {
     // Elimina la cookie de autenticación
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set('ng-ct', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',

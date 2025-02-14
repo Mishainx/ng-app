@@ -17,7 +17,7 @@ export const POST = async (req) => {
       const token = await user.getIdToken();
 
       // Set cookie securely
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.set('ng-ct', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',

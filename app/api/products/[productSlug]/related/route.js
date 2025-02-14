@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 import { authAdmin } from '@/firebase/authManager';
 
 export const GET = async (req, { params }) => {
-  const { productSlug } = params;
+  const { productSlug } = await params;
 
   try {
     // Crear una consulta para buscar el documento con el SKU especificado
@@ -38,10 +38,10 @@ export const GET = async (req, { params }) => {
 };
 
 export const DELETE = async (req, { params }) => {
-  const { productSlug } = params;
+  const { productSlug } = await params;
   try {
 
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const cookie = cookieStore.get("ng-ct");
     
         if (!cookie || !cookie.value) {
@@ -106,10 +106,10 @@ export const DELETE = async (req, { params }) => {
 };
 
 export const PUT = async (req, { params }) => {
-  const { productSlug } = params;
+  const { productSlug } = await params;
 
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
         const cookie = cookieStore.get("ng-ct");
     
         if (!cookie || !cookie.value) {

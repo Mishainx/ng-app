@@ -3,7 +3,7 @@ import { db } from '@/firebase/config';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export const GET = async (req, { params }) => {
-  const { slug } = params;
+  const { slug } = await params;
 
   try {
     // Realiza una consulta en la colección 'products' para encontrar el documento con el campo 'slug' correspondiente

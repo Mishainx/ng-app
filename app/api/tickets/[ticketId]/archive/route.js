@@ -7,11 +7,11 @@ import { cookies } from "next/headers";
 import { authAdmin } from "@/firebase/authManager"; // Verificación de token para autorización
 
 export const PATCH = async (request, { params }) => {
-  const { ticketId } = params;
+  const { ticketId } = await params;
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get('ng-ct');
 
     if (!cookie || !cookie.value) {

@@ -12,7 +12,7 @@ const isValidSlug = (slug) => /^[a-zA-Z0-9\-]+$/.test(slug);  // slug puede cont
 
 // Endpoint GET para obtener una subcategoría específica por slug
 export const GET = async (req, { params }) => {
-  const { id, slug } = params;
+  const { id, slug } = await params;
 
   if (!isValidFirestoreId(id) || !isValidSlug(slug)) {
     return NextResponse.json({ message: 'ID o slug inválido proporcionado' }, { status: 400 });
@@ -48,7 +48,7 @@ export const GET = async (req, { params }) => {
 // Endpoint POST para crear una subcategoría dentro de `subcategory2`
 // Endpoint POST para crear una subcategoría dentro de `subcategory2`
 export const POST = async (req, { params }) => {
-  const { id, slug } = params;
+  const { id, slug } = await params;
 
   // Validar ID de Firestore y slug
   if (!isValidFirestoreId(id) || !isValidSlug(slug)) {
@@ -56,7 +56,7 @@ export const POST = async (req, { params }) => {
   }
 
   // Obtener las cookies y el token
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookie = cookieStore.get('ng-ct');
 
   if (!cookie || !cookie.value) {
@@ -159,7 +159,7 @@ export const DELETE = async (req, { params }) => {
   }
 
   // Obtener las cookies y el token
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookie = cookieStore.get('ng-ct');
 
   if (!cookie || !cookie.value) {
@@ -235,7 +235,7 @@ export const PUT = async (req, { params }) => {
   }
 
   // Obtener las cookies y el token
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookie = cookieStore.get('ng-ct');
 
   if (!cookie || !cookie.value) {

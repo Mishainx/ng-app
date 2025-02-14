@@ -12,7 +12,7 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookie = cookieStore.get('ng-ct');
 
   // Si no hay cookie, redirigir a /login

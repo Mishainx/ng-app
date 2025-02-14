@@ -34,7 +34,7 @@ export const POST = async (request, { params }) => {
   try {
 
      // Obtener las cookies y el token
-          const cookieStore = cookies();
+          const cookieStore = await cookies();
           const cookie = cookieStore.get("ng-ct");
       
           if (!cookie || !cookie.value) {
@@ -57,7 +57,7 @@ export const POST = async (request, { params }) => {
             );
           }
 
-    const { userId } = params;
+    const { userId } = await params;
     const { sku, quantity} = await request.json();
 
     // Validar formato del SKU (ejemplo: PRO-XXXXX donde XXXXX son números)
@@ -132,7 +132,7 @@ export const PATCH = async (request, { params }) => {
     try {
 
        // Obtener las cookies y el token
-            const cookieStore = cookies();
+            const cookieStore = await cookies();
             const cookie = cookieStore.get("ng-ct");
         
             if (!cookie || !cookie.value) {
@@ -155,7 +155,7 @@ export const PATCH = async (request, { params }) => {
               );
             }
 
-      const { userId } = params;
+      const { userId } = await params;
       const { sku, quantity } = await request.json();
   
       // Validar SKU del producto
@@ -214,7 +214,7 @@ export const DELETE = async (request, { params }) => {
     try {
 
        // Obtener las cookies y el token
-            const cookieStore = cookies();
+            const cookieStore = await cookies();
             const cookie = cookieStore.get("ng-ct");
         
             if (!cookie || !cookie.value) {
@@ -236,7 +236,7 @@ export const DELETE = async (request, { params }) => {
                 { status: 401 }
               );
             }
-      const { userId } = params;
+      const { userId } = await params;
       const { sku } = await request.json();
   
       // Validar formato del SKU (ejemplo: PRO-XXXXX donde XXXXX son números)

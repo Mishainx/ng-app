@@ -9,7 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const isValidSlug = (categorySlug) => typeof categorySlug === 'string' && categorySlug.length > 0;
 
 export const GET = async (req, { params }) => {
-  const { categorySlug } = params;  // Obtén el slug del objeto params
+  const { categorySlug } = await params;  // Obtén el slug del objeto params
   // Verifica si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
     return NextResponse.json(
@@ -48,7 +48,7 @@ export const GET = async (req, { params }) => {
 
 // `DELETE` para eliminar una categoría recibiendo el slug en los params
 export const DELETE = async (req, { params }) => {
-  const { categorySlug } = params;
+  const { categorySlug } = await params;
 
   // Verificar si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
@@ -60,7 +60,7 @@ export const DELETE = async (req, { params }) => {
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get('ng-ct');
 
     if (!cookie || !cookie.value) {
@@ -123,7 +123,7 @@ export const DELETE = async (req, { params }) => {
 
 
 export const PUT = async (req, { params }) => {
-  const { categorySlug } = params; // Obtén el slug del objeto params
+  const { categorySlug } = await params; // Obtén el slug del objeto params
   // Verifica si el slug es válido antes de continuar
   if (!isValidSlug(categorySlug)) {
     return NextResponse.json(
@@ -134,7 +134,7 @@ export const PUT = async (req, { params }) => {
 
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get('ng-ct');
 
     if (!cookie || !cookie.value) {

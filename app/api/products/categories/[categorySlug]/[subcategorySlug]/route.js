@@ -4,7 +4,7 @@ import { db } from '@/firebase/config';
 
 // `GET` para obtener productos por categoría y subcategoría
 export const GET = async (req, { params }) => {
-  const { categorySlug, subcategorySlug } = params;
+  const { categorySlug, subcategorySlug } = await params;
 
   try {
     // Asegúrate de que categorySlug y subcategorySlug no estén vacíos
