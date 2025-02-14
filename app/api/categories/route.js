@@ -31,7 +31,7 @@ export const GET = async () => {
 export const POST = async (req) => {
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get('ng-ct');
 
     if (!cookie || !cookie.value) {

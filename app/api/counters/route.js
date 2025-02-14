@@ -9,7 +9,7 @@ import { initializeCounter, getCounterValue } from '@/utils/countersManager';
 export const GET = async (req) => {
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get("ng-ct");
     
     if (!cookie || !cookie.value) {
@@ -60,7 +60,7 @@ export const GET = async (req) => {
 export const POST = async (req) => {
   try {
     // Obtener las cookies y el token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get("ng-ct");
     
     if (!cookie || !cookie.value) {

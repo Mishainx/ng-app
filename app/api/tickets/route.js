@@ -143,7 +143,7 @@ export const GET = async (request) => {
 
 // Actualizar un Ticket (PUT)
 export const PUT = async (request, { params }) => {
-    const { ticketId } = params;
+    const { ticketId } = await params;
 
     try {
         const updates = await request.json();
@@ -167,11 +167,11 @@ export const PUT = async (request, { params }) => {
 
 // Eliminar un Ticket por ID (DELETE)
 export const DELETE = async (request, { params }) => {
-    const { ticketId } = params;
+    const { ticketId } = await params;
 
     try {
         // Verificar autorización mediante token
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const cookie = cookieStore.get('ng-ct');
 
         if (!cookie || !cookie.value) {

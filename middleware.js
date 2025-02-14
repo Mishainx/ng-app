@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 
 export async function middleware(request) {
   const { pathname } = new URL(request.url);
+  console.log("Middleware - Ruta solicitada:", pathname);
+
 
   // Definir las rutas protegidas
   const protectedRoutes = ['/admin', '/order', '/perfil'];
