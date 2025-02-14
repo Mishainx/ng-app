@@ -1,14 +1,13 @@
+import React, { useState } from "react";
 import TrashIcon from "@/icons/TrashIcon";
 import EditIcon from "@/icons/EditIcon";
 import { useClients } from "@/context/ClientsContext";
-import { useState } from "react";
 import WhatsappIcon from "@/icons/WhatsappIcon";
-import { formatWhatsAppNumber } from "@/utils/stringsManager";
-import { capitalizeFirstLetter } from "@/utils/stringsManager";
+import { formatWhatsAppNumber, capitalizeFirstLetter } from "@/utils/stringsManager";
 import MailIcon from "@/icons/MailIcon";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import * as XLSX from "xlsx";  // Importamos la librería para generar el archivo Excel
+import * as XLSX from "xlsx";
 
 const ClientTable = ({ handleViewChange, searchTerm }) => {
   const { clients, deleteClient } = useClients();
@@ -16,7 +15,7 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedClient, setExpandedClient] = useState(null);
 
-  const filteredClients = searchTerm.length >= 3 
+  const filteredClients = searchTerm.length >= 3
     ? clients.filter(client =>
         Object.values(client).some(value =>
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -30,8 +29,8 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
     currentPage * itemsPerPage
   );
 
-  const toggleExpandClient = (cuit) => {
-    setExpandedClient(prev => (prev === cuit ? null : cuit));
+  const toggleExpandClient = (id) => {
+    setExpandedClient(prev => (prev === id ? null : id));
   };
 
   const handleDeleteClient = async (clientId) => {
@@ -47,32 +46,28 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
   };
 
   const handleExportToExcel = () => {
-    // Eliminar los campos no deseados y reordenar los campos en el formato especificado
-    const cleanedClients = filteredClients.map((client) => {
-      return {
-        id: client.id,
-        email: client.email,
-        businessName: client.businessName,
-        name: client.name,
-        surname: client.surname,
-        whatsapp: formatWhatsAppNumber(client.whatsapp),
-        country: client.country,
-        province: client.province,
-        city: client.city,
-        address: client.address
-      };
-    });
-  
-    // Crear una hoja de Excel con los datos ordenados
+    const cleanedClients = filteredClients.map(client => ({
+      id: client.id,
+      email: client.email,
+      businessName: client.businessName,
+      name: client.name,
+      surname: client.surname,
+      whatsapp: formatWhatsAppNumber(client.whatsapp),
+      country: client.country,
+      province: client.province,
+      city: client.city,
+      address: client.address
+    }));
+
     const ws = XLSX.utils.json_to_sheet(cleanedClients);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Clientes");
     XLSX.writeFile(wb, "clientes.xlsx");
   };
+
   return (
     <div className="overflow-x-auto">
-            {/* Exportar a Excel */}
-            <div className="flex justify-end m-4 text-xs">
+      <div className="flex justify-end m-4 text-xs">
         <button
           onClick={handleExportToExcel}
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
@@ -80,7 +75,6 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
           Exportar a Excel
         </button>
       </div>
-      
       <table className="min-w-full bg-white border border-gray-300 text-sm rounded-md shadow-lg">
         <thead>
           <tr className="bg-gray-100 border-b border-gray-300">
@@ -92,13 +86,12 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
         </thead>
         <tbody>
           {paginatedClients.length > 0 ? (
-            paginatedClients.map((client) => (
-              <>
+            paginatedClients.map(client => (
+              <React.Fragment key={client.id}>
                 <tr
-                  key={client.cuit}
-                  onClick={() => toggleExpandClient(client.cuit)}
+                  onClick={() => toggleExpandClient(client.id)}
                   className={`border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer ${
-                    expandedClient === client.cuit ? "bg-gray-100" : ""
+                    expandedClient === client.id ? "bg-gray-100" : ""
                   }`}
                 >
                   <td className="py-1 px-3">{capitalizeFirstLetter(client.name)}</td>
@@ -109,39 +102,37 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
                       href={`https://wa.me/${formatWhatsAppNumber(client.whatsapp)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={e => e.stopPropagation()}
                       className="text-green-500 hover:text-green-700 transition"
                     >
                       <WhatsappIcon className="w-4 h-4" />
                     </a>
                     <a
                       href={`mailto:${client.email}`}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={e => e.stopPropagation()}
                       className="text-blue-500 hover:text-blue-700 transition"
                     >
                       <MailIcon className="w-4 h-4" />
                     </a>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleViewChange("edit", client); }}
+                      onClick={e => { e.stopPropagation(); handleViewChange("edit", client); }}
                       className="text-yellow-500 hover:text-yellow-700 transition"
                     >
                       <EditIcon className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleDeleteClient(client.id); }}
+                      onClick={e => { e.stopPropagation(); handleDeleteClient(client.id); }}
                       className="text-red-500 hover:text-red-700 transition"
                     >
                       <TrashIcon className="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
-                {expandedClient === client.cuit && (
-                  <tr>
+                {expandedClient === client.id && (
+                  <tr key={`expanded-${client.id}`}>
                     <td colSpan="4" className="bg-gray-50 p-3 text-gray-700">
                       <div className="space-y-2">
-                        <p>
-                          <span className="font-semibold">Dirección:</span> {client.address}, {client.city}, {client.province}, {client.country}
-                        </p>
+                        <p><span className="font-semibold">Dirección:</span> {client.address}, {client.city}, {client.province}, {client.country}</p>
                         <p><span className="font-semibold">CUIT:</span> {client.cuit}</p>
                         <p><span className="font-semibold">Razón Social:</span> {client.businessName}</p>
                         <p><span className="font-semibold">WhatsApp:</span> {formatWhatsAppNumber(client.whatsapp)}</p>
@@ -149,7 +140,7 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))
           ) : (
             <tr>
@@ -158,31 +149,6 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
           )}
         </tbody>
       </table>
-      {/* Paginación */}
-      {filteredClients.length > itemsPerPage && (
-        <div className="mt-4 flex justify-between items-center">
-          <p className="text-sm text-gray-700">
-            Página {currentPage} de {totalPages || 1}
-          </p>
-          <div className="flex space-x-2 text-xs">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className="bg-gray-200 text-gray-700 rounded-md px-4 py-2 hover:bg-gray-300 transition"
-              disabled={currentPage === 1}
-            >
-              Anterior
-            </button>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              className="bg-gray-200 text-gray-700 rounded-md px-4 py-2 hover:bg-gray-300 transition"
-              disabled={currentPage === totalPages}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };
