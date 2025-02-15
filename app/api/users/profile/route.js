@@ -9,8 +9,6 @@ export const GET = async () => {
         const cookieStore = await cookies();
         const cookie = cookieStore.get('ng-ct');
 
-        console.log("lalalal", cookie)
-
         if (!cookie || !cookie.value) {
             return NextResponse.json(
                 { message: 'Unauthorized: No token provided' },
