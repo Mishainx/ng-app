@@ -8,6 +8,8 @@ if (!admin.apps.length) {
 }
 
 // Verificar si la inicialización fue exitosa
+console.log("Firebase Admin Apps:", admin.apps.length);
 console.log("Firebase Admin SDK inicializado correctamente");
+
 
 export const authAdmin = admin.auth();
