@@ -16,7 +16,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-
+    console.log(authAdmin)
     // Verificar el token con Firebase Admin SDK
     let decodedToken;
     try {
