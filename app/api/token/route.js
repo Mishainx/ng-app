@@ -3,14 +3,11 @@ import { authAdmin } from '@/firebase/authManager';
 
 export async function POST(req) {
   try {
-    console.log('Request received');
 
     // Obtener el token del cuerpo de la solicitud
     const { token } = await req.json();
-    console.log('Token received:', token);
 
     if (!token) {
-      console.log('No token provided');
       return NextResponse.json(
         { message: 'Token not provided' },
         { status: 400 }
@@ -20,11 +17,8 @@ export async function POST(req) {
     // Verificar el token con Firebase Admin SDK
     let decodedToken;
     try {
-      console.log('Verifying token with Firebase Admin SDK...');
       decodedToken = await authAdmin.verifyIdToken(token);
-      console.log('Token verified:', decodedToken);
     } catch (error) {
-      console.log(error)
       console.error('Error verifying token:', error.message);
 
       // El token es inválido, eliminar la cookie
@@ -43,7 +37,6 @@ export async function POST(req) {
     }
 
     // Devolver la información del usuario decodificado
-    console.log('Token is valid, returning response...');
     return NextResponse.json(
       { message: 'Token is valid', user: decodedToken },
       { status: 200 }
