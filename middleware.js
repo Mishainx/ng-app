@@ -4,6 +4,18 @@ import { cookies } from 'next/headers';
 export async function middleware(request) {
   const { pathname } = new URL(request.url);
 
+  if (pathname.startsWith('/qr')) {
+    const enteredCode = request.cookies.get('qrAccessCode')?.value;
+
+    // Si el código ya está en las cookies, permitimos el acceso
+    if (enteredCode) {
+      return NextResponse.next();
+    }
+
+    // Si no hay código en las cookies, permitimos que la página /qr lo gestione
+    return NextResponse.next();
+  }
+
   const protectedRoutes = ['/admin', '/order', '/perfil'];
   if (!protectedRoutes.includes(pathname)) {
     return NextResponse.next();
@@ -45,5 +57,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/admin', '/order', '/perfil'],
+  matcher: ['/admin', '/order', '/perfil', '/qr'],
 };

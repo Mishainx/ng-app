@@ -2,8 +2,14 @@ import ProductDashboard from "./ProductDashboard/ProductDashboard";
 import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
 import TicketDashboard from "./ticketsDashboard/TicketsDashboard";
 import CategoriesDashboard from "./CategoriesDashboard/CategoriesDashboard";
+import CarrouselDashbaord from "./CarrouselDashboard/CarrouselDashboard";
+import CardsDashboard from "./CardsDashboard/CardsDashboard";
+import QrDashboard from "./QrDashboard/QrDashboard";
+import QrDashboardDashboard from "./QrDashboard/QrDashboard";
 
 export default function ContentAdmin({ selectedContent,resetView }) {
+    console.log(selectedContent)
+    
     const renderContent = () => {
         switch (selectedContent) {
             case 'products':
@@ -14,8 +20,15 @@ export default function ContentAdmin({ selectedContent,resetView }) {
                 return <TicketDashboard/>;
 
             case 'categories':
-                return <CategoriesDashboard resetView={resetView}/>
-            default:
+                return <CategoriesDashboard resetView={resetView}/>;
+            case 'carrousel':
+                return <CarrouselDashbaord resetView={resetView}/>
+            
+                case 'cards':
+                    return <CardsDashboard resetView={resetView}/>
+                    case 'qr':
+                        return <QrDashboardDashboard resetView={resetView}/>     
+                default:
                 return <p className="text-base text-muted-foreground">Welcome to the dashboard.</p>;
         }
     };

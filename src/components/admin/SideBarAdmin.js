@@ -149,6 +149,21 @@ const buttons = [
     icon: <SettingsIcon className="h-5 w-5 text-gray-500" />,
   },
   {
+    id: 'carrousel',
+    text: 'Carrousel',
+    icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
+  },
+  {
+    id: 'cards',
+    text: 'Cards',
+    icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
+  },
+  {
+    id: 'qr',
+    text: 'Qr',
+    icon: <ShoppingCartIcon className="h-5 w-5 text-gray-500" />,
+  },
+  {
     id: 'logout',
     text: 'Logout',
     icon: <svg

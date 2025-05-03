@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CategoryRow from './CategoryRow';
 
-const CategoryTable = ({ categories, updateCategory, deleteCategory, onViewSubcategories  }) => {
+const CategoryTable = ({ categories, updateCategory, deleteCategory, onViewSubcategories }) => {
   // Estado para la página actual
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -21,13 +21,13 @@ const CategoryTable = ({ categories, updateCategory, deleteCategory, onViewSubca
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg overflow-hidden">
-      <table className="w-full border-collapse">
+      <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="bg-gray-100">
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Nombre</th>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 hidden sm:table-cell">Imagen</th>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 hidden sm:table-cell">Icono</th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Visible</th>
+            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600">Visible</th>
             <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600">Acciones</th>
           </tr>
         </thead>
@@ -39,7 +39,6 @@ const CategoryTable = ({ categories, updateCategory, deleteCategory, onViewSubca
               updateCategory={updateCategory}
               deleteCategory={deleteCategory}
               onViewSubcategories={onViewSubcategories} // Pasar la función
-
             />
           ))}
         </tbody>
@@ -74,5 +73,3 @@ const CategoryTable = ({ categories, updateCategory, deleteCategory, onViewSubca
 };
 
 export default CategoryTable;
-
-

@@ -35,7 +35,6 @@ export default function ActionButtons({ sku, stock }) {
               value={quantity}
               onChange={handleQuantityChange}
               min="1"
-              max={stock}
               className="w-16 px-1 py-0.5 border border-gray-300 rounded-md text-center text-gray-700 focus:outline-none focus:border-red-500 text-xs"
             />
             <span className="text-xs text-gray-500">de {stock} disponibles</span>

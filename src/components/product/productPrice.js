@@ -4,22 +4,38 @@ import { useAuth } from "@/context/AuthContext";
 import { formatPriceToUSD } from "@/utils/stringsManager";
 import Link from "next/link";
 import SpinnerIcon from "@/icons/SpinnerIcon";
+import { useEffect, useState } from "react";
 
 export default function ProductPrice({ price, discount }) {
-  const { userData, loading} = useAuth();
+  const { userData, loading: authLoading } = useAuth();
+  const [hasQrAccess, setHasQrAccess] = useState(false);
+  const [loadingCookie, setLoadingCookie] = useState(true);
 
-  // Mostrar un mensaje de carga mientras el estado de autenticación se resuelve
-  if (loading) {
-    
-    return(
-    <div className="flex items-center justify-center">
-          <SpinnerIcon className="text-center w-3 h-3"/>
-    </div>)
+  useEffect(() => {
+    const checkQrCookie = () => {
+      setLoadingCookie(true);
+      const hasCookie = document.cookie.includes('qrAccessCode=');
+      setHasQrAccess(hasCookie);
+      setLoadingCookie(false);
+    };
+
+    checkQrCookie();
+  }, []);
+
+  // Mostrar un mensaje de carga mientras el estado de autenticación o la cookie se resuelven
+  if (authLoading || loadingCookie) {
+    return (
+      <div className="flex items-center justify-center">
+        <SpinnerIcon className="text-center w-3 h-3" />
+      </div>
+    );
   }
+
+  const canViewPrice = userData || hasQrAccess;
 
   return (
     <div>
-      {userData ? ( // Si el usuario está autenticado, mostrar los precios con o sin descuento
+      {canViewPrice ? ( // Si el usuario está autenticado O tiene la cookie, mostrar los precios
         <>
           {discount > 0 ? (
             <>

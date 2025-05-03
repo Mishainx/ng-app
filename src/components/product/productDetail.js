@@ -15,6 +15,23 @@ const fallbackImage = "/images/default-product.png";
 export default function ProductDetail({ product }) {
   const { userData, loading } = useAuth();
 
+  const [hasQrAccess, setHasQrAccess] = useState(false);
+  const [loadingCookie, setLoadingCookie] = useState(true);
+
+  useEffect(() => {
+    const checkQrCookie = () => {
+      setLoadingCookie(true);
+      const hasCookie = document.cookie.includes('qrAccessCode=');
+      setHasQrAccess(hasCookie);
+      setLoadingCookie(false);
+    };
+
+    checkQrCookie();
+  }, []);
+
+  const canViewPrice = userData || hasQrAccess;
+
+
   const productDetails = [
     { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
     { label: "Marca", value: capitalizeFirstLetter(product.brand) },
@@ -72,8 +89,7 @@ export default function ProductDetail({ product }) {
             )}
           </h1>
 
-          {/* Precio */}
-          {userData ? (
+          {canViewPrice ? (
             <div className="mb-3 text-center md:text-left">
               {product.discount > 0 ? (
                 <>

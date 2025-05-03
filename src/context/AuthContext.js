@@ -36,6 +36,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+    // Function to handle QR code login (anonymous login via backend)
+    const qrLogin = async (qrCode) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/qr`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ qrCode }),
+        });
+  
+        if (!response.ok) {
+          const errorMessage = await response.json(); // Espera un JSON con el error
+          throw new Error(errorMessage?.error || "Error al iniciar sesión con código QR");
+        }
+  
+        const data = await response.json();
+        const customToken = data.user;
+        setUserData(customToken); // Almacena los datos del usuario
+
+        setLoading(false);
+        return data; // Opcional: puedes retornar información adicional si es necesario
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+        throw error;
+      }
+    };
+
   // Function to handle password reset
   const resetPassword = async (email) => {
     try {
@@ -90,7 +121,7 @@ export const AuthProvider = ({ children }) => {
   }, [userData]); // Monitorea los cambios en userData
 
   return (
-    <AuthContext.Provider value={{ userData, loading, error, login, resetPassword }}>
+    <AuthContext.Provider value={{ userData, loading, error, login, resetPassword,qrLogin }}>
       {children}
     </AuthContext.Provider>
   );
