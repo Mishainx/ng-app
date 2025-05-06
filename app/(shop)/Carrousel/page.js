@@ -1,13 +1,13 @@
 import HeroCarousel from "@/components/Carrousel/Carrousel";
 
-export default async function Carrousel() {
+export default async function CarrouselPage() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides`, { cache: 'no-cache' });
+  const data = await res.json();
+  const visibleSlides = data.payload?.filter((s) => s.visible).sort((a, b) => a.order - b.order) || [];
 
   return (
-          <main>
-            <div>hola</div>
-            <HeroCarousel/>
-        </main>
-
-
+    <main>
+      <HeroCarousel slides={visibleSlides} />
+    </main>
   );
 }

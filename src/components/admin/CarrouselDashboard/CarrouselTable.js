@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import CarrouselRow from './CarrouselRow';
 import SlideFormModal from './SlideFormModal';
+import { toast } from 'react-toastify';
 
-const CarrouselTable = ({ slides = [], updateSlide, deleteSlide }) => {
+const CarrouselTable = ({ slides = [] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSlide, setSelectedSlide] = useState(null);
@@ -28,25 +29,60 @@ const CarrouselTable = ({ slides = [], updateSlide, deleteSlide }) => {
     setLocalSlides((prev) => prev.filter((slide) => slide.id !== deletedId));
   };
 
+  const handleUpdateSlide = async ({ id, data }) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides/${id}`, {
+        method: 'PUT',
+        body: data,
+      });
+
+      if (!response.ok) throw new Error('Error al actualizar el slide');
+      const result = await response.json();
+
+      if (result?.slide) {
+        setLocalSlides((prev) =>
+          prev.map((slide) =>
+            slide.id === result.slide.id ? result.slide : slide
+          )
+        );
+        toast.success('Slide actualizado con éxito');
+        closeModal(); // ✅ cerrar modal después de actualizar
+      } else {
+        toast.error('No se recibió el slide actualizado desde el servidor');
+      }
+      
+    } catch (error) {
+      console.error('Error al actualizar el slide:', error);
+      toast.error('Error al actualizar el slide');
+    }
+  };
+
   const createSlide = async (newData) => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides`, {
-                method: 'POST',
-                body: newData, // ¡Aquí enviamos el FormData directamente!
-              });
-    
-          if (!response.ok) throw new Error('Error al crear el slide');
-          const result = await response.json();
-    
-          if (result?.slide) { // ✅ Accedemos a la nueva slide desde result.slide
-            setLocalSlides((prev) => [...prev, result.slide]);
-          } else {
-            console.warn('La respuesta del servidor no incluyó la nueva slide:', result);
-          }
-        } catch (error) {
-          console.error('Error al crear el slide:', error);
-        }
-      };
+    const slideData = newData.data
+    console.log(slideData)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides`, {
+        method: 'POST',
+        body: slideData,
+      });
+
+      if (!response.ok) throw new Error('Error al crear el slide');
+      const result = await response.json();
+
+      if (result?.slide) {
+        setLocalSlides((prev) => [...prev, result.slide]);
+        toast.success('Slide creado con éxito');
+        closeModal(); // ✅ cerrar modal después de crear
+      } else {
+        console.warn('La respuesta del servidor no incluyó la nueva slide:', result);
+        toast.error('La respuesta del servidor no incluyó la nueva slide');
+      }
+    } catch (error) {
+      console.error('Error al crear el slide:', error);
+      toast.error('Error al crear el slide');
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-xl overflow-x-auto flex flex-col gap-5">
       <h2 className="text-lg font-semibold">Slides del Carrusel</h2>
@@ -79,8 +115,9 @@ const CarrouselTable = ({ slides = [], updateSlide, deleteSlide }) => {
               <CarrouselRow
                 key={slide.id}
                 slide={slide}
-                onEdit={() => openModal(slide)}
+                openEditModal={openModal}
                 onDelete={handleDeleteSlide}
+                updateSlide={handleUpdateSlide}
               />
             ))}
           </tbody>
@@ -92,14 +129,14 @@ const CarrouselTable = ({ slides = [], updateSlide, deleteSlide }) => {
           <span>Página {currentPage} de {totalPages}</span>
           <div className="flex gap-2">
             <button
-              onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
               className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
               Anterior
             </button>
             <button
-              onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
@@ -115,11 +152,10 @@ const CarrouselTable = ({ slides = [], updateSlide, deleteSlide }) => {
         slide={selectedSlide}
         onSave={(data) => {
           if (selectedSlide) {
-            updateSlide(data);
+            handleUpdateSlide(data);
           } else {
             createSlide(data);
           }
-          closeModal();
         }}
       />
     </div>

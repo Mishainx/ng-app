@@ -69,7 +69,6 @@ export const POST = async (req) => {
         { status: 400 }
       );
     }
-
     const formData = await req.formData();
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
@@ -79,7 +78,8 @@ export const POST = async (req) => {
     const ctaText = formData.get('ctaText');
     const ctaColor = formData.get('ctaColor');
     const overlay = formData.get('overlay');
-    const image = formData.get('imagen');
+    const image = formData.get('image');
+    const position = formData.get('position') || 'center'; // por defecto centro
 
     // ✅ Validaciones
     if (!title || title.length < 3 || title.length > 70) {
@@ -88,6 +88,7 @@ export const POST = async (req) => {
         { status: 400 }
       );
     }
+
 
     if (!subtitle || subtitle.length < 3) {
       return NextResponse.json(
@@ -114,6 +115,8 @@ export const POST = async (req) => {
         { status: 400 }
       );
     }
+
+
     // 🖼️ Subir imagen y verificar que tenga URL
     let imgUrl = null;
     if (image && image.name) {
@@ -123,12 +126,18 @@ export const POST = async (req) => {
     }
 
     if (!imgUrl) {
-      console.log("error")
       return NextResponse.json(
         { message: 'La imagen es obligatoria' },
         { status: 400 }
       );
     }
+
+if (!['left', 'center', 'right', 'none'].includes(position)) {
+  return NextResponse.json(
+    { message: 'La posición del contenido no es válida' },
+    { status: 400 }
+  );
+}
 
     const slideData = {
       title,
@@ -140,6 +149,7 @@ export const POST = async (req) => {
       ctaColor,
       imgUrl,
       overlay,
+      position, 
     };
 
     const newSlide = await addDoc(slidesRef, slideData);

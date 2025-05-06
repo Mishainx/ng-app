@@ -1,7 +1,5 @@
-// app/api/slides/[id]/route.js
-
 import { NextResponse } from 'next/server';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';  // Cambié updateDoc por setDoc
 import { authAdmin } from '@/firebase/authManager';
 import { cookies } from 'next/headers';
 import { db, storage } from '@/firebase/config';
@@ -34,12 +32,9 @@ export const DELETE = async (req, { params }) => {
   }
 };
 
-// app/api/slides/[id]/route.js
-
-
-export const PATCH = async (req, { params }) => {
+export const PUT = async (req, { params }) => {  // Cambié PATCH por PUT
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get('ng-ct');
 
     if (!cookie?.value) {
@@ -58,6 +53,7 @@ export const PATCH = async (req, { params }) => {
 
     const updates = {};
 
+    // Validación y procesamiento de los campos
     const title = formData.get('title');
     if (title !== null) {
       if (title.length < 3 || title.length > 70) {
@@ -99,7 +95,7 @@ export const PATCH = async (req, { params }) => {
     const overlay = formData.get('overlay');
     if (overlay !== null) updates.overlay = overlay;
 
-    // Manejar imagen si se incluye
+    // Manejo de imagen y icono (si se incluyen)
     const image = formData.get('image');
     if (image && image.name) {
       const storageRef = ref(storage, `SlideImages/${image.name}`);
@@ -108,15 +104,39 @@ export const PATCH = async (req, { params }) => {
       updates.imgUrl = imgUrl;
     }
 
+    const icon = formData.get('icon');
+    if (icon && icon.name) {
+      const storageRef = ref(storage, `SlideIcons/${icon.name}`);
+      await uploadBytes(storageRef, icon);
+      const iconUrl = await getDownloadURL(storageRef);
+      updates.iconUrl = iconUrl;
+    }
+
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ message: 'No se enviaron cambios' }, { status: 400 });
     }
 
-    const docRef = doc(db, 'carouselSlides', id);
-    await updateDoc(docRef, updates);
+    // Obtener el documento anterior para no sobrescribir valores que no se actualizaron
+    const docRef = doc(db, 'slides', id);
+    const existingDoc = await getDoc(docRef);
+    if (!existingDoc.exists()) {
+      return NextResponse.json({ message: 'Slide no encontrado' }, { status: 404 });
+    }
 
-    return NextResponse.json({ message: 'Slide actualizada correctamente', updates }, { status: 200 });
+    // Mantener los valores anteriores si no se enviaron actualizaciones para ciertos campos
+    const previousData = existingDoc.data();
+    const finalUpdates = { ...previousData, ...updates };
+
+    // Usar setDoc para reemplazar completamente el documento con los nuevos valores
+    await setDoc(docRef, finalUpdates);
+
+    // Obtener el documento actualizado y devolverlo en la respuesta
+    const updatedDoc = await getDoc(docRef);
+    const updatedSlide = { id: updatedDoc.id, ...updatedDoc.data() };
+
+    return NextResponse.json({ message: 'Slide actualizada correctamente', slide: updatedSlide }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: 'Error al actualizar slide', error: error.message }, { status: 500 });
   }
 };
