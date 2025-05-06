@@ -73,7 +73,7 @@ export default function HeroCarousel({ slides }) {
           >
             {isCenter ? (
               <div className="relative w-full h-full">
-                <Image
+              <Image
                   src={slide.imgUrl}
                   alt={slide.title}
                   fill
@@ -83,7 +83,6 @@ export default function HeroCarousel({ slides }) {
                 {slide.overlay && (
                   <div className="absolute inset-0 bg-black bg-opacity-40 pointer-events-none" />
                 )}
-
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 md:p-12 text-center text-white">
                   <div className="max-w-2xl">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold mb-4">
@@ -104,10 +103,26 @@ export default function HeroCarousel({ slides }) {
                     )}
                   </div>
                 </div>
+                {/* Dots sobre la imagen en el slide activo */}
+                {isActive && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+                    <div className="flex gap-2 pointer-events-auto">
+                      {slides.map((_, dotIndex) => (
+                        <button
+                          key={dotIndex}
+                          onClick={() => setCurrentSlide(dotIndex)}
+                          className={`w-3 h-3 rounded-full transition-colors ${
+                            dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : isHidden ? (
-              <div className="relative w-full h-full">
-                <Image
+<div className="relative w-full h-full">
+<Image
                   src={slide.imgUrl}
                   alt={slide.title}
                   fill
@@ -116,6 +131,21 @@ export default function HeroCarousel({ slides }) {
                 />
                 {slide.overlay && (
                   <div className="absolute inset-0 bg-black bg-opacity-40 pointer-events-none" />
+                )}
+                {isActive && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+                    <div className="flex gap-2 pointer-events-auto">
+                      {slides.map((_, dotIndex) => (
+                        <button
+                          key={dotIndex}
+                          onClick={() => setCurrentSlide(dotIndex)}
+                          className={`w-3 h-3 rounded-full transition-colors ${
+                            dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             ) : (
@@ -133,15 +163,34 @@ export default function HeroCarousel({ slides }) {
                     className="object-cover"
                     priority
                   />
-{slide.overlay && (
-  <div className={`absolute inset-0 pointer-events-none ${slide.overlay}`} />
-)}
-
+                  {slide.overlay && (
+                    <div className={`absolute inset-0 pointer-events-none ${slide.overlay}`} />
+                  )}
+                  {isActive && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none sm:hidden">
+                      <div className="flex gap-2 pointer-events-auto">
+                        {slides.map((_, dotIndex) => (
+                          <button
+                            key={dotIndex}
+                            onClick={() => setCurrentSlide(dotIndex)}
+                            className={`w-3 h-3 rounded-full transition-colors ${
+                              dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Leyenda */}
-                <div className="bg-black bg-opacity-80 text-white flex flex-col justify-center items-center sm:items-start w-full sm:w-1/2 px-6 py-8 sm:px-12 sm:py-0">
-                  <div className="max-w-xl text-center sm:text-left space-y-4">
+                <div className="relative bg-black/90 text-white flex flex-col justify-center items-center sm:items-start w-full sm:w-1/2 px-6 py-8 sm:px-12 sm:py-0">
+                  <div
+                    className={`absolute inset-0 pointer-events-none ${
+                      isLeft ? 'bg-gradient-to-l' : 'bg-gradient-to-r'
+                    } from-black/90 to-transparent`}
+                  />
+                  <div className="max-w-xl text-center sm:text-left space-y-4 relative z-10">
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold">{slide.title}</h1>
                     {slide.subtitle && (
                       <p className="text-base sm:text-lg md:text-xl">{slide.subtitle}</p>
@@ -163,19 +212,6 @@ export default function HeroCarousel({ slides }) {
           </div>
         );
       })}
-
-      {/* Dots */}
-      <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentSlide ? 'bg-white' : 'bg-white/50'
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
