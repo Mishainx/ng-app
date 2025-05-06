@@ -73,7 +73,7 @@ export default function HeroCarousel({ slides }) {
           >
             {isCenter ? (
               <div className="relative w-full h-full">
-              <Image
+                <Image
                   src={slide.imgUrl}
                   alt={slide.title}
                   fill
@@ -103,7 +103,6 @@ export default function HeroCarousel({ slides }) {
                     )}
                   </div>
                 </div>
-                {/* Dots sobre la imagen en el slide activo */}
                 {isActive && (
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
                     <div className="flex gap-2 pointer-events-auto">
@@ -121,8 +120,8 @@ export default function HeroCarousel({ slides }) {
                 )}
               </div>
             ) : isHidden ? (
-<div className="relative w-full h-full">
-<Image
+              <div className="relative w-full h-full">
+                <Image
                   src={slide.imgUrl}
                   alt={slide.title}
                   fill
@@ -155,7 +154,7 @@ export default function HeroCarousel({ slides }) {
                 }`}
               >
                 {/* Imagen */}
-                <div className="relative w-full sm:w-1/2 h-64 sm:h-full">
+                <div className="relative w-full sm:w-1/2 h-full">
                   <Image
                     src={slide.imgUrl}
                     alt={slide.title}
@@ -184,7 +183,7 @@ export default function HeroCarousel({ slides }) {
                 </div>
 
                 {/* Leyenda */}
-                <div className="relative bg-black/90 text-white flex flex-col justify-center items-center sm:items-start w-full sm:w-1/2 px-6 py-8 sm:px-12 sm:py-0">
+                <div className="relative bg-black/90 text-white flex flex-col justify-center items-center sm:items-start w-full sm:w-1/2 px-6 py-8 sm:px-12 sm:py-0 h-full">
                   <div
                     className={`absolute inset-0 pointer-events-none ${
                       isLeft ? 'bg-gradient-to-l' : 'bg-gradient-to-r'
