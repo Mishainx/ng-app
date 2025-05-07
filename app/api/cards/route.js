@@ -1,4 +1,5 @@
-// app/api/slides/route.js
+// app/api/cards/route.js
+
 import { NextResponse } from 'next/server';
 import { getDocs, collection, addDoc } from 'firebase/firestore';
 import { db, storage } from '@/firebase/config';
@@ -6,33 +7,33 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { authAdmin } from '@/firebase/authManager';
 import { cookies } from 'next/headers';
 
-// `GET` para obtener todas las slides
+// `GET` para obtener todas las cards
 export const GET = async (req) => {
   try {
-    const collectionRef = collection(db, 'cards'); // Cambiado de 'slides' a 'cards'
-    const slidesSnapshot = await getDocs(collectionRef);
-    const slides = slidesSnapshot.docs.map((doc) => ({
+    const collectionRef = collection(db, 'cards');
+    const cardsSnapshot = await getDocs(collectionRef);
+    const cards = cardsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
     return NextResponse.json(
-      { message: 'success', payload: slides },
+      { message: 'success', payload: cards },
       { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
-      { message: 'Error fetching cards', error: error.message }, // Cambiado el mensaje de error
+      { message: 'Error fetching cards', error: error.message },
       { status: 500 }
     );
   }
 };
 
-// `POST` para crear una nueva slide
+// `POST` para crear una nueva card
 export const POST = async (req) => {
   try {
     const cookieStore = await cookies();
-    const cookie = cookieStore.get("ng-ct");
+    const cookie = cookieStore.get('ng-ct');
 
     if (!cookie || !cookie.value) {
       return NextResponse.json(
@@ -60,26 +61,25 @@ export const POST = async (req) => {
       );
     }
 
-    // 🔍 Verificar límite de 5 slides
-    const cardsRef = collection(db, 'cards'); // Cambiado de 'slides' a 'cards'
+    // 🔍 Verificar límite de 5 cards
+    const cardsRef = collection(db, 'cards');
     const cardsSnapshot = await getDocs(cardsRef);
-    if (cardsSnapshot.size >= 5) {
+    if (cardsSnapshot.size >= 20) {
       return NextResponse.json(
-        { message: 'No se pueden crear más de 5 cards' }, // Cambiado el mensaje
+        { message: 'No se pueden crear más de 5 cards' },
         { status: 400 }
       );
     }
 
     const formData = await req.formData();
     const title = formData.get('title');
-    const content = formData.get('content');  // Cambiado 'subtitle' a 'content'
+    const content = formData.get('content');
     const order = parseInt(formData.get('order'));
-    const visible = (formData.get('visible') === 'true');
+    const visible = formData.get('visible') === '1';
     const link = formData.get('link');
-    const fullPage = formData.get('fullPage') === 'true';
-    const image1 = formData.get('image1');     // Cambiado 'img1' a 'image1'
-    const image2 = formData.get('image2');     // Cambiado 'img2' a 'image2'
-
+    const fullPage = formData.get('fullPage') === '1';
+    const image1 = formData.get('image1');
+    const image2 = formData.get('image2');
 
     // ✅ Validaciones
     if (!title || title.length < 3 || title.length > 70) {
@@ -89,9 +89,9 @@ export const POST = async (req) => {
       );
     }
 
-    if (!content || content.length < 3) {  // Cambiado 'subtitle' a 'content'
+    if (!content || content.length < 3) {
       return NextResponse.json(
-        { message: 'El contenido debe tener al menos 3 caracteres' }, // Cambiado el mensaje
+        { message: 'El contenido debe tener al menos 3 caracteres' },
         { status: 400 }
       );
     }
@@ -101,54 +101,61 @@ export const POST = async (req) => {
       return pattern.test(url);
     };
 
-    if (!link || !isValidUrl(link)) {  // Cambiado 'ctaLink' a 'link'
+    if (!link || !isValidUrl(link)) {
       return NextResponse.json(
-        { message: 'El enlace no es válido' },  // Cambiado el mensaje
+        { message: 'El enlace no es válido' },
         { status: 400 }
       );
     }
-    // 🖼️ Subir imagen y verificar que tenga URL
+
+    // 🖼️ Subir imagen 1 y verificar que tenga URL
     let image1Url = null;
     if (image1 && image1.name) {
-      const storageRef1 = ref(storage, `cardImages/${image1.name}`); //cambiado
+      const timestamp = new Date().getTime(); // Obtener timestamp único
+      const storageRef1 = ref(storage, `cardImages/${timestamp}_${image1.name}`);
       await uploadBytes(storageRef1, image1);
       image1Url = await getDownloadURL(storageRef1);
     }
 
     if (!image1Url) {
       return NextResponse.json(
-        { message: 'La imagen principal es obligatoria' }, // Cambiado el mensaje
+        { message: 'La imagen principal es obligatoria' },
         { status: 400 }
       );
     }
+
+    // 🖼️ Subir imagen 2 y verificar que tenga URL
     let image2Url = null;
     if (image2 && image2.name) {
-      const storageRef2 = ref(storage, `cardImages/${image2.name}`); //cambiado
+      const timestamp = new Date().getTime(); // Obtener timestamp único
+      const storageRef2 = ref(storage, `cardImages/${timestamp}_${image2.name}`);
       await uploadBytes(storageRef2, image2);
       image2Url = await getDownloadURL(storageRef2);
     }
 
-    const cardData = {  // Cambiado 'slideData' a 'cardData'
+    // Datos de la nueva card
+    const cardData = {
       title,
-      content, // Cambiado 'subtitle' a 'content'
+      content,
       order,
       link,
       visible,
-      fullPage,    // Cambiado 'ctaLink' a 'link'
-      image1Url: image1Url, // Cambiado 'img1' a 'image1Url' y asignado image1Url
-      image2Url: image2Url, // Cambiado 'img2' a 'image2' y asignado image2Url
+      fullPage,
+      image1Url,
+      image2Url,
     };
 
-    const newCard = await addDoc(cardsRef, cardData);  // Cambiado 'newSlide' a 'newCard' y 'slidesRef' a 'cardsRef'
+    // Crear la nueva card en la base de datos
+    const newCard = await addDoc(cardsRef, cardData);
 
     return NextResponse.json(
-      { message: 'Card creado correctamente', card: { id: newCard.id, ...cardData } }, // Cambiado el mensaje y 'slide' a 'card'
+      { message: 'Card creado correctamente', card: { id: newCard.id, ...cardData } },
       { status: 201 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { message: 'Error al crear la card', error: error.message }, // Cambiado el mensaje
+      { message: 'Error al crear la card', error: error.message },
       { status: 500 }
     );
   }

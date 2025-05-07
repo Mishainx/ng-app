@@ -7,6 +7,8 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [localCards, setLocalCards] = useState(cards);
+  const [shouldResetForm, setShouldResetForm] = useState(false);
+
   const itemsPerPage = 10;
 
   const indexOfLast = currentPage * itemsPerPage;
@@ -29,24 +31,29 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
   };
 
   const createCard = async (newData) => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cards`, {
-                method: 'POST',
-                body: newData, // ¡Aquí enviamos el FormData directamente!
-              });
-    
-          if (!response.ok) throw new Error('Error al crear el card');
-          const result = await response.json();
-    
-          if (result?.card) { // ✅ Accedemos a la nueva card desde result.card
-            setLocalCards((prev) => [...prev, result.card]);
-          } else {
-            console.warn('La respuesta del servidor no incluyó la nueva card:', result);
-          }
-        } catch (error) {
-          console.error('Error al crear el card:', error);
-        }
-      };
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cards`, {
+        method: 'POST',
+        body: newData,
+      });
+  
+      if (!response.ok) throw new Error('Error al crear el card');
+  
+      const result = await response.json();
+  
+      if (result?.card) {
+        setLocalCards((prev) => [...prev, result.card]);
+        setShouldResetForm(true); // 🚀 indicar reseteo
+        closeModal();
+      } else {
+        console.warn('La respuesta del servidor no incluyó la nueva card:', result);
+      }
+    } catch (error) {
+      console.error('Error al crear el card:', error);
+    }
+  };
+  
+  
   return (
     <div className="bg-white p-6 rounded-xl overflow-x-auto flex flex-col gap-5">
       <h2 className="text-lg font-semibold">Cards de navegación</h2>
@@ -109,19 +116,22 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
         </div>
       )}
 
-      <CardFormModal
-        open={modalOpen}
-        onClose={closeModal}
-        card={selectedCard}
-        onSave={(data) => {
-          if (selectedCard) {
-            updateCard(data);
-          } else {
-            createCard(data);
-          }
-          closeModal();
-        }}
-      />
+<CardFormModal
+  open={modalOpen}
+  onClose={closeModal}
+  card={selectedCard}
+  resetAfterSave={shouldResetForm}
+  clearResetFlag={() => setShouldResetForm(false)}
+  onSave={(data) => {
+    if (selectedCard) {
+      updateCard(data);
+      closeModal();
+    } else {
+      createCard(data); // closeModal() se llama dentro si es exitoso
+    }
+  }}
+/>
+
     </div>
   );
 };

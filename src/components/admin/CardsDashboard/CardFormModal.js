@@ -7,8 +7,8 @@ const CardFormModal = ({ open, onClose, card, onSave }) => {
     content: '',
     link: '',
     order: '',
-    visible: true,
-    fullPage: false, 
+    visible: true,  // Valor predeterminado para visible
+    fullPage: false, // Valor predeterminado para fullPage
     image1: null,
     image2: null,
   });
@@ -22,8 +22,8 @@ const CardFormModal = ({ open, onClose, card, onSave }) => {
         content: card.content || '',
         link: card.link || '',
         order: card.order || '',
-        visible: card.visible ?? true,
-        fullPage: card.fullPage ?? false,
+        visible: card.visible !== undefined ? card.visible : true, // Verificar si existe visible en card
+        fullPage: card.fullPage !== undefined ? card.fullPage : false, // Verificar si existe fullPage en card
         image1: null,
         image2: null,
       });
@@ -34,9 +34,9 @@ const CardFormModal = ({ open, onClose, card, onSave }) => {
         title: '',
         content: '',
         link: '',
-        order: '',
+        order: '1',
         visible: true,
-        fullPage:  false,
+        fullPage: false,
         image1: null,
         image2: null,
       });
@@ -97,8 +97,16 @@ const CardFormModal = ({ open, onClose, card, onSave }) => {
           <Input label="Título" name="title" value={formData.title} onChange={handleChange} required />
           <Input label="Contenido" name="content" value={formData.content} onChange={handleChange} required />
           <Input label="Enlace" name="link" value={formData.link} onChange={handleChange} required />
-          <Input label="Orden" name="order" value={formData.order} onChange={handleChange} type="number" required />
-
+          <input
+  type="number"
+  name="order"
+  value={formData.order}
+  onChange={handleChange}
+  required
+  min={1}              // ✅ evita negativos si no se permiten
+  step={1}             // ✅ incrementos enteros
+  className="mt-1 w-full border rounded px-2 py-1"
+/>
           <div className="flex items-center gap-2">
             <input
               type="checkbox"

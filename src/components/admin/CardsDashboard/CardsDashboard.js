@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import CardsTable from './CardsTable';
 
 const CardsDashboard = ({ resetView }) => {
-  const [slides, setSlides] = useState([]);
+  const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -11,8 +11,9 @@ const CardsDashboard = ({ resetView }) => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cards`); // Cambia la URL si es necesario
         const data = await response.json();
+        console.log(data)
         if (data?.message === "success") {
-          setSlides(data.payload);
+          setCards(data.payload);
         }
       } catch (error) {
         console.error("Error fetching slides:", error);
@@ -33,7 +34,7 @@ const CardsDashboard = ({ resetView }) => {
   }
 
   return (
-    <CardsTable/>
+    <CardsTable cards={cards}/>
   );
 };
 
