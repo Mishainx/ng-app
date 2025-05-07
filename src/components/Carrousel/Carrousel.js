@@ -57,10 +57,10 @@ export default function HeroCarousel({ slides }) {
   if (!slides || slides.length === 0) return null;
 
   const positionClasses = {
-    left: 'sm:items-center sm:justify-start sm:px-20',  // Mejor separación para left
-    right: 'sm:items-center sm:justify-end sm:px-20', // Mejor separación para right
+    left: 'sm:items-center sm:justify-start sm:px-20',
+    right: 'sm:items-center sm:justify-end sm:px-20',
     center: 'sm:items-center sm:justify-center',
-    none: '',  // Cuando la posición es "none", no mostramos la leyenda
+    none: '',
   };
 
   return (
@@ -70,10 +70,7 @@ export default function HeroCarousel({ slides }) {
         const position = slide.position || 'center';
 
         return (
-          <div
-            key={slide.id}
-            className={`${isActive ? 'block' : 'hidden'} w-full`}
-          >
+          <div key={slide.id} className={`${isActive ? 'block' : 'hidden'} w-full`}>
             <div className="relative w-full aspect-[16/6]">
               <Image
                 src={slide.imgUrl}
@@ -82,20 +79,20 @@ export default function HeroCarousel({ slides }) {
                 className="object-cover"
                 priority
               />
-              {/* No aplicar overlay si la posición es 'none' */}
+
+              {/* Degrade solo en mobile */}
+              <div className="absolute bottom-0 left-0 w-full h-2/5 bg-gradient-to-t from-black via-transparent to-transparent sm:hidden" />
+
               {position !== 'none' && slide.overlay && (
                 <div className={`absolute inset-0 ${slide.overlay} pointer-events-none`} />
               )}
 
-              {/* Leyenda sm+ posicionada */}
               {position !== 'none' && (
                 <div
                   className={`hidden sm:flex absolute top-1/2 transform -translate-y-1/2 w-full z-10 ${positionClasses[position]}`}
                 >
                   <div className="flex flex-col max-w-2xl space-y-3 text-white text-center">
-                    <h1 className="text-xl sm:text-4xl font-bold">
-                      {slide.title}
-                    </h1>
+                    <h1 className="text-xl sm:text-4xl font-bold">{slide.title}</h1>
                     {slide.subtitle && (
                       <p className="text-sm sm:text-lg">{slide.subtitle}</p>
                     )}
@@ -112,7 +109,6 @@ export default function HeroCarousel({ slides }) {
               )}
             </div>
 
-            {/* Leyenda para mobile (ajustes) */}
             <div className="block sm:hidden bg-black text-white px-4 py-4 text-center space-y-3">
               <h1 className="text-xl font-bold">{slide.title}</h1>
               {slide.subtitle && <p className="text-sm">{slide.subtitle}</p>}
@@ -129,8 +125,7 @@ export default function HeroCarousel({ slides }) {
         );
       })}
 
-      {/* Dots al pie del contenedor */}
-      <div className="absolute bottom-36 sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
+      <div className="absolute bottom-32 sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
         <div className="flex gap-2">
           {slides.map((_, dotIndex) => (
             <button
