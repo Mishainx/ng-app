@@ -62,7 +62,7 @@ export default function CardList({ cards }) {
   flushRow(); // cualquier sobrante
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center gap-6 p-10 max-w-7xl mx-auto">
+    <div className="w-full min-h-screen flex flex-col items-center gap-6 p-5 md:p-10 max-w-7xl mx-auto">
       {items}
     </div>
   );
