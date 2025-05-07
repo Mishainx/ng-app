@@ -24,7 +24,7 @@ let visibleCards = [];
   }
 
   return (
-    <main>
+    <main className="">
       <CardList cards={visibleCards} />
     </main>
   );

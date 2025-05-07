@@ -55,7 +55,7 @@ const CarrouselRow = ({ slide, openEditModal, onDelete, updateSlide }) => {
       <td className="px-4 py-2">{slide.ctaText}</td>
 
       <td className="px-4 py-2 text-center">
-        {slide.active ? '✅' : '❌'}
+        {slide.visible ? '✅' : '❌'}
       </td>
 
       <td className="px-4 py-2 text-center">

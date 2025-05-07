@@ -1,23 +1,70 @@
 import CardNavigation from "./CardNavigation";
 
 export default function CardList({ cards }) {
-  if (!cards.length) return <p className="text-center py-10">No hay cards disponibles.</p>;
+  if (!cards.length)
+    return <p className="text-center py-10">No hay cards disponibles.</p>;
 
-  return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6  p-2 md:p-4 w-full ">
-        {cards.map((card) => (
+  const items = [];
+  let tempRow = [];
+  const flushRow = () => {
+    if (tempRow.length) {
+      const isIncompleteRow = tempRow.length < 3;
+  
+      items.push(
+        <div
+          key={`row-${items.length}`}
+          className={`
+            grid gap-4 w-full
+            grid-cols-1 sm:grid-cols-2 md:grid-cols-3
+            ${isIncompleteRow ? "justify-center md:justify-start" : ""}
+          `}
+        >
+          {tempRow.map((card) => (
+            <CardNavigation
+              key={card.id}
+              title={card.title}
+              href={card.link}
+              imgSrc={card.image1Url}
+              imgHoverSrc={card.image2Url}
+              content={card.content}
+              fullPage={false}
+            />
+          ))}
+        </div>
+      );
+      tempRow = [];
+    }
+  };
+  
+  
+
+  for (const card of cards) {
+    if (card.fullPage) {
+      flushRow(); // cerrar fila previa
+      items.push(
+        <div key={card.id} className="w-full">
           <CardNavigation
-            key={card.id}
             title={card.title}
             href={card.link}
             imgSrc={card.image1Url}
             imgHoverSrc={card.image2Url}
             content={card.content}
-            fullPage={card.fullPage}
+            fullPage={true}
           />
-        ))}
-      </div>
+        </div>
+      );
+    } else {
+      tempRow.push(card);
+      if (tempRow.length === 3) flushRow();
+    }
+  }
+
+  flushRow(); // cualquier sobrante
+
+  return (
+    <div className="w-full min-h-screen flex flex-col items-center gap-6 p-10 max-w-7xl mx-auto">
+      {items}
     </div>
   );
+
 }

@@ -4,6 +4,7 @@ import TrashIcon from "@/icons/TrashIcon";
 import EditIcon from "@/icons/EditIcon";
 import SpinnerIcon from "@/icons/SpinnerIcon";
 
+
 const CarrouselRow = ({ card, updateCard, onDelete }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -55,14 +56,13 @@ const CarrouselRow = ({ card, updateCard, onDelete }) => {
 
       <td className="px-4 py-2 text-center">
         <div className="flex items-center justify-center gap-4">
-    {/*      <button 
-            onClick={() => updateCard(card)} 
-            className="text-yellow-500 hover:text-yellow-600 transition"
-            title="Editar"
-          >
-            <EditIcon className="h-5 w-5" />
-          </button>
-*/}
+        <button 
+  onClick={() => updateCard(card)} 
+  className="text-yellow-500 hover:text-yellow-600 transition"
+  title="Editar"
+>
+  <EditIcon className="h-5 w-5" />
+</button>
           <button 
             onClick={handleDelete} 
             className="text-red-500 hover:text-red-600 transition disabled:opacity-50"

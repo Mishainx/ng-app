@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import CardsRow from './CardsRow';
 import CardFormModal from './CardFormModal';
+import EditCardModal from "./EditCardModal";
 
-const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
+
+const CardsTable = ({ cards = [],  deleteCard }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [localCards, setLocalCards] = useState(cards);
   const [shouldResetForm, setShouldResetForm] = useState(false);
+  const [editingCard, setEditingCard] = useState(null);
+const [showEditModal, setShowEditModal] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -21,6 +25,24 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
     setModalOpen(true);
   };
 
+  const handleEdit = (card) => {
+    setEditingCard(card);
+    setShowEditModal(true);
+  };
+
+  const handleUpdateCard = (updatedCard) => {
+    setLocalCards((prevCards) =>
+      prevCards.map((card) =>
+        card.id === updatedCard.id ? updatedCard : card
+      )
+    );
+  };
+  
+  const handleCloseModal = () => {
+    setEditingCard(null);
+    setShowEditModal(false);
+  };
+
   const closeModal = () => {
     setModalOpen(false);
     setSelectedCard(null);
@@ -29,6 +51,41 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
   const handleDeleteCard = (deletedId) => {
     setLocalCards((prev) => prev.filter((card) => card.id !== deletedId));
   };
+
+  const updateCard = async (formData) => {
+    try {
+      const id = formData.get('id');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cards/${id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+  
+      if (!response.ok) throw new Error('Error al actualizar la card');
+  
+      const result = await response.json();
+      console.log(result)
+  
+      if (result?.card) {
+        // Actualizar el estado local con la card actualizada
+        setLocalCards((prev) =>
+          prev.map((card) =>
+            card.id === result.card.id ? result.card : card
+          )
+        );
+  
+        // Cerrar el modal si la actualización fue exitosa
+        handleCloseModal();
+      } else {
+        console.warn('La respuesta del servidor no incluyó la card actualizada:', result);
+      }
+    } catch (error) {
+      console.log(error)
+      console.error('Error al actualizar la card:', error);
+    }
+  };
+  
+  
+  
 
   const createCard = async (newData) => {
     try {
@@ -86,7 +143,8 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
               <CardsRow
                 key={card.id}
                 card={card}
-                onEdit={() => openModal(card)}
+
+  updateCard={handleEdit}
                 onDelete={handleDeleteCard}
               />
             ))}
@@ -131,6 +189,15 @@ const CardsTable = ({ cards = [], updateCard, deleteCard }) => {
     }
   }}
 />
+
+{showEditModal && (
+  <EditCardModal
+    open={showEditModal}
+    onClose={handleCloseModal}
+    card={editingCard}
+    onSave={updateCard}
+  />
+)}
 
     </div>
   );
