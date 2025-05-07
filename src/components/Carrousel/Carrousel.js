@@ -92,17 +92,17 @@ export default function HeroCarousel({ slides }) {
                 <div
                   className={`hidden sm:flex absolute top-1/2 transform -translate-y-1/2 w-full z-10 ${positionClasses[position]}`}
                 >
-                  <div className="flex flex-col max-w-2xl space-y-4 text-white text-center">
-                    <h1 className="text-2xl sm:text-4xl font-bold">
+                  <div className="flex flex-col max-w-2xl space-y-3 text-white text-center">
+                    <h1 className="text-xl sm:text-4xl font-bold">
                       {slide.title}
                     </h1>
                     {slide.subtitle && (
-                      <p className="text-base sm:text-lg">{slide.subtitle}</p>
+                      <p className="text-sm sm:text-lg">{slide.subtitle}</p>
                     )}
                     {slide.ctaLink && slide.ctaText && (
                       <Link
                         href={slide.ctaLink}
-                        className={`inline-flex items-center justify-center h-10 sm:h-12 px-5 sm:px-6 text-sm sm:text-base font-medium rounded-lg shadow-md transition-colors duration-300 ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
+                        className={`inline-flex items-center justify-center h-10 sm:h-12 px-4 sm:px-6 text-sm sm:text-base font-medium rounded-lg shadow-md transition-colors duration-300 ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
                       >
                         {slide.ctaText}
                       </Link>
@@ -112,14 +112,14 @@ export default function HeroCarousel({ slides }) {
               )}
             </div>
 
-            {/* Leyenda para mobile (sin cambios) */}
-            <div className="block sm:hidden bg-black/90 text-white px-6 py-6 text-center space-y-3">
-              <h1 className="text-2xl font-bold">{slide.title}</h1>
-              {slide.subtitle && <p className="text-base">{slide.subtitle}</p>}
+            {/* Leyenda para mobile (ajustes) */}
+            <div className="block sm:hidden bg-black text-white px-4 py-4 text-center space-y-3">
+              <h1 className="text-xl font-bold">{slide.title}</h1>
+              {slide.subtitle && <p className="text-sm">{slide.subtitle}</p>}
               {slide.ctaLink && slide.ctaText && (
                 <Link
                   href={slide.ctaLink}
-                  className={`inline-flex items-center justify-center h-10 px-5 text-sm font-medium rounded-lg shadow-md transition-colors duration-300 ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
+                  className={`inline-flex items-center justify-center h-8 px-4 text-sm font-medium rounded-lg shadow-md transition-colors duration-300 ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
                 >
                   {slide.ctaText}
                 </Link>
@@ -130,7 +130,7 @@ export default function HeroCarousel({ slides }) {
       })}
 
       {/* Dots al pie del contenedor */}
-      <div className="absolute bottom-1 sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
+      <div className="absolute bottom-36 sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
         <div className="flex gap-2">
           {slides.map((_, dotIndex) => (
             <button
