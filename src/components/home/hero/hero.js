@@ -25,7 +25,7 @@ export default function Hero() {
             Nippon Game
           </h1>
           <p className="text-lg md:text-xl mb-6 text-white">
-            Expertos en videojuegos
+            Expertos en videojuegos / Solo mayoristas
           </p>
           <Link
             href="/catalogo"
