@@ -1,11 +1,12 @@
 import HeroCarousel from "@/components/Carrousel/Carrousel";
+import { cache } from "react";
 
 export default async function CarrouselPage() {
   let visibleSlides = [];
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides`, {
-      next: { revalidate: 60 },
+      cache:"no-cache"
     });
 
     if (!res.ok) {
