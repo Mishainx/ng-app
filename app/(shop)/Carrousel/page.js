@@ -1,5 +1,7 @@
 import HeroCarousel from "@/components/Carrousel/Carrousel";
+import CategoriesList from "@/components/home/categoriesList/categoriesList";
 import NavigationCardsContainer from "@/components/NavigationCards/NavigationCardsContainer";
+import FeaturedProducts from "@/components/product/FeaturedProducts";
 
 export default async function CarrouselPage() {
   let visibleSlides = [];
@@ -25,7 +27,9 @@ export default async function CarrouselPage() {
   return (
     <main>
       <HeroCarousel slides={visibleSlides} />
+      <CategoriesList/>
       <NavigationCardsContainer/>
+      <FeaturedProducts/>
     </main>
   );
 }

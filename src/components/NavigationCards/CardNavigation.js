@@ -24,11 +24,11 @@ export default function CardNavigation({
           className={`relative w-full h-full`}
         >
           {/* Imagen base */}
-          <div
-            className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
-              !fullPage && !hasHoverImage ? "group-hover:scale-105" : ""
-            }`} // Solo scale si NO es fullPage
-          >
+<div
+  className={`absolute inset-0 transition-transform duration-1000 ease-in-out ${
+    !hasHoverImage ? "group-hover:scale-105" : ""
+  }`}
+>
             <Image
               src={imgSrc}
               alt={title}
@@ -55,7 +55,7 @@ export default function CardNavigation({
         </div>
 
         {/* Overlay de contenido */}
-        <div className="absolute inset-0 flex flex-col items-start justify-end px-4 py-3 z-30 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+        <div className="absolute inset-0 flex flex-col items-start justify-end px-4 py-3 z-30 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
           <h3 className="text-xl font-bold text-white relative mb-1">
             {title}
             <span className="absolute -bottom-1 left-0 w-full h-1 bg-red-500 origin-left transition-transform duration-500 scale-x-100 md:scale-x-0 group-hover:md:scale-x-100"></span>

@@ -95,6 +95,9 @@ export const PUT = async (req, { params }) => {  // Cambié PATCH por PUT
     const overlay = formData.get('overlay');
     if (overlay !== null) updates.overlay = overlay;
 
+    const position = formData.get('position');
+if (position !== null) updates.position = position;
+
     // Manejo de imagen y icono (si se incluyen)
     const image = formData.get('image');
     if (image && image.name) {
@@ -126,7 +129,7 @@ export const PUT = async (req, { params }) => {  // Cambié PATCH por PUT
     // Mantener los valores anteriores si no se enviaron actualizaciones para ciertos campos
     const previousData = existingDoc.data();
     const finalUpdates = { ...previousData, ...updates };
-
+    console.log(finalUpdates)
     // Usar setDoc para reemplazar completamente el documento con los nuevos valores
     await setDoc(docRef, finalUpdates);
 
