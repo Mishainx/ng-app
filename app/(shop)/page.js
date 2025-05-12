@@ -1,7 +1,5 @@
-import VacationPopup from "@/components/vacaciones/VacationPopUp";
 import CategoriesList from "../../src/components/home/categoriesList/categoriesList";
 import FeaturedProducts from "../../src/components/product/FeaturedProducts";
-import NavCard from "../../src/components/product/navCard";
 import HeroCarousel from "@/components/Carrousel/Carrousel";
 import NavigationCardsContainer from "@/components/NavigationCards/NavigationCardsContainer";
 
