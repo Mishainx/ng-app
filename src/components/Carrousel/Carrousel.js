@@ -120,22 +120,35 @@ export default function HeroCarousel({ slides }) {
                   {slide.ctaText}
                 </Link>
               )}
+
+              {/* Dots en mobile, dentro del bloque de leyenda negro */}
+<div className="flex justify-center gap-2 mt-4 sm:hidden">
+  {slides.map((_, dotIndex) => (
+    <button
+      key={dotIndex}
+      onClick={() => setCurrentSlide(dotIndex)}
+      className={`w-3 h-3 rounded-full transition-colors ${dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+    />
+  ))}
+</div>
             </div>
           </div>
         );
       })}
 
-      <div className="absolute bottom-32 sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
-        <div className="flex gap-2">
-          {slides.map((_, dotIndex) => (
-            <button
-              key={dotIndex}
-              onClick={() => setCurrentSlide(dotIndex)}
-              className={`w-3 h-3 rounded-full transition-colors ${dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'}`}
-            />
-          ))}
-        </div>
-      </div>
+<div className="hidden sm:flex sm:absolute sm:bottom-4 left-1/2 -translate-x-1/2 z-30">
+  <div className="flex gap-2">
+    {slides.map((_, dotIndex) => (
+      <button
+        key={dotIndex}
+        onClick={() => setCurrentSlide(dotIndex)}
+        className={`w-3 h-3 rounded-full transition-colors ${dotIndex === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+      />
+    ))}
+  </div>
+</div>
+
+
     </div>
   );
 }

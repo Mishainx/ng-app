@@ -1,4 +1,4 @@
-import HeroCarousel from "@/components/Carrousel/Carrousel";
+import  deHeroCarousel from "@/components/Carrousel/Carrousel";
 import CategoriesList from "@/components/home/categoriesList/categoriesList";
 import NavigationCardsContainer from "@/components/NavigationCards/NavigationCardsContainer";
 import FeaturedProducts from "@/components/product/FeaturedProducts";
