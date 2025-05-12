@@ -1,8 +1,9 @@
 import VacationPopup from "@/components/vacaciones/VacationPopUp";
 import CategoriesList from "../../src/components/home/categoriesList/categoriesList";
-import HeroCarousel from "../../src/components/home/hero/hero";
 import FeaturedProducts from "../../src/components/product/FeaturedProducts";
 import NavCard from "../../src/components/product/navCard";
+import HeroCarousel from "@/components/Carrousel/Carrousel";
+import NavigationCardsContainer from "@/components/NavigationCards/NavigationCardsContainer";
 
 export const metadata = {
   title: "Nippon Game - Videojuegos",
@@ -23,31 +24,33 @@ export const metadata = {
 };
 
 export default async function Home() {
+  let visibleSlides = [];
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/slides`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      console.error("Error fetching slides:", res.status);
+    } else {
+      const data = await res.json();
+      visibleSlides = data.payload
+        ?.filter((s) => s.visible)
+        .sort((a, b) => a.order - b.order) || [];
+      console.log("Fetched visible slides:", visibleSlides.length);
+    }
+  } catch (error) {
+    console.error("Error fetching slides:", error);
+  }
 
   return (
     <>
-      <HeroCarousel />
-
+    
       <main className="">
+        <HeroCarousel slides={visibleSlides} />
         <CategoriesList />
-        <div className="w-full flex flex-row flex-wrap items-center justify-center gap-5">
-          <NavCard
-            imgSrc="/navCard/catalogo-nav-card.jpg"
-            title="Catálogo"
-            href="/catalogo"
-          />
-          <NavCard
-            imgSrc="/navCard/local-nav-card.png"
-            title="Local"
-            href="/local"
-          />
-          <NavCard
-            imgSrc="/navCard/ofertas-nippongame.jpg"
-            title="Ofertas"
-            href="/ofertas"
-          />
-        </div>
-
+        <NavigationCardsContainer/>
         <FeaturedProducts/>
       </main>
     </>

@@ -119,7 +119,7 @@ const SlideFormModal = ({ open, onClose, slide, onSave }) => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-3 text-sm">
-          <Input label="Título" name="title" value={formData.title} onChange={handleChange} required />
+          <Input label="Título"  name="title" value={formData.title} onChange={handleChange}    required />
           <Input label="Subtítulo" name="subtitle" value={formData.subtitle} onChange={handleChange} required />
           <Input label="Texto CTA" name="ctaText" value={formData.ctaText} onChange={handleChange} required/>
           <Input label="Link CTA" name="ctaLink" value={formData.ctaLink} onChange={handleChange} required/>
