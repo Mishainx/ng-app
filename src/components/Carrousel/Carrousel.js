@@ -89,17 +89,17 @@ export default function HeroCarousel({ slides }) {
 
               {position !== 'none' && (
                 <div
-                  className={`hidden sm:flex absolute top-1/2 transform -translate-y-1/2 w-full z-10 ${positionClasses[position]}`}
+                  className={`hidden sm:flex absolute top-1/2 transform -translate-y-1/2 w-full z-10 ${positionClasses[position]} text-center`}
                 >
-                  <div className="flex flex-col sm:max-w-xl md:max-w-2xl space-y-3 text-white text-center">
-                    <h1 className="text-xl sm:text-lg md:text-3xl lg:text-4xl font-bold">{slide.title}</h1>
+                  <div className="flex flex-col items-center sm:max-w-xl md:max-w-2xl space-y-3 text-white text-center">
+                    <h1 className="text-xl sm:text-lg md:text-3xl lg:text-4xl font-bold text-wrap">{slide.title}</h1>
                     {slide.subtitle && (
-                      <p className="text-sm sm:text-xs md:text-sm lg:text-base">{slide.subtitle}</p>
+                      <p className="text-sm sm:text-xs md:text-sm lg:text-base sm:max-w-44 lg:max-w-72 m-auto ">{slide.subtitle}</p>
                     )}
                     {slide.ctaLink && slide.ctaText && (
                       <Link
                         href={slide.ctaLink}
-                        className={`inline-flex items-center justify-center h-10 sm:h-8 sm: px-8   md:px-30 text-sm sm:text-sm md:text-xl md:h-10 font-medium rounded-lg shadow-md transition-colors duration-300 ${position === 'center' ? 'max-w-96 mx-auto' : ''} ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
+                        className={`inline-flex items-center justify-center h-10 sm:h-8 sm: px-8   md:px-25 md:max-w-44 text-sm sm:text-sm md:text-md md:h-10 font-medium rounded-lg shadow-md transition-colors duration-300 ${position === 'center' ? 'max-w-96 mx-auto' : ''} ${CTA_COLORS[slide.ctaColor] || CTA_COLORS.red}`}
                         >
                         {slide.ctaText}
                       </Link>
