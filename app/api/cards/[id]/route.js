@@ -9,8 +9,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export const DELETE = async (req, { params }) => {
   try {
-    const cookieStore = cookies();
-    const cookie = cookieStore.get('ng-ct');
+    const cookieStore = await cookies();
+    const cookie = await cookieStore.get('ng-ct');
 
     if (!cookie?.value) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

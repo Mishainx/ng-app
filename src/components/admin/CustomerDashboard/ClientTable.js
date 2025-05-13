@@ -149,6 +149,73 @@ const ClientTable = ({ handleViewChange, searchTerm }) => {
           )}
         </tbody>
       </table>
+
+{/* Controles de paginación y selector responsivo */}
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-4 gap-3 text-sm">
+  {/* Selector de cantidad */}
+  <div className="flex flex-wrap items-center gap-2">
+    <label htmlFor="itemsPerPage" className="text-gray-700">Mostrar:</label>
+    <select
+      id="itemsPerPage"
+      value={itemsPerPage}
+      onChange={(e) => {
+        setItemsPerPage(Number(e.target.value));
+        setCurrentPage(1); // Reinicia la página
+      }}
+      className="border border-gray-300 rounded px-2 py-1"
+    >
+      <option value={5}>5</option>
+      <option value={10}>10</option>
+      <option value={20}>20</option>
+      <option value={50}>50</option>
+    </select>
+    <span>clientes por página</span>
+  </div>
+
+  {/* Paginación */}
+  <div className="flex flex-wrap items-center gap-1 justify-center sm:justify-end">
+    <button
+      onClick={() => {
+        setCurrentPage(prev => Math.max(prev - 1, 1));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      disabled={currentPage === 1}
+      className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300"
+    >
+      Anterior
+    </button>
+
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      <button
+        key={page}
+        onClick={() => {
+          setCurrentPage(page);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className={`px-3 py-1 rounded ${
+          page === currentPage
+            ? "bg-red-500 text-white"
+            : "bg-gray-100 hover:bg-gray-200"
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+
+    <button
+      onClick={() => {
+        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      disabled={currentPage === totalPages}
+      className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
+
+
     </div>
   );
 };
