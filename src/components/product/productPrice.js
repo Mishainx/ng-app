@@ -7,6 +7,7 @@ import SpinnerIcon from "@/icons/SpinnerIcon";
 import { useEffect, useState } from "react";
 
 export default function ProductPrice({ price, discount }) {
+  /* ===== LÓGICA DE AUTENTICACIÓN (DESACTIVADA TEMPORALMENTE) =====
   const { userData, loading: authLoading } = useAuth();
   const [hasQrAccess, setHasQrAccess] = useState(false);
   const [loadingCookie, setLoadingCookie] = useState(true);
@@ -22,7 +23,6 @@ export default function ProductPrice({ price, discount }) {
     checkQrCookie();
   }, []);
 
-  // Mostrar un mensaje de carga mientras el estado de autenticación o la cookie se resuelven
   if (authLoading || loadingCookie) {
     return (
       <div className="flex items-center justify-center">
@@ -32,29 +32,35 @@ export default function ProductPrice({ price, discount }) {
   }
 
   const canViewPrice = userData || hasQrAccess;
+  */
+
+  // 👇 SIEMPRE MOSTRAR PRECIOS
+  const canViewPrice = true;
 
   return (
     <div>
-      {canViewPrice ? ( // Si el usuario está autenticado O tiene la cookie, mostrar los precios
+      {canViewPrice ? (
         <>
           {discount > 0 ? (
             <>
               <p className="text-sm mb-1 line-through text-gray-500">
-                {formatPriceToUSD(price)} {/* Precio original tachado */}
+                {formatPriceToUSD(price)}
               </p>
               <p className="text-red-500 text-sm mb-1">
-                {formatPriceToUSD(discount)} {/* Precio con descuento */}
+                {formatPriceToUSD(discount)}
               </p>
             </>
           ) : (
-            <p className="text-sm mb-1">{formatPriceToUSD(price)}</p> // Precio sin descuento
+            <p className="text-sm mb-1">
+              {formatPriceToUSD(price)}
+            </p>
           )}
         </>
       ) : (
         <Link href="/login">
           <p className="flex items-center justify-center text-slate-400 text-xs hover:text-slate-600 transition-colors duration-300">
             <EyeIcon width="20" height="20" className="mr-1" />
-            Ver Precios {/* Mostrar ícono con texto de acceso a precios */}
+            Ver Precios
           </p>
         </Link>
       )}

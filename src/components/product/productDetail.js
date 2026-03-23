@@ -13,6 +13,7 @@ import RelatedProducts from "./RelatedProducts";
 const fallbackImage = "/images/default-product.png";
 
 export default function ProductDetail({ product }) {
+  /* ===== LÓGICA DE AUTENTICACIÓN (DESACTIVADA TEMPORALMENTE) =====
   const { userData, loading } = useAuth();
 
   const [hasQrAccess, setHasQrAccess] = useState(false);
@@ -21,7 +22,7 @@ export default function ProductDetail({ product }) {
   useEffect(() => {
     const checkQrCookie = () => {
       setLoadingCookie(true);
-      const hasCookie = document.cookie.includes('qrAccessCode=');
+      const hasCookie = document.cookie.includes("qrAccessCode=");
       setHasQrAccess(hasCookie);
       setLoadingCookie(false);
     };
@@ -30,7 +31,10 @@ export default function ProductDetail({ product }) {
   }, []);
 
   const canViewPrice = userData || hasQrAccess;
+  */
 
+  // 👇 SIEMPRE MOSTRAR PRECIOS
+  const canViewPrice = true;
 
   const productDetails = [
     { label: "Presentación", value: capitalizeFirstLetter(product.shortDescription) },
@@ -51,7 +55,6 @@ export default function ProductDetail({ product }) {
         .join(", "),
     });
   }
-
 
   return (
     <div>
@@ -134,8 +137,8 @@ export default function ProductDetail({ product }) {
 
       {/* Productos relacionados */}
       {product.relatedProducts && product.relatedProducts.length > 0 && (
-        <RelatedProducts relatedProducts={product.relatedProducts}/>
-)}
+        <RelatedProducts relatedProducts={product.relatedProducts} />
+      )}
     </div>
   );
 }
